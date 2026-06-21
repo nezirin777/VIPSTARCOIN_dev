@@ -1,0 +1,3888 @@
+diff --git a/src/amount.h b/src/amount.h
+index 525de47bc6..46d4980612 100644
+--- a/src/amount.h
++++ b/src/amount.h
+@@ -15,7 +15,7 @@ static const CAmount COIN = 100000000;
+ static const CAmount CENT = 1000000;
+
+ /** No amount larger than this (in satoshi) is valid.*/
+-static const CAmount MAX_MONEY = 107822406 * COIN + 25 * (COIN / 100);
++static const CAmount MAX_MONEY = 70000000000 * COIN;
+ inline bool MoneyRange(const CAmount& nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
+
+ #endif //  BITCOIN_AMOUNT_H
+diff --git a/src/chainparams.cpp b/src/chainparams.cpp
+index 9d02dc56df..580c9cf440 100644
+--- a/src/chainparams.cpp
++++ b/src/chainparams.cpp
+@@ -8,6 +8,8 @@
+ #include <chainparamsseeds.h>
+ #include <consensus/merkle.h>
+ #include <consensus/consensus.h>
++#include <key_io.h>
++#include <script/standard.h>
+ #include <tinyformat.h>
+ #include <util/system.h>
+ #include <util/strencodings.h>
+@@ -48,21 +50,10 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
+     return genesis;
+ }
+
+-/**
+- * Build the genesis block. Note that the output of its generation
+- * transaction cannot be spent since it did not originally exist in the
+- * database.
+- *
+- * CBlock(hash=000000000019d6, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=4a5e1e, nTime=1231006505, nBits=1d00ffff, nNonce=2083236893, vtx=1)
+- *   CTransaction(hash=4a5e1e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+- *     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73)
+- *     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
+- *   vMerkleTree: 4a5e1e
+- */
+ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+ {
+-    const char* pszTimestamp = "Sep 02, 2017 Bitcoin breaks $5,000 in latest price frenzy";
+-    const CScript genesisOutputScript = CScript() << ParseHex("040d61d8653448c98731ee5fffd303c15e71ec2057b77f11ab3601979728cdaff2d68afbba14e4fa0bc44f2072b0b23ef63717f8cdfbe58dcd33f32b6afe98741a") << OP_CHECKSIG;
++    const char* pszTimestamp = "vip quality on the world!!";
++    const CScript genesisOutputScript = CScript() << ParseHex("766970207175616c697479206f6e2074686520776f726c642121766970207175616c697479206f6e2074686520776f726c642121766970207175616c697479206f") << OP_CHECKSIG;
+     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+ }
+
+@@ -73,85 +64,92 @@ class CMainParams : public CChainParams {
+ public:
+     CMainParams() {
+         strNetworkID = CBaseChainParams::MAIN;
+-        consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
++        consensus.nSubsidyHalvingInterval = 525600; // PoS Halving every 1 years
+         consensus.BIP16Exception = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
+         consensus.BIP34Height = 0;
+         consensus.BIP34Hash = uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c");
+-        consensus.BIP65Height = 0; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
+-        consensus.BIP66Height = 0; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
+-        consensus.CSVHeight = 6048; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
+-        consensus.SegwitHeight = 6048; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
+-        consensus.MinBIP9WarningHeight = 8064; // segwit activation height + miner confirmation window
+-        consensus.QIP5Height = 466600;
+-        consensus.QIP6Height = 466600;
+-        consensus.QIP7Height = 466600;
+-        consensus.QIP9Height = 466600;
+-        consensus.nOfflineStakeHeight = 680000;
+-        consensus.nReduceBlocktimeHeight = 845000;
+-        consensus.nMuirGlacierHeight = 845000;
++        consensus.BIP65Height = 0;
++        consensus.BIP66Height = 0;
++        consensus.CSVHeight = 60480;
++        consensus.SegwitHeight = 60480;
++        consensus.MinBIP9WarningHeight = 80640;
++        consensus.QIP5Height = 0x7fffffff;
++        consensus.QIP6Height = 0x7fffffff;
++        consensus.QIP7Height = 0x7fffffff;
++        consensus.QIP9Height = 0x7fffffff;
++        consensus.nOfflineStakeHeight = 0x7fffffff;
++        consensus.nReduceBlocktimeHeight = 0x7fffffff;
++        consensus.nMuirGlacierHeight = 0x7fffffff;
+         consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+         consensus.posLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+         consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
+         consensus.RBTPosLimit = uint256S("0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff");
+-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
++        consensus.nPosTargetTimespan = 120;
++        consensus.nPosTargetTimespanV2 = 4000;
++        consensus.nPowTargetTimespan = 120;
+         consensus.nPowTargetTimespanV2 = 4000;
++        consensus.nPowTargetSpacing = 120;
+         consensus.nRBTPowTargetTimespan = 1000;
+-        consensus.nPowTargetSpacing = 2 * 64;
+         consensus.nRBTPowTargetSpacing = 32;
++        consensus.checkpointPubKey = "714b98243f1e0f15567a4afec1c2b9b756fc3762e7c560dc11aa94c2014694876ab8719f624a101fd583e735f4bad5a2f956e1b86ec929ec20e80d98946b9644dc";
+         consensus.fPowAllowMinDifficultyBlocks = false;
+-        consensus.fPowNoRetargeting = true;
++        consensus.fPowNoRetargeting = false;
+         consensus.fPoSNoRetargeting = false;
+-        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
+-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
++        consensus.nRuleChangeActivationThreshold = 15120; // 95% of 2016
++        consensus.nMinerConfirmationWindow = 20160; // nPowTargetTimespan / nPowTargetSpacing
++        consensus.nDiffAdjustChange = 1000;
++        consensus.nDiffDamping = 1000;
++        consensus.nDiffChange = 0x7fffffff;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+
+         // The best chain should have at least this much work.
+-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000002621183875d3ed75577"); // qtum
++        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000a84437ef774d6cb20e924"); // 1539160
+
+         // By default assume that the signatures in ancestors of this block are valid.
+-        consensus.defaultAssumeValid = uint256S("0x02caf7a26b995e5054462715a4d31e1a7ff220c53fead7c06de720ac54510433"); // 888000
++        consensus.defaultAssumeValid = uint256S("7fe9bbee38f9dd215bf60b42b84ca310d731032e5e4f65a523cf96e6d464accb"); // 1539160
+
+         /**
+          * The message start string is designed to be unlikely to occur in normal data.
+          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
+          * a large 32-bit integer with any alignment.
+          */
+-        pchMessageStart[0] = 0xf1;
+-        pchMessageStart[1] = 0xcf;
+-        pchMessageStart[2] = 0xa6;
+-        pchMessageStart[3] = 0xd3;
+-        nDefaultPort = 3888;
++        pchMessageStart[0] = 0x01;
++        pchMessageStart[1] = 0x2c;
++        pchMessageStart[2] = 0xe7;
++        pchMessageStart[3] = 0xb5;
++        nDefaultPort = 31915;
+         nPruneAfterHeight = 100000;
+-        m_assumed_blockchain_size = 8;
++        m_assumed_blockchain_size = 2;
+         m_assumed_chain_state_size = 1;
+
+-        genesis = CreateGenesisBlock(1504695029, 8026361, 0x1f00ffff, 1, 50 * COIN);
++        genesis = CreateGenesisBlock(1522223204, 135269, 0x1f00ffff, 1, 1 * COIN);
+         consensus.hashGenesisBlock = genesis.GetHash();
+-        assert(consensus.hashGenesisBlock == uint256S("0x000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"));
+-        assert(genesis.hashMerkleRoot == uint256S("0xed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"));
++        assert(consensus.hashGenesisBlock == uint256S("0x0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"));
++        assert(genesis.hashMerkleRoot == uint256S("0x3821b1e4634626248389576cae0c9310c365a46ace444a6e0bfb9e1f421bb625"));
+
+         // Note that of those which support the service bits prefix, most only support a subset of
+         // possible options.
+         // This is fine at runtime as we'll fall back to using them as a oneshot if they don't support the
+         // service bits we want, but we should get them updated to support all service bits wanted by any
+         // release ASAP to avoid it where possible.
+-        vSeeds.emplace_back("qtum3.dynu.net"); // Qtum mainnet
+-        vSeeds.emplace_back("qtum5.dynu.net"); // Qtum mainnet
+-        vSeeds.emplace_back("qtum6.dynu.net"); // Qtum mainnet
+-        vSeeds.emplace_back("qtum7.dynu.net"); // Qtum mainnet
++        vSeeds.emplace_back("dnsseed.vipstarcoin.jp"); // mainnet
++        vSeeds.emplace_back("dnsseed.vips.y-chan.dev"); // mainnet
++        vSeeds.emplace_back("seed.nezirin.net"); // mainnet
++        vSeeds.emplace_back("dnsseed.vips.takana.me"); // mainnet
+
+-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,58);
++        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,70);
+         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);
+         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
+         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
+         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
+
+-        bech32_hrp = "qc";
++        bech32_hrp = "vips";
+
+         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
+
++        fMiningRequiresPeers = true;
+         fDefaultConsistencyChecks = false;
+         fRequireStandard = true;
+         fMineBlocksOnDemand = false;
+@@ -160,26 +158,25 @@ public:
+
+         checkpointData = {
+             {
+-                { 0, uint256S("000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c")},
+-                { 5000, uint256S("00006a5338e5647872bd91de1d291365e941e14dff1939b5f16d1804d1ce61cd")}, //last PoW block
+-                { 45000, uint256S("060c6af680f6975184c7a17059f2ff4970544fcfd4104e73744fe7ab7be14cfc")},
+-                { 90000, uint256S("66fcf426b0aa6f2c9e3330cb2775e9e13c4a2b8ceedb50f8931ae0e12078ad50")},
+-                { 245000, uint256S("ed79607feeadcedf5b94f1c43df684af5106e79b0989a008a88f9dc2221cc12a")},
+-                { 353000, uint256S("d487896851fed42b07771f950fcc4469fbfa79211cfefed800f6d7806255e23f")},
+-                { 367795, uint256S("1209326b73e38e44ec5dc210f51dc5d8c3494e9c698521032dd754747d4c1685")},
+-                { 445709, uint256S("814e7d91aac6c577e4589b76918f44cf80020212159d39709fbad3f219725c9f")},
+-                { 498000, uint256S("497f28fd4b1dadc9ff6dd2ac771483acfd16e4c4664eb45d0a6008dc33811418")},
+-                { 708000, uint256S("23c66194def65cfea20d32a71f23807a93a0b207b3d7251246e2c351204fe9d3")},
+-                { 888000, uint256S("02caf7a26b995e5054462715a4d31e1a7ff220c53fead7c06de720ac54510433")},
++                {       0, uint256S("0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c")},
++                {    1000, uint256S("0000966ea0fed775d527fb31902270f01cafdfe53403be884080e2203bd43c74")},
++                {  244000, uint256S("0000000000261d023630c17c99b686bc251eca6e044c75191d83d7f35cff530d")},
++                {  400000, uint256S("00000000005845c3019379551f73d16a71ebbf4307cae40b16caa3d36440462f")},
++                {  500000, uint256S("d82e075ff3d1649fa56eec48a42e31deb8e54b6a407f1c23716e8868fdaeca00")},
++                {  550000, uint256S("e4004917148b8b5d4ede63b8662f1f703a6b30f167a2662640d0320f5661d8af")},
++                {  750000, uint256S("a5dfd0d3114cfef2da35ecfc4a50f89e41de43cf1ac16110d61803115dd5da66")},
++                { 1000000, uint256S("a515258d40e1736d391c8544fc47108f024f1e8a6ccc08a9be80c597940910a0")},
++                { 1250000, uint256S("bdbef8faa70f3f8b4310a440b6331bfb6db8ef3f573e5f237945321a9f04c5a3")},
++                { 1500000, uint256S("000000000168c5932ba40acba7d120f59a0f1f7fd9822ac008db3b13ba4bc21e")},
+             }
+         };
+
+         chainTxData = ChainTxData{
+-            // Data as of block 76b1e67fcff0fcfd078d499c65494cee4319f256da09f5fdefa574433f7d4e3c (height 709065)
+-            1602362976, // * UNIX timestamp of last known number of transactions
+-            4340534, // * total number of transactions between genesis and that timestamp
++            // Data from RPC: getchaintxstats 4096 000000000019cc24a160aadde531daf265a05409ddcde3fd91233fd2bd0343d4
++            1617246864, // * UNIX timestamp of last known number of transactions
++            2661766, // * total number of transactions between genesis and that timestamp
+             //   (the tx=... number in the SetBestChain debug.log lines)
+-            0.02433574394826639 // * estimated number of transactions per second after that timestamp
++            0.02533215756325678 // * estimated number of transactions per second after that timestamp
+         };
+
+         consensus.nBlocktimeDownscaleFactor = 4;
+@@ -187,17 +184,7 @@ public:
+         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
+         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
+
+-        consensus.nLastPOWBlock = 5000;
+-        consensus.nLastBigReward = 5000;
+-        consensus.nMPoSRewardRecipients = 10;
+-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock +
+-                                    consensus.nMPoSRewardRecipients +
+-                                    consensus.nCoinbaseMaturity;
+-        consensus.nLastMPoSBlock = 679999;
+-
+-
+-        consensus.nFixUTXOCacheHFHeight = 100000;
+-        consensus.nEnableHeaderSignatureHeight = 399100;
++        consensus.nEnableHeaderSignatureHeight = 1600000;
+         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
+         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
+         consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
+@@ -213,75 +200,79 @@ class CTestNetParams : public CChainParams {
+ public:
+     CTestNetParams() {
+         strNetworkID = CBaseChainParams::TESTNET;
+-        consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
+-        consensus.BIP16Exception = uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222");
++        consensus.nSubsidyHalvingInterval = 525600; // PoS Halving every 1 years
++        consensus.BIP16Exception = uint256();
+         consensus.BIP34Height = 0;
+-        consensus.BIP34Hash = uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222");
+-        consensus.BIP65Height = 0; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
+-        consensus.BIP66Height = 0; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
+-        consensus.CSVHeight = 6048; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
+-        consensus.SegwitHeight = 6048; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
+-        consensus.MinBIP9WarningHeight = 8064; // segwit activation height + miner confirmation window
+-        consensus.QIP5Height = 446320;
+-        consensus.QIP6Height = 446320;
+-        consensus.QIP7Height = 446320;
+-        consensus.QIP9Height = 446320;
+-        consensus.nOfflineStakeHeight = 625000;
+-        consensus.nReduceBlocktimeHeight = 806600;
+-        consensus.nMuirGlacierHeight = 806600;
++        consensus.BIP34Hash = uint256();
++        consensus.BIP65Height = 0;
++        consensus.BIP66Height = 0;
++        consensus.CSVHeight = 6048;
++        consensus.SegwitHeight = 6048;
++        consensus.MinBIP9WarningHeight = 8064;
++        consensus.QIP5Height = std::numeric_limits<int>::max();
++        consensus.QIP6Height = std::numeric_limits<int>::max();
++        consensus.QIP7Height = std::numeric_limits<int>::max();
++        consensus.QIP9Height = std::numeric_limits<int>::max();
++        consensus.nOfflineStakeHeight = std::numeric_limits<int>::max();
++        consensus.nReduceBlocktimeHeight = std::numeric_limits<int>::max();
++        consensus.nMuirGlacierHeight = std::numeric_limits<int>::max();
+         consensus.powLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+-        consensus.posLimit = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
++        consensus.posLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+         consensus.QIP9PosLimit = uint256S("0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
+         consensus.RBTPosLimit = uint256S("0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff");
+-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
++        consensus.nPosTargetTimespan = 120;
++        consensus.nPosTargetTimespanV2 = 4000;
++        consensus.nPowTargetTimespan = 120;
+         consensus.nPowTargetTimespanV2 = 4000;
++        consensus.nPowTargetSpacing = 120;
+         consensus.nRBTPowTargetTimespan = 1000;
+-        consensus.nPowTargetSpacing = 2 * 64;
+         consensus.nRBTPowTargetSpacing = 32;
+         consensus.fPowAllowMinDifficultyBlocks = false;
+-        consensus.fPowNoRetargeting = true;
++        consensus.fPowNoRetargeting = false;
+         consensus.fPoSNoRetargeting = false;
+         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
+         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
++        consensus.nDiffAdjustChange = 0;
++        consensus.nDiffDamping = 0;
++        consensus.nDiffChange = -1;
++        consensus.checkpointPubKey = "0480459f232f2d35f250708d162571a0450bc5b56967c721970a0f53bd74ae2977c16d87fae1b4e4b5cc0e90584cd3c38b6e0e2bfb8c123e750b3007c62fabe78b";
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+
+         // The best chain should have at least this much work.
+-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000b17fc0aa1093c32edb"); // qtum
++        consensus.nMinimumChainWork = uint256S("0x00");
+
+         // By default assume that the signatures in ancestors of this block are valid.
+-        consensus.defaultAssumeValid = uint256S("0x6bb6312088d81ca5484460b3466c66c01ff7d1cd4ef91e1dc9555a15b51d025d"); // 944000
++        consensus.defaultAssumeValid = uint256S("0x00");
+
+-        pchMessageStart[0] = 0x0d;
+-        pchMessageStart[1] = 0x22;
+-        pchMessageStart[2] = 0x15;
+-        pchMessageStart[3] = 0x06;
+-        nDefaultPort = 13888;
++        pchMessageStart[0] = 0x1a;
++        pchMessageStart[1] = 0x2b;
++        pchMessageStart[2] = 0x3c;
++        pchMessageStart[3] = 0x4d;
++        nDefaultPort = 32915;
+         nPruneAfterHeight = 1000;
+-        m_assumed_blockchain_size = 4;
++        m_assumed_blockchain_size = 1;
+         m_assumed_chain_state_size = 1;
+
+-        genesis = CreateGenesisBlock(1504695029, 7349697, 0x1f00ffff, 1, 50 * COIN);
++        genesis = CreateGenesisBlock(1522223204, 135269, 0x1f00ffff, 1, 1 * COIN);
+         consensus.hashGenesisBlock = genesis.GetHash();
+-        assert(consensus.hashGenesisBlock == uint256S("0x0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"));
+-        assert(genesis.hashMerkleRoot == uint256S("0xed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"));
++        assert(consensus.hashGenesisBlock == uint256S("0x0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"));
+
+         vFixedSeeds.clear();
+         vSeeds.clear();
+-        // nodes with support for servicebits filtering should be at the top
+-        vSeeds.emplace_back("qtum4.dynu.net"); // Qtum testnet
+
+-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,120);
++        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,132);
+         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);
+         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
+         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
+
+-        bech32_hrp = "tq";
++        bech32_hrp = "tvips";
+
+         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
+
++        fMiningRequiresPeers = true;
+         fDefaultConsistencyChecks = false;
+         fRequireStandard = false;
+         fMineBlocksOnDemand = false;
+@@ -290,23 +281,14 @@ public:
+
+         checkpointData = {
+             {
+-                {0, uint256S("0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222")},
+-                {5000, uint256S("000000302bc22f2f65995506e757fff5c824545db5413e871d57d27a0997e8a0")}, //last PoW block
+-                {77000, uint256S("f41e2e8d09bca38827c23cad46ed6d434902da08415d2314d0c8ce285b1970cb")},
+-                {230000, uint256S("cd17baf80fa817dd543b83897ccb1e07350019e5b812f4956f69efe855d62601")},
+-                {343000, uint256S("ac66f1de1a5fa473b5097b313c203e97d45669485e4c235a32a0f80df64f6948")},
+-                {441632, uint256S("2cb93f74cb3e47ec05b745a445f90a023b7136a68f94e9bff7fb49819155ccd8")},
+-                {491300, uint256S("75a7db2865423d3af5f0dfd70cfef6053b91f3c018c4b28a4e28c09a8c011e78")},
+-                {690000, uint256S("89b010b5333fa9d22c7fcf157c7eeaee1ccfe80c435390243b3d782a1fc1eff7")},
+-                {944000, uint256S("6bb6312088d81ca5484460b3466c66c01ff7d1cd4ef91e1dc9555a15b51d025d")},
++                { 0, uint256S("0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c")},
+             }
+         };
+
+         chainTxData = ChainTxData{
+-            // Data as of block 8947ec20d2e17bb48365d50833d6967115ceb2358b13edf99b5624da3f156f37 (height 694595)
+-            1602363600,
+-            1505398,
+-            0.016913121136215
++            0,
++            0,
++            0
+         };
+
+         consensus.nBlocktimeDownscaleFactor = 4;
+@@ -314,15 +296,6 @@ public:
+         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
+         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
+
+-        consensus.nLastPOWBlock = 5000;
+-        consensus.nLastBigReward = 5000;
+-        consensus.nMPoSRewardRecipients = 10;
+-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock +
+-                                    consensus.nMPoSRewardRecipients +
+-                                    consensus.nCoinbaseMaturity;
+-        consensus.nLastMPoSBlock = 624999;
+-
+-        consensus.nFixUTXOCacheHFHeight = 84500;
+         consensus.nEnableHeaderSignatureHeight = 391993;
+         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
+         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
+@@ -340,9 +313,9 @@ public:
+     explicit CRegTestParams(const ArgsManager& args) {
+         strNetworkID =  CBaseChainParams::REGTEST;
+         consensus.nSubsidyHalvingInterval = 985500;
+-        consensus.BIP16Exception = uint256S("0x665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943");
++        consensus.BIP16Exception = uint256();
+         consensus.BIP34Height = 0; // BIP34 activated on regtest (Used in functional tests)
+-        consensus.BIP34Hash = uint256S("0x665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943");
++        consensus.BIP34Hash = uint256();
+         consensus.BIP65Height = 0; // BIP65 activated on regtest (Used in functional tests)
+         consensus.BIP66Height = 0; // BIP66 activated on regtest (Used in functional tests)
+         consensus.CSVHeight = 432; // CSV activated on regtest (Used in rpc activation tests)
+@@ -359,16 +332,23 @@ public:
+         consensus.posLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+         consensus.QIP9PosLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // The new POS-limit activated after QIP9
+         consensus.RBTPosLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes (960 = 832 + 128; multiplier is 832)
++        consensus.nPosTargetTimespan = 15 * 60;
++        consensus.nPosTargetTimespanV2 = 4000;
++        consensus.nPowTargetTimespan = 60;
+         consensus.nPowTargetTimespanV2 = 4000;
+-        consensus.nRBTPowTargetTimespan = 1000;
+         consensus.nPowTargetSpacing = 2 * 64;
++        consensus.nRBTPowTargetTimespan = 1000;
+         consensus.nRBTPowTargetSpacing = 32;
++        consensus.checkpointPubKey = "048b4b3a2b6a072b0bfa7986d6ce73e2b9896a8559fca2063d4cabb83e05e9b8268cb00b8229edb4a2fd15fa32bd2238102268cc96b52e6727a4b23c339d5908ff";
++
+         consensus.fPowAllowMinDifficultyBlocks = true;
+-        consensus.fPowNoRetargeting = true;
++        consensus.fPowNoRetargeting = false;
+         consensus.fPoSNoRetargeting = true;
+         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
+         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
++        consensus.nDiffAdjustChange = 0;
++        consensus.nDiffDamping = 0;
++        consensus.nDiffChange = 1100;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
+         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+@@ -379,25 +359,25 @@ public:
+         // By default assume that the signatures in ancestors of this block are valid.
+         consensus.defaultAssumeValid = uint256S("0x00");
+
+-        pchMessageStart[0] = 0xfd;
+-        pchMessageStart[1] = 0xdd;
+-        pchMessageStart[2] = 0xc6;
+-        pchMessageStart[3] = 0xe1;
+-        nDefaultPort = 23888;
++        pchMessageStart[0] = 0x2a;
++        pchMessageStart[1] = 0x3b;
++        pchMessageStart[2] = 0x4c;
++        pchMessageStart[3] = 0x5d;
++        nDefaultPort = 33915;
+         nPruneAfterHeight = 1000;
+         m_assumed_blockchain_size = 0;
+         m_assumed_chain_state_size = 0;
+
+         UpdateActivationParametersFromArgs(args);
+
+-        genesis = CreateGenesisBlock(1504695029, 17, 0x207fffff, 1, 50 * COIN);
++        genesis = CreateGenesisBlock(1522223204, 0, 0x207fffff, 1, 1 * COIN);
+         consensus.hashGenesisBlock = genesis.GetHash();
+-        assert(consensus.hashGenesisBlock == uint256S("0x665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943"));
+-        assert(genesis.hashMerkleRoot == uint256S("0xed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"));
++        assert(consensus.hashGenesisBlock == uint256S("0x00054237d8dc843bd3f7ab66e2b608cfbfbbeed213e30eca9ca8c627dc8aace5"));
+
+         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
+         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
+
++        fMiningRequiresPeers = false;
+         fDefaultConsistencyChecks = true;
+         fRequireStandard = true;
+         fMineBlocksOnDemand = true;
+@@ -406,7 +386,7 @@ public:
+
+         checkpointData = {
+             {
+-                {0, uint256S("665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943")},
++                {0, uint256S("00054237d8dc843bd3f7ab66e2b608cfbfbbeed213e30eca9ca8c627dc8aace5")},
+             }
+         };
+
+@@ -421,13 +401,6 @@ public:
+         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
+         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
+
+-        consensus.nLastPOWBlock = 0x7fffffff;
+-        consensus.nLastBigReward = 5000;
+-        consensus.nMPoSRewardRecipients = 10;
+-        consensus.nFirstMPoSBlock = 5000;
+-        consensus.nLastMPoSBlock = 0;
+-
+-        consensus.nFixUTXOCacheHFHeight=0;
+         consensus.nEnableHeaderSignatureHeight = 0;
+
+         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
+@@ -436,13 +409,13 @@ public:
+         consensus.nStakeTimestampMask = 15;
+         consensus.nRBTStakeTimestampMask = 3;
+
+-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,120);
++        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,132);
+         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);
+         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
+         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
+
+-        bech32_hrp = "qcrt";
++        bech32_hrp = "tvips";
+     }
+
+     /**
+@@ -622,12 +595,6 @@ void CChainParams::UpdateDifficultyChangeBlockHeight(int nHeight)
+     consensus.fPowAllowMinDifficultyBlocks = false;
+     consensus.fPowNoRetargeting = true;
+     consensus.fPoSNoRetargeting = false;
+-    consensus.nLastPOWBlock = 5000;
+-    consensus.nMPoSRewardRecipients = 10;
+-    consensus.nFirstMPoSBlock = consensus.nLastPOWBlock +
+-                                consensus.nMPoSRewardRecipients +
+-                                consensus.nCoinbaseMaturity;
+-    consensus.nLastMPoSBlock = 0;
+ }
+
+ void UpdateDifficultyChangeBlockHeight(int nHeight)
+diff --git a/src/chainparams.h b/src/chainparams.h
+index 0318b8923e..afb247e315 100644
+--- a/src/chainparams.h
++++ b/src/chainparams.h
+@@ -66,6 +66,8 @@ public:
+     int GetDefaultPort() const { return nDefaultPort; }
+
+     const CBlock& GenesisBlock() const { return genesis; }
++    /** Make miner wait to have peers to avoid wasting work */
++    bool MiningRequiresPeers() const { return fMiningRequiresPeers; }
+     /** Default value for -checkmempool and -checkblockindex argument */
+     bool DefaultConsistencyChecks() const { return fDefaultConsistencyChecks; }
+     /** Policy: Filter transactions that do not match well-defined patterns */
+@@ -120,6 +122,7 @@ protected:
+     std::string strNetworkID;
+     CBlock genesis;
+     std::vector<SeedSpec6> vFixedSeeds;
++    bool fMiningRequiresPeers;
+     bool fDefaultConsistencyChecks;
+     bool fRequireStandard;
+     bool fMineBlocksOnDemand;
+diff --git a/src/chainparamsbase.cpp b/src/chainparamsbase.cpp
+index 6201fb7417..3d58f342dc 100644
+--- a/src/chainparamsbase.cpp
++++ b/src/chainparamsbase.cpp
+@@ -37,13 +37,13 @@ const CBaseChainParams& BaseParams()
+ std::unique_ptr<CBaseChainParams> CreateBaseChainParams(const std::string& chain)
+ {
+     if (chain == CBaseChainParams::MAIN)
+-        return MakeUnique<CBaseChainParams>("", 3889);
++        return MakeUnique<CBaseChainParams>("", 31916);
+     else if (chain == CBaseChainParams::TESTNET)
+-        return MakeUnique<CBaseChainParams>("testnet3", 13889);
++        return MakeUnique<CBaseChainParams>("testnet3", 32916);
+     else if (chain == CBaseChainParams::REGTEST)
+-        return MakeUnique<CBaseChainParams>("regtest", 13889);
++        return MakeUnique<CBaseChainParams>("regtest", 33916);
+     else if (chain == CBaseChainParams::UNITTEST)
+-        return MakeUnique<CBaseChainParams>("regtest", 13889);
++        return MakeUnique<CBaseChainParams>("regtest", 33916);
+     else
+         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
+ }
+diff --git a/src/chainparamsseeds.h b/src/chainparamsseeds.h
+index a0f2491f3b..852069f983 100644
+--- a/src/chainparamsseeds.h
++++ b/src/chainparamsseeds.h
+@@ -5,302 +5,12 @@
+  * AUTOGENERATED by contrib/seeds/generate-seeds.py
+  *
+  * Each line contains a 16-byte IPv6 address and a port.
+- * IPv4 as well as onion addresses are wrapped inside an IPv6 address accordingly.
++ * IPv4 as well as onion addresses are wrapped inside a IPv6 address accordingly.
+  */
+ static SeedSpec6 pnSeed6_main[] = {
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc2,0xad,0x65}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc2,0xbb,0xf3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbd,0x5b,0x9b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbd,0x6f,0x6a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbc,0xe2,0xfc}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xba,0xaf,0xe4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2d,0x4d,0xa0,0x90}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2d,0x4d,0xc0,0x81}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe0,0x77,0x44}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc5,0xcd,0x2c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0xc2,0xd3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x68,0xc6,0xd7,0x1b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe6,0x50,0x06}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbb,0xc4,0x35}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc0,0x7c,0x05}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc5,0x8a,0xa3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc6,0x6c,0x38}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe1,0x7c,0xa2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe1,0xbc,0x5d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe2,0x1f,0xce}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe6,0xac,0x35}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe2,0xcb,0xa7}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe2,0x1c,0xb0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc3,0x4b,0x8c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe8,0xad,0xad}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xcd,0xe9,0x43}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc3,0xee,0x29}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe2,0x79,0xe9}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0xa3,0x7d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc0,0x36,0xa1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe9,0x00,0x14}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc3,0xce,0x77}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc0,0x90,0xc4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xcd,0xcf,0x1c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x82,0xd3,0xdc,0x20}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0xa7,0x6e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc6,0x00,0x4c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x68,0xc7,0xc2,0x8e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbd,0x7b,0x58}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0xff,0xd4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0x9f,0x44}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe7,0x8c,0xdd}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbc,0xd6,0xfa}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0x88,0xbd}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbd,0x42,0x49}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe0,0x7b,0x92}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbd,0x5f,0x1f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0x89,0x54}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbc,0x1a,0x55}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe6,0x9a,0x9a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0x82,0x35}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x3b,0x11,0x74,0xf5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xce,0x0b,0x74}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x76,0x28,0xf0,0x25}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2f,0x59,0xff,0xd8}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2f,0x4b,0x83,0xb0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xaf,0x73,0x25,0x06}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x7d,0x86,0x56,0x9a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x70,0xa8,0x7b,0x3f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2f,0x5e,0x8c,0x55}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x78,0x4f,0x8d,0xde}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc8,0x04,0x10}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdf,0xff,0xfa,0xc2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x70,0xd8,0x9a,0x52}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x2f,0x34,0x5f,0x02}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x73,0x8b,0x23,0xa7}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x77,0x43,0x59,0x21}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x01,0xf9,0xb6,0x7d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x4d,0xa8,0x14,0xd1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x36,0xfa,0xef,0x1a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x40,0x2d,0xc5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x40,0x2d,0xc5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xa8,0xf5,0xb1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x27,0x72,0xd7,0x80}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdc,0xc2,0x2b,0xec}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x5f,0x5a,0xc3,0xd4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x0e,0x8b,0x5f,0x44}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x56,0xc3,0x09,0xed}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xbe,0xbf,0xb6}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xda,0xee,0xc7,0x57}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x0d,0x7c,0x81,0x4e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x0d,0xe4,0x18,0x07}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x77,0xc2,0xdf,0x2b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xe5,0x24,0x3c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0x88,0xea,0x7e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0x6d,0xef,0xc8}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x7d,0x89,0x1c,0x16}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0x5a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd9,0xd8,0x27}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x77}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0xa8}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe3,0x67,0x10}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0xa8,0x2e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0x13}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdc,0xc7,0x44}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0x78}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x03}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x67,0xaf}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x66,0x88}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe4,0x09,0xd1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0xb0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x3e,0x6b,0x13}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbb,0x83}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdd,0xe1,0xd9,0x6e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0xda,0xc2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0xf1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x15}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0xde}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0xad}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xcc}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdc,0xc7,0x12}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x90,0x6b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0xda,0x0a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd9,0xd8,0xa2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0xa8,0x08}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xa8}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdb,0x07,0x38}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x82}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0xf9}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0x7b,0xbf}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe4,0x09,0xb4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0xb7}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x76}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x54}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0xe4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x15}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd9,0xd8,0xca}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0x6c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdd,0xe1,0xd9,0xf2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x91,0xc3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x91,0xf3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0xaf}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x66,0xb3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x0a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdc,0xc7,0x66}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0x87}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0x91}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x80}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0x7b,0x41}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0x0c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xaa}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0x42}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0xd5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x4f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0x9c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x67,0xa8,0x20}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbb,0x60}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe4,0x09,0x4d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd9,0xd8,0xba}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xec,0x6e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0x31}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x48,0xa5,0xc1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0x40}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x6c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0x84,0xa4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x74,0x94,0x00,0xf8}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x09,0xe5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdd,0xe1,0xd9,0x7c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x1b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x1e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0x32}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x21}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x47}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdc,0xc7,0xdd}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x91,0x50}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x72,0x87}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x98}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x9d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x90,0x55}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0x8b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0x5f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x4e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x82}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0x89}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0xab}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x13}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xbf,0x5b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x90,0x73}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0x6e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0xcc}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0x27}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x27}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x69}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6c,0x39,0x3f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xc2,0x1a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x09,0x18}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0x24}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x3e,0x6b,0xee}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x72,0xd3}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x0a,0x6d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x3a,0xd0,0x78,0x40}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0x50}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xd5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd9,0xd8,0x61}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x2e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0x0e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x64,0xb1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x67,0xa8,0x58}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xc0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0xfc}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0x65}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xda}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x18}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x09,0x35}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x72,0x99}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x3e,0x6b,0x1f}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0xa2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x55}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xec,0x17}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0xa1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xee,0xf5,0x14}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdf,0x5d,0xe0,0xe2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x0c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0xf4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x3a,0xd0,0x78,0x5e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0x7b,0xba}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0xb1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x90}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x50,0x7b,0xaf}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x95}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xfe,0x9e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x1d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x58}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x56,0x10}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x94,0xf1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x48,0xe0,0xf5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0x03}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0xe4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xdd,0xe1,0xd9,0x42}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x55,0xde,0x4d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x70,0x3c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x79}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0xa8,0xab}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x91,0xb6}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x72,0xb4}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x39}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdb,0x07,0x5a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x70,0x5d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xaf}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0xa8,0x3b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x72,0x64}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0x83}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x65,0xef}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xef}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x3a,0xd0,0x78,0x2d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0x6c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x59}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xf6}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0xc2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xc2,0x5b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x91,0x4e}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xb2,0xbe}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0xa8,0x05}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xea}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x51}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x75,0x0a,0xdd}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x73,0xbd}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0xd0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0xb9}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0xc5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdc,0xc7,0x43}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x49,0xae,0x10}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x79,0xe0,0x2c,0x8c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x48,0xa5,0x07}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xbf,0x15}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x66,0x6a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x3e,0x6b,0x23}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x66,0xf2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xc0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0x94,0xf0}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x76,0x3a}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xda,0xfc,0xb2}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x7d}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x48,0xa5,0x67}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x3e,0x6b,0x3c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xf8,0xf3,0x1c}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x71,0x72}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xd8,0x6b,0x33}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0x0b}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x75,0x51,0xb8,0xe1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0xbd,0x41}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6b,0x66,0x71}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x31,0x40,0x21,0xc1}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb7,0xd1,0x70,0x37}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x72,0xdb,0x07,0x35}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0xbf,0xe5}, 3888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb4,0x6a,0x85,0x5a}, 3888}
+ };
+
+ static SeedSpec6 pnSeed6_test[] = {
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc5,0xeb,0x1c}, 13888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x68,0xc6,0x05,0xdc}, 13888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc5,0x84,0x0a}, 13888},
+-    {{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x23,0xc2,0x48,0x5f}, 13888}
+ };
+ #endif // BITCOIN_CHAINPARAMSSEEDS_H
++
+diff --git a/src/checkpointsync.cpp b/src/checkpointsync.cpp
+new file mode 100644
+index 0000000000..dc123f2bd5
+--- /dev/null
++++ b/src/checkpointsync.cpp
+@@ -0,0 +1,470 @@
++// Copyright (c) 2013-2019 Feathercoin developers
++// Copyright (c) 2011-2013 PPCoin developers
++// Copyright (c) 2013 Primecoin developers
++// Distributed under conditional MIT/X11 software license,
++// see the accompanying file COPYING
++//
++// The synchronized checkpoint system is first developed by Sunny King for
++// ppcoin network in 2012, giving cryptocurrency developers a tool to gain
++// additional network protection against 51% attack.
++//
++// Primecoin also adopts this security mechanism, and the enforcement of
++// checkpoints is explicitly granted by user, thus granting only temporary
++// consensual central control to developer at the threats of 51% attack.
++//
++// Concepts
++//
++// In the network there can be a privileged node known as 'checkpoint master'.
++// This node can send out checkpoint messages signed by the checkpoint master
++// key. Each checkpoint is a block hash, representing a block on the blockchain
++// that the network should reach consensus on.
++//
++// Besides verifying signatures of checkpoint messages, each node also verifies
++// the consistency of the checkpoints. If a conflicting checkpoint is received,
++// it means either the checkpoint master key is compromised, or there is an
++// operator mistake. In this situation the node would discard the conflicting
++// checkpoint message and display a warning message. This precaution controls
++// the damage to network caused by operator mistake or compromised key.
++//
++// Operations
++//
++// Any node can be turned into checkpoint master by setting the 'checkpointkey'
++// configuration parameter with the private key of the checkpoint master key.
++// Operator should exercise caution such that at any moment there is at most
++// one node operating as checkpoint master. When switching master node, the
++// recommended procedure is to shutdown the master node and restart as
++// regular node, note down the current checkpoint by 'getcheckpoint', then
++// compare to the checkpoint at the new node to be upgraded to master node.
++// When the checkpoint on both nodes match then it is safe to switch the new
++// node to checkpoint master.
++//
++// The configuration parameter 'checkpointdepth' specifies how many blocks
++// should the checkpoints lag behind the latest block in auto checkpoint mode.
++// A depth of 5 is the minimum auto checkpoint policy and offers the greatest
++// protection against 51% attack.
++//
++
++#include <checkpointsync.h>
++
++#include <consensus/validation.h>
++#include <chainparams.h>
++#include <key_io.h>
++#include <logging.h>
++#include <netmessagemaker.h>
++#include <txdb.h>
++#include <validation.h>
++
++// Synchronized checkpoint (centrally broadcasted)
++std::string CSyncCheckpoint::strMasterPrivKey;
++uint256 hashSyncCheckpoint;
++static uint256 hashPendingCheckpoint;
++CSyncCheckpoint checkpointMessage;
++static CSyncCheckpoint checkpointMessagePending;
++RecursiveMutex cs_hashSyncCheckpoint;
++
++
++// Only descendant of current sync-checkpoint is allowed
++bool ValidateSyncCheckpoint(uint256 hashCheckpoint)
++{
++    CBlockIndex* pindexSyncCheckpoint = nullptr;
++    CBlockIndex* pindexCheckpointRecv = nullptr;
++
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++        if (!::BlockIndex().count(hashSyncCheckpoint))
++            return error("%s: block index missing for current sync-checkpoint %s", __func__, hashSyncCheckpoint.ToString());
++        if (!::BlockIndex().count(hashCheckpoint))
++            return error("%s: block index missing for received sync-checkpoint %s", __func__, hashCheckpoint.ToString());
++
++        pindexSyncCheckpoint = ::BlockIndex()[hashSyncCheckpoint];
++        pindexCheckpointRecv = ::BlockIndex()[hashCheckpoint];
++    }
++
++    if (pindexCheckpointRecv->nHeight <= pindexSyncCheckpoint->nHeight)
++    {
++        // Received an older checkpoint, trace back from current checkpoint
++        // to the same height of the received checkpoint to verify
++        // that current checkpoint should be a descendant block
++        CBlockIndex* pindex = pindexSyncCheckpoint;
++        while (pindex->nHeight > pindexCheckpointRecv->nHeight)
++            if (!(pindex = pindex->pprev))
++                return error("%s: pprev1 null - block index structure failure", __func__);
++        if (pindex->GetBlockHash() != hashCheckpoint)
++        {
++            LOCK(cs_hashSyncCheckpoint);
++            return error("%s: new sync-checkpoint %s is conflicting with current sync-checkpoint %s", __func__, hashCheckpoint.ToString(), hashSyncCheckpoint.ToString());
++        }
++        return false; // ignore older checkpoint
++    }
++
++    // Received checkpoint should be a descendant block of the current
++    // checkpoint. Trace back to the same height of current checkpoint
++    // to verify.
++    CBlockIndex* pindex = pindexCheckpointRecv;
++    while (pindex->nHeight > pindexSyncCheckpoint->nHeight)
++        if (!(pindex = pindex->pprev))
++            return error("%s: pprev2 null - block index structure failure", __func__);
++
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        if (pindex->GetBlockHash() != hashSyncCheckpoint)
++        {
++            return error("%s: new sync-checkpoint %s is not a descendant of current sync-checkpoint %s", __func__, hashCheckpoint.ToString(), hashSyncCheckpoint.ToString());
++        }
++    }
++
++    return true;
++}
++
++bool WriteSyncCheckpoint(const uint256& hashCheckpoint)
++{
++    if (!pblocktree->WriteSyncCheckpoint(hashCheckpoint))
++        return error("%s: failed to write to txdb sync checkpoint %s", __func__, hashCheckpoint.ToString());
++
++    hashSyncCheckpoint = hashCheckpoint;
++    return true;
++}
++
++bool AcceptPendingSyncCheckpoint(CConnman* connman)
++{
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++        bool havePendingCheckpoint = hashPendingCheckpoint != uint256() && ::BlockIndex().count(hashPendingCheckpoint);
++        if (!havePendingCheckpoint)
++            return false;
++    }
++
++    uint256 hashPendingCheckpointTmp;
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        hashPendingCheckpointTmp = hashPendingCheckpoint;
++    }
++
++    if (!ValidateSyncCheckpoint(hashPendingCheckpointTmp))
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        hashPendingCheckpoint = uint256();
++        checkpointMessagePending.SetNull();
++        return false;
++    }
++
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++        if (!::ChainActive().Contains(::BlockIndex()[hashPendingCheckpoint]))
++            return false;
++    }
++
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        if (!WriteSyncCheckpoint(hashPendingCheckpoint)) {
++            return error("%s: failed to write sync checkpoint %s", __func__, hashPendingCheckpoint.ToString());
++        }
++
++        hashPendingCheckpoint = uint256();
++        checkpointMessage = checkpointMessagePending;
++        checkpointMessagePending.SetNull();
++        checkpointMessage.connman = connman;
++
++        // Relay the checkpoint
++        if (connman && !checkpointMessage.IsNull())
++        {
++            connman->ForEachNode([](CNode* pnode) {
++                if (pnode->supportACPMessages)
++                    checkpointMessage.RelayTo(pnode);
++            });
++        }
++    }
++
++    return true;
++}
++
++// Automatically select a suitable sync-checkpoint
++uint256 AutoSelectSyncCheckpoint()
++{
++    LOCK(cs_main);
++    // Search backward for a block with specified depth policy
++    const CBlockIndex *pindex = ::ChainActive().Tip();
++    while (pindex->pprev && pindex->nHeight + gArgs.GetArg("-checkpointdepth", DEFAULT_AUTOCHECKPOINT) > ::ChainActive().Tip()->nHeight)
++        pindex = pindex->pprev;
++    return pindex->GetBlockHash();
++}
++
++// Check against synchronized checkpoint
++bool CheckSyncCheckpoint(const uint256 hashBlock, const int nHeight, const CBlockIndex* pindexPrev)
++{
++    // Genesis block
++    if (nHeight == 0) {
++        return true;
++    }
++
++    {
++        LOCK(cs_hashSyncCheckpoint);
++
++        // Checkpoint on default
++        if (hashSyncCheckpoint == uint256()) {
++            return true;
++        }
++    }
++
++    const CBlockIndex* pindexSync;
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++        // sync-checkpoint should always be accepted block, if not top
++        // of chain might have been rolled back due to abrupt shutdown.
++        // Return true while blocks resync.
++        if (!::BlockIndex().count(hashSyncCheckpoint)) {
++            return true;
++        }
++        pindexSync = ::BlockIndex()[hashSyncCheckpoint];
++    }
++
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        if (nHeight > pindexSync->nHeight)
++        {
++            const CBlockIndex* pindex;
++            if (pindexPrev) {
++                pindex = pindexPrev;
++            } else {
++                LOCK(cs_main);
++                pindex = ::ChainActive().Tip();
++            }
++
++            // Trace back to same height as sync-checkpoint
++            while (pindex->nHeight > pindexSync->nHeight)
++                if (!(pindex = pindex->pprev))
++                    return error("%s: pprev null - block index structure failure", __func__);
++            if (pindex->nHeight < pindexSync->nHeight)
++                return error("%s: Wound back below checkpoint sync height. Arg height %d tip height %d checkpoint height %d pindexPrev %s", __func__, nHeight, pindex->nHeight, pindexSync->nHeight, pindexPrev ? "valid" : "nullptr");
++            if (pindex->GetBlockHash() != hashSyncCheckpoint)
++                return error("%s: mismatched block hash at sync height. height %d block hash %s", __func__, pindex->nHeight, pindex->GetBlockHash().ToString(), hashSyncCheckpoint.ToString());
++        }
++        if (nHeight == pindexSync->nHeight && hashBlock != hashSyncCheckpoint)
++            return error("%s: Same height with sync-checkpoint", __func__);
++    }
++
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++        if (nHeight < pindexSync->nHeight && !::BlockIndex().count(hashBlock))
++            return error("%s: Lower height than sync-checkpoint", __func__);
++    }
++    return true;
++}
++
++// Reset synchronized checkpoint to the genesis block
++bool ResetSyncCheckpoint()
++{
++    LOCK(cs_hashSyncCheckpoint);
++
++    if (!WriteSyncCheckpoint(Params().GetConsensus().hashGenesisBlock))
++        return error("%s: failed to reset sync checkpoint to genesis block", __func__);
++
++    return true;
++}
++
++// Verify sync checkpoint master pubkey and reset sync checkpoint if changed
++bool CheckCheckpointPubKey()
++{
++    std::string strPubKey = "";
++    std::string strMasterPubKey = Params().GetConsensus().checkpointPubKey;
++
++    if (!pblocktree->ReadCheckpointPubKey(strPubKey) || strPubKey != strMasterPubKey)
++    {
++        // write checkpoint master key to db
++        if (!ResetSyncCheckpoint())
++            return error("%s: failed to reset sync-checkpoint", __func__);
++        if (!pblocktree->WriteCheckpointPubKey(strMasterPubKey))
++            return error("%s: failed to write new checkpoint master key to db", __func__);
++    }
++
++    return true;
++}
++
++bool SetCheckpointPrivKey(std::string strPrivKey)
++{
++    CKey key = DecodeSecret(strPrivKey);
++    if (!key.IsValid())
++        return false;
++
++    // Mock signing to see if key valid
++    CSyncCheckpoint checkpoint;
++    checkpoint.hashCheckpoint = Params().GetConsensus().hashGenesisBlock;
++    CDataStream sMsg(SER_NETWORK, PROTOCOL_VERSION);
++    sMsg << static_cast<CUnsignedSyncCheckpoint>(checkpoint);
++    checkpoint.vchMsg = std::vector<unsigned char>(sMsg.begin(), sMsg.end());
++
++    if (!key.Sign(Hash(checkpoint.vchMsg.begin(), checkpoint.vchMsg.end()), checkpoint.vchSig))
++        return false;
++
++    std::string strMasterPubKey = Params().GetConsensus().checkpointPubKey;
++    CPubKey pubkey(ParseHex(strMasterPubKey));
++    if (!pubkey.Verify(Hash(checkpoint.vchMsg.begin(), checkpoint.vchMsg.end()), checkpoint.vchSig))
++        return false;
++
++    CSyncCheckpoint::strMasterPrivKey = strPrivKey;
++    return true;
++}
++
++bool SendSyncCheckpoint(uint256 hashCheckpoint, CConnman* connman)
++{
++    // P2P disabled
++    if (!connman)
++        return true;
++
++    // No connections
++    if (connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
++        return true;
++
++    // Do not send dummy checkpoint
++    if (hashCheckpoint == uint256())
++        return true;
++
++    CSyncCheckpoint checkpoint;
++    checkpoint.hashCheckpoint = hashCheckpoint;
++    checkpoint.connman = connman;
++    CDataStream sMsg(SER_NETWORK, PROTOCOL_VERSION);
++    sMsg << static_cast<CUnsignedSyncCheckpoint>(checkpoint);
++    checkpoint.vchMsg = std::vector<unsigned char>(sMsg.begin(), sMsg.end());
++
++    if (CSyncCheckpoint::strMasterPrivKey.empty())
++        return error("%s: Checkpoint master key unavailable.", __func__);
++
++    CKey key = DecodeSecret(CSyncCheckpoint::strMasterPrivKey);
++    if (!key.IsValid())
++        return error("%s: Checkpoint master key invalid", __func__);
++
++    if (!key.Sign(Hash(checkpoint.vchMsg.begin(), checkpoint.vchMsg.end()), checkpoint.vchSig))
++        return error("%s: Unable to sign checkpoint, check private key?", __func__);
++
++    if(!checkpoint.ProcessSyncCheckpoint())
++        return error("%s: Failed to process checkpoint.", __func__);
++
++    // Relay checkpoint
++    connman->ForEachNode([checkpoint](CNode* pnode) {
++        checkpoint.RelayTo(pnode);
++    });
++
++    return true;
++}
++
++
++void CUnsignedSyncCheckpoint::SetNull()
++{
++    nVersion = 1;
++    hashCheckpoint = uint256();
++}
++
++std::string CUnsignedSyncCheckpoint::ToString() const
++{
++    return strprintf(
++            "CSyncCheckpoint(\n"
++            "    nVersion       = %d\n"
++            "    hashCheckpoint = %s\n"
++            ")\n",
++        nVersion,
++        hashCheckpoint.ToString());
++}
++
++CSyncCheckpoint::CSyncCheckpoint()
++{
++    SetNull();
++}
++
++void CSyncCheckpoint::SetNull()
++{
++    CUnsignedSyncCheckpoint::SetNull();
++    vchMsg.clear();
++    vchSig.clear();
++}
++
++bool CSyncCheckpoint::IsNull() const
++{
++    return (hashCheckpoint == uint256());
++}
++
++uint256 CSyncCheckpoint::GetHash() const
++{
++    return Hash(this->vchMsg.begin(), this->vchMsg.end());
++}
++
++void CSyncCheckpoint::RelayTo(CNode* pfrom) const
++{
++    if (connman && pfrom->hashCheckpointKnown != hashCheckpoint && pfrom->supportACPMessages)
++    {
++        pfrom->hashCheckpointKnown = hashCheckpoint;
++        connman->PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::CHECKPOINT, *this));
++    }
++}
++
++// Verify signature of sync-checkpoint message
++bool CSyncCheckpoint::CheckSignature()
++{
++    std::string strMasterPubKey = Params().GetConsensus().checkpointPubKey;
++    CPubKey key(ParseHex(strMasterPubKey));
++    if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
++        return error("%s: verify signature failed", __func__);
++
++    // Now unserialize the data
++    CDataStream sMsg(vchMsg, SER_NETWORK, PROTOCOL_VERSION);
++    sMsg >> *static_cast<CUnsignedSyncCheckpoint*>(this);
++    return true;
++}
++
++// Process synchronized checkpoint
++bool CSyncCheckpoint::ProcessSyncCheckpoint()
++{
++    if (!CheckSignature())
++        return false;
++
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++
++        if (!::BlockIndex().count(hashCheckpoint)) {
++            // We haven't received the checkpoint chain, keep the checkpoint as pending
++            hashPendingCheckpoint = hashCheckpoint;
++            checkpointMessagePending = *this;
++            LogPrintf("%s: pending for sync-checkpoint %s\n", __func__, hashCheckpoint.ToString());
++
++            return false;
++        }
++    }
++
++    if (!ValidateSyncCheckpoint(hashCheckpoint)) {
++        return false;
++    }
++
++    CBlockIndex* bad_fork = nullptr;
++    CBlockIndex* index = nullptr;
++    {
++        LOCK2(cs_main, cs_hashSyncCheckpoint);
++
++        // Check if we're on a fork
++        index = ::BlockIndex()[hashCheckpoint];
++        if (!::ChainActive().Contains(index)) {
++            auto ancestor = LastCommonAncestor(index, ::ChainActive().Tip());
++            bad_fork = ::ChainActive().Next(ancestor);
++        }
++    }
++
++    if (bad_fork && index && index->GetAncestor(bad_fork->nHeight) != bad_fork) {
++        BlockValidationState state;
++        InvalidateBlock(state, Params(), bad_fork);
++
++        if (state.IsValid()) {
++            ActivateBestChain(state, Params());
++        }
++    }
++
++    {
++        LOCK(cs_hashSyncCheckpoint);
++        if (!WriteSyncCheckpoint(hashCheckpoint)) {
++            return error("%s: failed to write sync checkpoint %s\n", __func__, hashCheckpoint.ToString());
++        }
++
++        checkpointMessage = *this;
++        hashPendingCheckpoint = uint256();
++        checkpointMessagePending.SetNull();
++    }
++
++    return true;
++}
+diff --git a/src/checkpointsync.h b/src/checkpointsync.h
+new file mode 100644
+index 0000000000..388e73127d
+--- /dev/null
++++ b/src/checkpointsync.h
+@@ -0,0 +1,78 @@
++// Copyright (c) 2013-2019 Feathercoin developers
++// Copyright (c) 2011-2013 PPCoin developers
++// Copyright (c) 2013 Primecoin developers
++// Distributed under conditional MIT/X11 open source software license
++// see the accompanying file COPYING
++#ifndef BITCOIN_CHECKPOINTSYNC_H
++#define BITCOIN_CHECKPOINTSYNC_H
++
++#include <serialize.h>
++#include <sync.h>
++#include <uint256.h>
++
++#include <string>
++#include <vector>
++
++class CConnman;
++class CNode;
++class CBlockIndex;
++class CSyncCheckpoint;
++class uint256;
++
++extern uint256 hashSyncCheckpoint;
++extern CSyncCheckpoint checkpointMessage;
++extern RecursiveMutex cs_hashSyncCheckpoint;
++
++bool WriteSyncCheckpoint(const uint256& hashCheckpoint);
++bool AcceptPendingSyncCheckpoint(CConnman* connman);
++uint256 AutoSelectSyncCheckpoint();
++bool CheckSyncCheckpoint(const uint256 hashBlock, const int nHeight, const CBlockIndex* pindexPrev = nullptr);
++bool CheckCheckpointPubKey();
++bool SetCheckpointPrivKey(std::string strPrivKey);
++bool SendSyncCheckpoint(uint256 hashCheckpoint, CConnman* connman = nullptr);
++
++// Synchronized checkpoint (introduced first in ppcoin)
++class CUnsignedSyncCheckpoint
++{
++public:
++    int nVersion;
++    uint256 hashCheckpoint;      // checkpoint block
++
++    ADD_SERIALIZE_METHODS
++    template <typename Stream, typename Operation>
++    inline void SerializationOp(Stream& s, Operation ser_action) {
++        READWRITE(this->nVersion);
++        READWRITE(hashCheckpoint);
++    }
++
++    void SetNull();
++    std::string ToString() const;
++};
++
++class CSyncCheckpoint : public CUnsignedSyncCheckpoint
++{
++public:
++    static std::string strMasterPrivKey;
++    std::vector<unsigned char> vchMsg;
++    std::vector<unsigned char> vchSig;
++    CConnman* connman;
++
++    CSyncCheckpoint();
++
++    ADD_SERIALIZE_METHODS
++
++    template <typename Stream, typename Operation>
++    inline void SerializationOp(Stream& s, Operation ser_action) {
++        READWRITE(vchMsg);
++        READWRITE(vchSig);
++    }
++
++    void SetNull();
++    bool IsNull() const;
++    uint256 GetHash() const;
++    void RelayTo(CNode* pfrom) const;
++    bool CheckSignature();
++    bool ProcessSyncCheckpoint();
++};
++
++#endif
+diff --git a/src/consensus/consensus.cpp b/src/consensus/consensus.cpp
+index 52609f639a..011fb83f82 100644
+--- a/src/consensus/consensus.cpp
++++ b/src/consensus/consensus.cpp
+@@ -15,12 +15,3 @@ int64_t dgpMaxBlockSigOps = 80000;
+ unsigned int dgpMaxProtoMsgLength = 8000000;
+
+ unsigned int dgpMaxTxSigOps = 16000;
+-
+-void updateBlockSizeParams(unsigned int newBlockSize){
+-    unsigned int newSizeForParams=WITNESS_SCALE_FACTOR*newBlockSize;
+-    dgpMaxBlockSerSize=newSizeForParams;
+-    dgpMaxBlockWeight=newSizeForParams;
+-    dgpMaxBlockSigOps=(int64_t)(newSizeForParams/100);
+-    dgpMaxTxSigOps = (unsigned int)(dgpMaxBlockSigOps/5);
+-    dgpMaxProtoMsgLength=newSizeForParams;
+-}
+diff --git a/src/consensus/consensus.h b/src/consensus/consensus.h
+index aaa79b3d7e..9d807012dd 100644
+--- a/src/consensus/consensus.h
++++ b/src/consensus/consensus.h
+@@ -35,6 +35,4 @@ static constexpr unsigned int LOCKTIME_VERIFY_SEQUENCE = (1 << 0);
+ /** Use GetMedianTimePast() instead of nTime for end point timestamp. */
+ static constexpr unsigned int LOCKTIME_MEDIAN_TIME_PAST = (1 << 1);
+
+-void updateBlockSizeParams(unsigned int newBlockSize);
+-
+ #endif // BITCOIN_CONSENSUS_CONSENSUS_H
+diff --git a/src/consensus/params.h b/src/consensus/params.h
+index cf24bc5f3f..3705e23443 100644
+--- a/src/consensus/params.h
++++ b/src/consensus/params.h
+@@ -91,6 +91,10 @@ struct Params {
+     uint256 posLimit;
+     uint256 QIP9PosLimit;
+     uint256 RBTPosLimit;
++    int nDiffAdjustChange;
++    int nDiffDamping;
++    unsigned int nDiffChange;
++    std::string checkpointPubKey;
+     bool fPowAllowMinDifficultyBlocks;
+     bool fPowNoRetargeting;
+     bool fPoSNoRetargeting;
+@@ -99,12 +103,12 @@ struct Params {
+     int64_t nPowTargetTimespan;
+     int64_t nPowTargetTimespanV2;
+     int64_t nRBTPowTargetTimespan;
++    int64_t nPosTargetTimespan;
++    int64_t nPosTargetTimespanV2;
++
+     uint256 nMinimumChainWork;
+     uint256 defaultAssumeValid;
+-    int nLastPOWBlock;
+-    int nFirstMPoSBlock;
+-    int nMPoSRewardRecipients;
+-    int nFixUTXOCacheHFHeight;
++    // int nFixUTXOCacheHFHeight;
+     int nEnableHeaderSignatureHeight;
+     /** Block sync-checkpoint span*/
+     int nCheckpointSpan;
+diff --git a/src/consensus/validation.h b/src/consensus/validation.h
+index a8b1251188..42a2b0c00e 100644
+--- a/src/consensus/validation.h
++++ b/src/consensus/validation.h
+@@ -69,6 +69,7 @@ enum class BlockValidationResult {
+     BLOCK_MISSING_PREV,      //!< We don't have the previous block the checked one is built on
+     BLOCK_INVALID_PREV,      //!< A block this one builds on is invalid
+     BLOCK_TIME_FUTURE,       //!< block timestamp was > 2 hours in the future (or our clock is bad)
++    BLOCK_TIME_PAST,         //!< block time more than 15 minutes before previous block
+     BLOCK_CHECKPOINT,        //!< the block failed to meet one of our checkpoints
+     BLOCK_HEADER_SPAM,       //!< reject block header from the spam filter
+     BLOCK_HEADER_REJECT,     //!< reject only the block header, but not ban the node
+diff --git a/src/init.cpp b/src/init.cpp
+index 329c5e43a9..666dffa73b 100644
+--- a/src/init.cpp
++++ b/src/init.cpp
+@@ -15,6 +15,7 @@
+ #include <blockfilter.h>
+ #include <chain.h>
+ #include <chainparams.h>
++#include <checkpointsync.h>
+ #include <compat/sanity.h>
+ #include <consensus/validation.h>
+ #include <fs.h>
+@@ -109,7 +110,7 @@ static const char* DEFAULT_ASMAP_FILENAME="ip_asn.map";
+ /**
+  * The PID file facilities.
+  */
+-static const char* BITCOIN_PID_FILENAME = "qtumd.pid";
++static const char* BITCOIN_PID_FILENAME = "vipstarcoind.pid";
+
+ static fs::path GetPidFile()
+ {
+@@ -391,7 +392,7 @@ void SetupServerArgs()
+
+     // Hidden Options
+     std::vector<std::string> hidden_args = {
+-        "-dbcrashratio", "-forcecompactdb",
++        "-dbcrashratio", "-forcecompactdb", "-checkpointkey", "-checkpointdepth",
+         // GUI args. These will be overwritten by SetupUIArgs for the GUI
+         "-choosedatadir", "-lang=<lang>", "-min", "-resetguisettings", "-splash", "-uiplatform"};
+
+@@ -633,9 +634,9 @@ void SetupServerArgs()
+
+ std::string LicenseInfo()
+ {
+-    const std::string URL_SOURCE_CODE = "<https://github.com/qtumproject/qtum>";
++    const std::string URL_SOURCE_CODE = "<https://github.com/vipstar-dev/VIPSTARCOIN>";
+
+-    return CopyrightHolders(strprintf(_("Copyright (C) %i").translated, COPYRIGHT_YEAR) + " ") + "\n" +
++    return CopyrightHolders(strprintf(_("Copyright (C) %i-%i").translated, 2018, COPYRIGHT_YEAR) + " ") + "\n" +
+            "\n" +
+            strprintf(_("Please contribute if you find %s useful. "
+                        "Visit %s for further information about the software.").translated,
+@@ -646,7 +647,7 @@ std::string LicenseInfo()
+            "\n" +
+            "\n" +
+            _("This is experimental software.").translated + "\n" +
+-           strprintf(_("Distributed under the MIT software license, see the accompanying file %s or %s").translated, "COPYING", "<https://opensource.org/licenses/MIT>") +
++           strprintf(_("Distributed under the GPLv3 license, see the accompanying file %s or %s").translated, "COPYING", "<https://www.gnu.org/licenses/gpl-3.0.html>") + "\n" +
+            "\n";
+ }
+
+@@ -741,7 +742,7 @@ void DeleteBlockChainData()
+     // Delete block chain data paths
+     fs::remove_all(GetDataDir() / "chainstate");
+     fs::remove_all(GetBlocksDir());
+-    fs::remove_all(GetDataDir() / "stateQtum");
++    fs::remove_all(GetDataDir() / "stateVIPSTARCOIN");
+     fs::remove(GetDataDir() / "banlist.dat");
+     fs::remove(GetDataDir() / FEE_ESTIMATES_FILENAME);
+     fs::remove(GetDataDir() / "mempool.dat");
+@@ -1461,6 +1462,13 @@ bool AppInitSanityChecks()
+     if (!InitSanityCheck())
+         return InitError(strprintf(_("Initialization sanity check failed. %s is shutting down.").translated, PACKAGE_NAME));
+
++    // Run after ECC_Start for mock key signing
++    if (gArgs.IsArgSet("-checkpointkey")) // Checkpoint master priv key
++    {
++        if (!SetCheckpointPrivKey(gArgs.GetArg("-checkpointkey", "")))
++            return InitError("Unable to sign checkpoint, wrong checkpointkey?");
++    }
++
+     // Probe the data directory lock to give an early error message, if possible
+     // We cannot hold the data directory lock here, as the forking for daemon() hasn't yet happened,
+     // and a fork will cause weird behavior to it.
+@@ -1924,7 +1932,7 @@ bool AppInitMain(NodeContext& node)
+                 }
+
+                 dev::eth::NoProof::init();
+-                fs::path qtumStateDir = GetDataDir() / "stateQtum";
++                fs::path qtumStateDir = GetDataDir() / "stateVIPSTARCOIN";
+                 bool fStatus = fs::exists(qtumStateDir);
+                 const std::string dirQtum(qtumStateDir.string());
+                 const dev::h256 hashDB(dev::sha3(dev::rlp("")));
+@@ -1984,6 +1992,15 @@ bool AppInitMain(NodeContext& node)
+                 }
+             }
+
++            {
++                LOCK(cs_main);
++                uiInterface.InitMessage("Checking ACP ...");
++                if (!CheckCheckpointPubKey()) {
++                    strLoadError = "Checking ACP pubkey failed";
++                    break;
++                }
++            }
++
+             try {
+                 LOCK(cs_main);
+
+diff --git a/src/miner.cpp b/src/miner.cpp
+index c6cd0b6391..45d44ddb6a 100644
+--- a/src/miner.cpp
++++ b/src/miner.cpp
+@@ -6,6 +6,7 @@
+ #include <miner.h>
+
+ #include <amount.h>
++#include <base58.h>
+ #include <chain.h>
+ #include <chainparams.h>
+ #include <coins.h>
+@@ -28,9 +29,16 @@
+ #include <wallet/wallet.h>
+ #endif
+
++#include <openssl/sha.h>
+ #include <algorithm>
+ #include <utility>
+
++uint32_t ByteReverse(uint32_t value)
++{
++    value = ((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8);
++    return (value<<16) | (value>>16);
++}
++
+ unsigned int nMaxStakeLookahead = MAX_STAKE_LOOKAHEAD;
+ unsigned int nBytecodeTimeBuffer = BYTECODE_TIME_BUFFER;
+ unsigned int nStakeTimeBuffer = STAKE_TIME_BUFFER;
+@@ -62,6 +70,72 @@ void updateMinerParams(int nHeight, const Consensus::Params& consensusParams, bo
+     }
+ }
+
++void FormatHashBuffers(CBlock* pblock, char* pdata)
++{
++    unsigned char workpadding[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++                                   0xff, 0xff, 0xff, 0xff, 0x00};
++    struct
++    {
++        struct unnamed2
++        {
++            int nVersion;
++            uint256 hashPrevBlock;
++            uint256 hashMerkleRoot;
++            unsigned int nTime;
++            unsigned int nBits;
++            unsigned int nNonce;
++            uint256 hashStateRoot; // qtum
++            uint256 hashUTXORoot; // qtum
++            unsigned char workpadding[48];//37
++        }
++        block;
++        unsigned char pchPadding0[64];
++    }
++    tmp;
++    memset(&tmp, 0, sizeof(tmp));
++
++    tmp.block.nVersion       = pblock->nVersion;
++    tmp.block.hashPrevBlock  = pblock->hashPrevBlock;
++    tmp.block.hashMerkleRoot = pblock->hashMerkleRoot;
++    tmp.block.nTime          = pblock->nTime;
++    tmp.block.nBits          = pblock->nBits;
++    tmp.block.nNonce         = pblock->nNonce;
++    tmp.block.hashStateRoot  = pblock->hashStateRoot; // qtum
++    tmp.block.hashUTXORoot   = pblock->hashUTXORoot; // qtum
++    memcpy((unsigned char *)(tmp.block.workpadding), workpadding, sizeof(workpadding));
++    // Byte swap all the input buffer
++    for (unsigned int i = 0; i < 180/4; i++) // sizeof(tmp)/4
++        ((unsigned int*)&tmp.block)[i] = ByteReverse(((unsigned int*)&tmp.block)[i]);
++    memcpy(pdata, &tmp.block, 192); // 192 // 128
++}
++
++bool CheckWork(const CChainParams& chainparams, CBlock* pblock)
++{
++    uint256 hash = pblock->GetHash();
++    arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
++
++    if (UintToArith256(hash) > hashTarget)
++        return false;
++
++    // Found a solution
++    {
++        LOCK(cs_main);
++        if (pblock->hashPrevBlock != ::ChainActive().Tip()->GetBlockHash())
++            return error("Generated block is stale!");
++
++        // Process this block the same as if we had received it from another node
++        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
++        bool fNewBlock = false;
++        if (!ProcessNewBlock(chainparams, shared_pblock, true, &fNewBlock))
++            return error("CheckWork: block not accepted");
++    }
++
++    return true;
++}
++
+ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
+ {
+     int64_t nOldTime = pblock->nTime;
+@@ -137,7 +211,11 @@ void BlockAssembler::RebuildRefundTransaction(){
+         refundtx=1; //1 for coinstake in PoS
+     }
+     CMutableTransaction contrTx(originalRewardTx);
+-    contrTx.vout[refundtx].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
++    if(pblock->IsProofOfStake()) {
++        contrTx.vout[refundtx].nValue = nFees + GetProofOfStakeReward(nHeight, chainparams.GetConsensus());
++    } else {
++        contrTx.vout[refundtx].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
++    }
+     contrTx.vout[refundtx].nValue -= bceResult.refundSender;
+     //note, this will need changed for MPoS
+     int i=contrTx.vout.size();
+@@ -152,7 +230,7 @@ void BlockAssembler::RebuildRefundTransaction(){
+ Optional<int64_t> BlockAssembler::m_last_block_num_txs{nullopt};
+ Optional<int64_t> BlockAssembler::m_last_block_weight{nullopt};
+
+-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx, bool fProofOfStake, int64_t* pTotalFees, int32_t txProofTime, int32_t nTimeLimit)
++std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx, bool fProofOfStake, int64_t* pTotalFees, int32_t txProofTime, int32_t nTimeLimit, bool externalGBT)
+ {
+     int64_t nTimeStart = GetTimeMicros();
+
+@@ -213,7 +291,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
+     // not activated.
+     // TODO: replace this with a call to main to assess validity of a mempool
+     // transaction (which in most cases can be a no-op).
+-    fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus());
++    fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus()) && fMineWitnessTx;
+
+
+     int64_t nTime1 = GetTimeMicros();
+@@ -247,6 +325,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
+         coinstakeTx.vout.resize(2);
+         coinstakeTx.vout[0].SetEmpty();
+         coinstakeTx.vout[1].scriptPubKey = scriptPubKeyIn;
++        coinstakeTx.vout[1].nValue = nFees + GetProofOfStakeReward(nHeight, chainparams.GetConsensus());
+         originalRewardTx = coinstakeTx;
+         pblock->vtx[1] = MakeTransactionRef(std::move(coinstakeTx));
+
+@@ -283,7 +362,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
+     /////////////////////////////////////////////////
+     int nPackagesSelected = 0;
+     int nDescendantsUpdated = 0;
+-    addPackageTxs(nPackagesSelected, nDescendantsUpdated, minGasPrice);
++    addPackageTxs(nPackagesSelected, nDescendantsUpdated, minGasPrice, externalGBT);
+     pblock->hashStateRoot = uint256(h256Touint(dev::h256(globalState->rootHash())));
+     pblock->hashUTXORoot = uint256(h256Touint(dev::h256(globalState->rootHashUTXO())));
+     globalState->setRoot(oldHashStateRoot);
+@@ -476,11 +555,11 @@ bool BlockAssembler::TestPackageTransactions(const CTxMemPool::setEntries& packa
+     return true;
+ }
+
+-bool BlockAssembler::AttemptToAddContractToBlock(CTxMemPool::txiter iter, uint64_t minGasPrice) {
+-    if (nTimeLimit != 0 && GetAdjustedTime() >= nTimeLimit - nBytecodeTimeBuffer) {
++bool BlockAssembler::AttemptToAddContractToBlock(CTxMemPool::txiter iter, uint64_t minGasPrice, bool externalGBT) {
++    if (nTimeLimit != 0 && GetAdjustedTime() >= nTimeLimit - BYTECODE_TIME_BUFFER) {
+         return false;
+     }
+-    if (gArgs.GetBoolArg("-disablecontractstaking", false))
++    if (gArgs.GetBoolArg("-disablecontractstaking", false) || externalGBT)
+     {
+         // Contract staking is disabled for the staker
+         return false;
+@@ -705,7 +784,7 @@ void BlockAssembler::SortForBlock(const CTxMemPool::setEntries& package, std::ve
+ // Each time through the loop, we compare the best transaction in
+ // mapModifiedTxs with the next transaction in the mempool to decide what
+ // transaction package to work on next.
+-void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpdated, uint64_t minGasPrice)
++void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpdated, uint64_t minGasPrice, bool externalGBT)
+ {
+     // mapModifiedTx will store sorted packages after they are modified
+     // because some of their txs are already in the block
+@@ -837,7 +916,7 @@ void BlockAssembler::addPackageTxs(int &nPackagesSelected, int &nDescendantsUpda
+             const CTransaction& tx = sortedEntries[i]->GetTx();
+             if(wasAdded) {
+                 if (tx.HasCreateOrCall()) {
+-                    wasAdded = AttemptToAddContractToBlock(sortedEntries[i], minGasPrice);
++                    wasAdded = AttemptToAddContractToBlock(sortedEntries[i], minGasPrice, externalGBT);
+                     if(!wasAdded){
+                         if(fUsingModified) {
+                             //this only needs to be done once to mark the whole package (everything in sortedEntries) as failed
+diff --git a/src/miner.h b/src/miner.h
+index 39f9f7df0b..5038fe67ae 100644
+--- a/src/miner.h
++++ b/src/miner.h
+@@ -21,6 +21,7 @@
+
+ class CBlockIndex;
+ class CChainParams;
++class CReserveKey;
+ class CScript;
+ #ifdef ENABLE_WALLET
+ class CWallet;
+@@ -75,6 +76,13 @@ struct CBlockTemplate
+     std::vector<unsigned char> vchCoinbaseCommitment;
+ };
+
++/** ByteReverse Function used by GetWork */
++uint32_t ByteReverse(uint32_t value);
++/** Do mining precalculation */
++void FormatHashBuffers(CBlock* pblock, char* pdata);
++/** Check mined block */
++bool CheckWork(const CChainParams& chainparams, CBlock* pblock);
++
+ // Container for tracking updates to ancestor feerate as we include (parent)
+ // transactions in a block
+ struct CTxMemPoolModifiedEntry {
+@@ -281,7 +289,7 @@ public:
+     int32_t nTimeLimit;
+
+     /** Construct a new block template with coinbase to scriptPubKeyIn */
+-    std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx=true, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0, int32_t nTimeLimit=0);
++    std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx=true, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0, int32_t nTimeLimit=0, bool externalGBT = false);
+     std::unique_ptr<CBlockTemplate> CreateEmptyBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx=true, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0);
+
+     static Optional<int64_t> m_last_block_num_txs;
+@@ -294,13 +302,13 @@ private:
+     /** Add a tx to the block */
+     void AddToBlock(CTxMemPool::txiter iter);
+
+-    bool AttemptToAddContractToBlock(CTxMemPool::txiter iter, uint64_t minGasPrice);
++    bool AttemptToAddContractToBlock(CTxMemPool::txiter iter, uint64_t minGasPrice, bool externalGBT = false);
+
+     // Methods for how to add transactions to a block.
+     /** Add transactions based on feerate including unconfirmed ancestors
+       * Increments nPackagesSelected / nDescendantsUpdated with corresponding
+       * statistics from the package selection (for logging statistics). */
+-    void addPackageTxs(int& nPackagesSelected, int& nDescendantsUpdated, uint64_t minGasPrice) EXCLUSIVE_LOCKS_REQUIRED(m_mempool.cs);
++    void addPackageTxs(int &nPackagesSelected, int &nDescendantsUpdated, uint64_t minGasPrice, bool externalGBT = false) EXCLUSIVE_LOCKS_REQUIRED(m_mempool.cs);
+
+     /** Rebuild the coinbase/coinstake transaction to account for new gas refunds **/
+     void RebuildRefundTransaction();
+diff --git a/src/net_processing.cpp b/src/net_processing.cpp
+index f03f60efb0..84850ee0e1 100644
+--- a/src/net_processing.cpp
++++ b/src/net_processing.cpp
+@@ -9,6 +9,7 @@
+ #include <banman.h>
+ #include <blockencodings.h>
+ #include <chainparams.h>
++#include <checkpointsync.h>
+ #include <consensus/validation.h>
+ #include <hash.h>
+ #include <validation.h>
+@@ -35,7 +36,7 @@
+ #include <typeinfo>
+
+ #if defined(NDEBUG)
+-# error "Qtum cannot be compiled without assertions."
++# error "HTMLCOIN cannot be compiled without assertions."
+ #endif
+
+ /** Expiration time for orphan transactions in seconds */
+@@ -2257,6 +2258,17 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
+             connman->MarkAddressGood(pfrom->addr);
+         }
+
++        if((nServices & NODE_ACP)) {
++            pfrom->supportACPMessages = true;
++
++            // Relay sync-checkpoint
++            {
++                LOCK(cs_hashSyncCheckpoint);
++                if (!checkpointMessage.IsNull())
++                    checkpointMessage.RelayTo(pfrom);
++            }
++        }
++
+         std::string remoteAddr;
+         if (fLogIPs)
+             remoteAddr = ", peeraddr=" + pfrom->addr.ToString();
+@@ -3345,6 +3357,22 @@ bool ProcessMessage(CNode* pfrom, const std::string& msg_type, CDataStream& vRec
+         return true;
+     }
+
++    else if (msg_type == NetMsgType::CHECKPOINT) // Synchronized checkpoint
++    {
++        CSyncCheckpoint checkpoint;
++        vRecv >> checkpoint;
++
++        if (checkpoint.ProcessSyncCheckpoint())
++        {
++            // Relay checkpoint
++            pfrom->hashCheckpointKnown = checkpoint.hashCheckpoint;
++            connman->ForEachNode([checkpoint](CNode* pnode) {
++                checkpoint.RelayTo(pnode);
++            });
++        }
++        return true;
++    }
++
+     if (msg_type == NetMsgType::FILTERLOAD) {
+         CBloomFilter filter;
+         vRecv >> filter;
+@@ -4459,7 +4487,7 @@ bool ProcessNetBlock(const CChainParams& chainparams, const std::shared_ptr<cons
+         }
+     }
+
+-    if(!ProcessNewBlock(chainparams, pblock, fForceProcessing, fNewBlock))
++    if(!ProcessNewBlock(chainparams, pblock, fForceProcessing, fNewBlock, &connman))
+         return error("%s: ProcessNewBlock FAILED", __func__);
+
+     std::vector<uint256> vWorkQueue;
+@@ -4480,7 +4508,7 @@ bool ProcessNetBlock(const CChainParams& chainparams, const std::shared_ptr<cons
+
+             bool fNewBlockOrphan = false;
+             std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(block);
+-            if (ProcessNewBlock(chainparams, shared_pblock, fForceProcessing, &fNewBlockOrphan))
++            if (ProcessNewBlock(chainparams, shared_pblock, fForceProcessing, &fNewBlockOrphan, &connman))
+                 vWorkQueue.push_back(mi->second->hashBlock);
+
+             LOCK(cs_main);
+diff --git a/src/pos.cpp b/src/pos.cpp
+index 68c011b81b..f659bb2749 100644
+--- a/src/pos.cpp
++++ b/src/pos.cpp
+@@ -502,12 +502,6 @@ struct ScriptsElement{
+     uint256 hash;
+ };
+
+-/**
+- * Cache of the recent mpos scripts for the block reward recipients
+- * The max size of the map is 2 * nCacheScripts - nMPoSRewardRecipients, so in this case it is 20
+- */
+-std::map<int, ScriptsElement> scriptsMap;
+-
+ unsigned int GetStakeMaxCombineInputs() { return 100; }
+
+ int64_t GetStakeCombineThreshold() { return 100 * COIN; }
+@@ -557,212 +551,3 @@ bool GetDelegationFeeFromContract(const uint160& address, uint8_t& fee)
+     }
+     return ret;
+ }
+-
+-bool NeedToEraseScriptFromCache(int nBlockHeight, int nCacheScripts, int nScriptHeight, const ScriptsElement& scriptElement)
+-{
+-    // Erase element from cache if not in range [nBlockHeight - nCacheScripts, nBlockHeight + nCacheScripts]
+-    if(nScriptHeight < (nBlockHeight - nCacheScripts) ||
+-            nScriptHeight > (nBlockHeight + nCacheScripts))
+-        return true;
+-
+-    // Erase element from cache if hash different
+-    CBlockIndex* pblockindex = ChainActive()[nScriptHeight];
+-    if(pblockindex && pblockindex->GetBlockHash() != scriptElement.hash)
+-        return true;
+-
+-    return false;
+-}
+-
+-void CleanScriptCache(int nHeight, const Consensus::Params& consensusParams)
+-{
+-    int nCacheScripts = consensusParams.nMPoSRewardRecipients * 1.5;
+-
+-    // Remove the scripts from cache that are not used
+-    for (std::map<int, ScriptsElement>::iterator it=scriptsMap.begin(); it!=scriptsMap.end();){
+-        if(NeedToEraseScriptFromCache(nHeight, nCacheScripts, it->first, it->second))
+-        {
+-            it = scriptsMap.erase(it);
+-        }
+-        else{
+-            it++;
+-        }
+-    }
+-}
+-
+-bool ReadFromScriptCache(BlockScript &script, CBlockIndex* pblockindex, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    CleanScriptCache(nHeight, consensusParams);
+-
+-    // Find the script in the cache
+-    std::map<int, ScriptsElement>::iterator it = scriptsMap.find(nHeight);
+-    if(it != scriptsMap.end())
+-    {
+-        if(it->second.hash == pblockindex->GetBlockHash())
+-        {
+-            script = it->second.script;
+-            return true;
+-        }
+-    }
+-
+-    return false;
+-}
+-
+-void AddToScriptCache(BlockScript script, CBlockIndex* pblockindex, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    CleanScriptCache(nHeight, consensusParams);
+-
+-    // Add the script into the cache
+-    ScriptsElement listElement;
+-    listElement.script = script;
+-    listElement.hash = pblockindex->GetBlockHash();
+-    scriptsMap.insert(std::pair<int, ScriptsElement>(nHeight, listElement));
+-}
+-
+-bool AddMPoSScript(std::vector<BlockScript> &mposScriptList, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    // Check if the block index exist into the active chain
+-    CBlockIndex* pblockindex = ChainActive()[nHeight];
+-    if(!pblockindex)
+-    {
+-        LogPrint(BCLog::COINSTAKE, "Block index not found\n");
+-        return false;
+-    }
+-
+-    // Try find the script from the cache
+-    BlockScript blockScript;
+-    if(ReadFromScriptCache(blockScript, pblockindex, nHeight, consensusParams))
+-    {
+-        mposScriptList.push_back(blockScript);
+-        return true;
+-    }
+-
+-    // Read the block
+-    uint160 stakeAddress;
+-    if(!pblocktree->ReadStakeIndex(nHeight, stakeAddress)){
+-        return false;
+-    }
+-
+-    // The block reward for PoS is in the second transaction (coinstake) and the second or third output
+-    if(pblockindex->IsProofOfStake())
+-    {
+-        if(stakeAddress == uint160())
+-        {
+-            LogPrint(BCLog::COINSTAKE, "Fail to solve script for mpos reward recipient\n");
+-            //This should never fail, but in case it somehow did we don't want it to bring the network to a halt
+-            //So, use an OP_RETURN script to burn the coins for the unknown staker
+-            blockScript = CScript() << OP_RETURN;
+-        }else{
+-            // Make public key hash script
+-            blockScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(stakeAddress) << OP_EQUALVERIFY << OP_CHECKSIG;
+-        }
+-
+-        if(pblockindex->HasProofOfDelegation())
+-        {
+-            uint160 delegateAddress;
+-            uint8_t fee;
+-            if(!pblocktree->ReadDelegateIndex(nHeight, delegateAddress, fee)){
+-                return false;
+-            }
+-
+-            if(delegateAddress == uint160())
+-            {
+-                LogPrint(BCLog::COINSTAKE, "Fail to solve script for mpos delegate reward recipient\n");
+-                blockScript.delegateScript = CScript() << OP_RETURN;
+-            }else{
+-                // Make public key hash script
+-                blockScript.delegateScript = CScript() << OP_DUP << OP_HASH160 << ToByteVector(delegateAddress) << OP_EQUALVERIFY << OP_CHECKSIG;
+-            }
+-
+-            blockScript.fee = fee;
+-            blockScript.hasDelegate = true;
+-        }
+-
+-        // Add the script into the list
+-        mposScriptList.push_back(blockScript);
+-
+-        // Update script cache
+-        AddToScriptCache(blockScript, pblockindex, nHeight, consensusParams);
+-    }
+-    else
+-    {
+-        if(Params().MineBlocksOnDemand()){
+-            //this could happen in regtest. Just ignore and add an empty script
+-            blockScript = CScript() << OP_RETURN;
+-            mposScriptList.push_back(blockScript);
+-            return true;
+-
+-        }
+-        LogPrint(BCLog::COINSTAKE, "The block is not proof-of-stake\n");
+-        return false;
+-    }
+-
+-    return true;
+-}
+-
+-bool GetMPoSOutputScripts(std::vector<BlockScript>& mposScriptList, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    bool ret = true;
+-    nHeight -= consensusParams.CoinbaseMaturity(nHeight + 1);
+-
+-    // Populate the list of scripts for the reward recipients
+-    for(int i = 0; (i < consensusParams.nMPoSRewardRecipients - 1) && ret; i++)
+-    {
+-        ret &= AddMPoSScript(mposScriptList, nHeight - i, consensusParams);
+-    }
+-
+-    return ret;
+-}
+-
+-bool GetMPoSOutputs(std::vector<CTxOut>& mposOutputList, int64_t nRewardPiece, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    std::vector<BlockScript> mposScriptList;
+-    if(!GetMPoSOutputScripts(mposScriptList, nHeight, consensusParams))
+-    {
+-        LogPrint(BCLog::COINSTAKE, "Fail to get the list of recipients\n");
+-        return false;
+-    }
+-
+-    // Create the outputs for the recipients
+-    for(unsigned int i = 0; i < mposScriptList.size(); i++)
+-    {
+-        BlockScript blockScript = mposScriptList[i];
+-        if(blockScript.hasDelegate)
+-        {
+-            int64_t nRewardDelegate, nRewardStaker;
+-            if(!SplitOfflineStakeReward(nRewardPiece, blockScript.fee, nRewardDelegate, nRewardStaker))
+-            {
+-                LogPrint(BCLog::COINSTAKE, "Fail to to split the offline staking reward\n");
+-                return false;
+-            }
+-
+-            mposOutputList.push_back(CTxOut(nRewardStaker, blockScript.stakerScript));
+-            if(IsDelegateOutputExist(blockScript.fee))
+-            {
+-                mposOutputList.push_back(CTxOut(nRewardDelegate, blockScript.delegateScript));
+-            }
+-        }
+-        else
+-        {
+-            mposOutputList.push_back(CTxOut(nRewardPiece, blockScript.stakerScript));
+-        }
+-    }
+-
+-    return true;
+-}
+-
+-bool CreateMPoSOutputs(CMutableTransaction& txNew, int64_t nRewardPiece, int nHeight, const Consensus::Params& consensusParams)
+-{
+-    std::vector<CTxOut> mposOutputList;
+-    if(!GetMPoSOutputs(mposOutputList, nRewardPiece, nHeight, consensusParams))
+-    {
+-        return false;
+-    }
+-
+-    // Split the block reward with the recipients
+-    for(unsigned int i = 0; i < mposOutputList.size(); i++)
+-    {
+-        txNew.vout.push_back(mposOutputList[i]);
+-    }
+-
+-    return true;
+-}
+diff --git a/src/pos.h b/src/pos.h
+index af918e753b..b1a8991743 100644
+--- a/src/pos.h
++++ b/src/pos.h
+@@ -69,8 +69,4 @@ unsigned int GetStakeSplitOutputs();
+
+ int64_t GetStakeSplitThreshold();
+
+-bool GetMPoSOutputs(std::vector<CTxOut>& mposOutputList, int64_t nRewardPiece, int nHeight, const Consensus::Params& consensusParams);
+-
+-bool CreateMPoSOutputs(CMutableTransaction& txNew, int64_t nRewardPiece, int nHeight, const Consensus::Params& consensusParams);
+-
+ #endif // QUANTUM_POS_H
+diff --git a/src/pow.cpp b/src/pow.cpp
+index df4a0ae7a2..d8bd7c15db 100644
+--- a/src/pow.cpp
++++ b/src/pow.cpp
+@@ -7,6 +7,7 @@
+
+ #include <arith_uint256.h>
+ #include <chain.h>
++#include <chainparams.h>
+ #include <primitives/block.h>
+ #include <uint256.h>
+
+@@ -57,47 +58,49 @@ inline arith_uint256 GetLimit(int nHeight, const Consensus::Params& params, bool
+
+ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, bool fProofOfStake)
+ {
+-
+-    unsigned int  nTargetLimit = GetLimit(pindexLast ? pindexLast->nHeight+1 : 0, params, fProofOfStake).GetCompact();
++    const unsigned int nHeight = pindexLast ? pindexLast->nHeight + 1 : 0;
++    unsigned int  nTargetLimit = GetLimit(nHeight, params, fProofOfStake).GetCompact();
+
+     // genesis block
+-    if (pindexLast == NULL)
++    if (pindexLast == nullptr)
+         return nTargetLimit;
+
+     // first block
+     const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
+-    if (pindexPrev->pprev == NULL)
++    if (pindexPrev->pprev == nullptr)
+         return nTargetLimit;
+
+     // second block
+     const CBlockIndex* pindexPrevPrev = GetLastBlockIndex(pindexPrev->pprev, fProofOfStake);
+-    if (pindexPrevPrev->pprev == NULL)
++    if (pindexPrevPrev->pprev == nullptr)
+         return nTargetLimit;
+
+-    // min difficulty
++    // Return min difficulty on regtest
+     if (params.fPowAllowMinDifficultyBlocks)
++        return nTargetLimit;
++
++    if (nHeight >= params.nDiffChange)
+     {
+-        // Special difficulty rule for testnet:
+-        // If the new block's timestamp is more than 2* 10 minutes
+-        // then allow mining of a min-difficulty block.
+-        int nHeight = pindexLast->nHeight + 1;
+-        if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.TargetSpacing(nHeight)*2)
+-            return nTargetLimit;
++        if (fProofOfStake)
++        {
++            return CalculateNextWorkRequired_QTUM(pindexPrev, pindexPrevPrev->GetBlockTime(), params);
++        }
+         else
+         {
+-            // Return the last non-special-min-difficulty-rules-block
+-            const CBlockIndex* pindex = pindexLast;
+-            while (pindex->pprev && pindex->nHeight % params.DifficultyAdjustmentInterval(pindex->nHeight) != 0 && pindex->nBits == nTargetLimit)
+-                pindex = pindex->pprev;
+-            return pindex->nBits;
++            return CalculateNextWorkRequired_Dash(pindexLast, params);
+         }
+-        return pindexLast->nBits;
+     }
+
+-    return CalculateNextWorkRequired(pindexPrev, pindexPrevPrev->GetBlockTime(), params, fProofOfStake);
++    return CalculateNextWorkRequired(pindexPrev, params, fProofOfStake);
+ }
+
+-unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params, bool fProofOfStake)
++/**
++ * eHRC (enhanced Hash Rate Compensation)
++ * Short, medium and long samples averaged together and compared against the target time span.
++ * Adjust every block but limted to 9% change maximum.
++ * Difficulty is calculated separately for PoW and PoS blocks in that PoW skips PoS blocks and vice versa.
++ */
++unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params, bool fProofOfStake)
+ {
+     if(fProofOfStake){
+         if (params.fPoSNoRetargeting)
+@@ -106,12 +109,113 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
+         if (params.fPowNoRetargeting)
+             return pindexLast->nBits;
+     }
++
++    int nHeight = pindexLast->nHeight + 1;
++    const arith_uint256 nTargetLimit = GetLimit(pindexLast ? pindexLast->nHeight+1 : 0, params, fProofOfStake);
++    int nPowTargetTimespan = params.nPowTargetTimespan;
++
++    int pindexFirstShortTime = 0, pindexFirstMediumTime = 0, pindexFirstLongTime = 0;
++    int shortSample = 15, mediumSample = 200, longSample = 1000;
++    int nActualTimespan = 0, nActualTimespanShort = 0, nActualTimespanMedium = 0, nActualTimespanLong = 0;
++
++    const CBlockIndex* pindexFirstLong = pindexLast;
++
++    // i tracks sample height, j counts number of blocks of required type
++    for (int i = 0, j = 0; j <= longSample + 1;) {
++        bool skip = false;
++
++        // Hit the start of the chain before finding enough blocks
++        if (pindexFirstLong->pprev == nullptr)
++            return nTargetLimit.GetCompact();
++
++        // Only increment j if we have a block of the current type
++        if (fProofOfStake) {
++            if (pindexFirstLong->IsProofOfStake())
++                j++;
++            if (pindexFirstLong->pprev->IsProofOfWork())
++                skip = true;
++        } else {
++            if (pindexFirstLong->IsProofOfWork())
++                j++;
++            if (pindexFirstLong->pprev->IsProofOfStake())
++                skip = true;
++        }
++
++        pindexFirstLong = pindexFirstLong->pprev;
++
++        // Do not sample on longSample - 1 due to nDiffAdjustChange bug
++        if (i < longSample)
++            pindexFirstLongTime = pindexFirstLong->GetBlockTime();
++
++        if (skip) {
++            // Incorrectly increment i before nDiffAdjustChange
++            if (nHeight <= params.nDiffAdjustChange)
++                i++;
++            continue;
++        }
++
++        if (i == shortSample - 1)
++            pindexFirstShortTime = pindexFirstLong->GetBlockTime();
++
++        if (i == mediumSample - 1)
++            pindexFirstMediumTime = pindexFirstLong->GetBlockTime();
++
++        i++;
++    }
++
++    if (pindexLast->GetBlockTime() - pindexFirstShortTime != 0)
++        nActualTimespanShort = (pindexLast->GetBlockTime() - pindexFirstShortTime) / shortSample;
++
++    if (pindexLast->GetBlockTime() - pindexFirstMediumTime != 0)
++        nActualTimespanMedium = (pindexLast->GetBlockTime() - pindexFirstMediumTime) / mediumSample;
++
++    if (pindexLast->GetBlockTime() - pindexFirstLongTime != 0)
++        nActualTimespanLong = (pindexLast->GetBlockTime() - pindexFirstLongTime) / longSample;
++
++    int nActualTimespanSum = nActualTimespanShort + nActualTimespanMedium + nActualTimespanLong;
++
++    if (nActualTimespanSum != 0)
++        nActualTimespan = nActualTimespanSum / 3;
++
++    if (pindexLast->nHeight >= params.nDiffDamping) {
++        // Apply .25 damping
++        nActualTimespan = nActualTimespan + (3 * nPowTargetTimespan);
++        nActualTimespan /= 4;
++    }
++
++    // 9% difficulty limiter
++    int nActualTimespanMax = nPowTargetTimespan * 494 / 453;
++    int nActualTimespanMin = nPowTargetTimespan * 453 / 494;
++
++    if(nActualTimespan < nActualTimespanMin)
++        nActualTimespan = nActualTimespanMin;
++
++    if(nActualTimespan > nActualTimespanMax)
++        nActualTimespan = nActualTimespanMax;
++
++    arith_uint256 bnNew;
++    bnNew.SetCompact(pindexLast->nBits);
++    bnNew *= nActualTimespan;
++    bnNew /= nPowTargetTimespan;
++
++    if (bnNew <= 0 || bnNew > nTargetLimit)
++        bnNew = nTargetLimit;
++
++    return bnNew.GetCompact();
++}
++
++// Use QTUM's difficulty adjust for PoS blocks only
++unsigned int CalculateNextWorkRequired_QTUM(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
++{
++    if (params.fPoSNoRetargeting) {
++        return pindexLast->nBits;
++    }
+     // Limit adjustment step
+     int nHeight = pindexLast->nHeight + 1;
+     int64_t nTargetSpacing = params.TargetSpacing(nHeight);
+     int64_t nActualSpacing = pindexLast->GetBlockTime() - nFirstBlockTime;
+     // Retarget
+-    const arith_uint256 bnTargetLimit = GetLimit(nHeight, params, fProofOfStake);
++    const arith_uint256 bnTargetLimit = GetLimit(pindexLast ? nHeight : 0, params, true);
+     // ppcoin: target change every block
+     // ppcoin: retarget with exponential moving toward target spacing
+     arith_uint256 bnNew;
+@@ -139,6 +243,55 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
+     return bnNew.GetCompact();
+ }
+
++// Use Dash's difficulty adjust for PoW blocks only
++unsigned int CalculateNextWorkRequired_Dash(const CBlockIndex* pindexLast, const Consensus::Params& params)
++{
++    /* current difficulty formula, dash - DarkGravity v3, written by Evan Duffield - evan@dash.org */
++
++    const arith_uint256 nTargetLimit = GetLimit(0, params, false);
++    int64_t nPastBlocks = 30;
++    const CBlockIndex *pindex = pindexLast;
++    arith_uint256 bnPastTargetAvg;
++
++    for (unsigned int nCountBlocks = 1; nCountBlocks <= nPastBlocks; nCountBlocks++) {
++        arith_uint256 bnTarget = arith_uint256().SetCompact(pindex->nBits);
++        if (nCountBlocks == 1) {
++            bnPastTargetAvg = bnTarget;
++        } else {
++            // NOTE: that's not an average really...
++            bnPastTargetAvg = (bnPastTargetAvg * nCountBlocks + bnTarget) / (nCountBlocks + 1);
++        }
++
++        if(nCountBlocks != nPastBlocks) {
++            // If we hit start of chain return min diff
++            if (pindex->pprev == nullptr)
++                return nTargetLimit.GetCompact();
++
++            pindex = GetLastBlockIndex(pindex->pprev, false);
++        }
++    }
++
++    arith_uint256 bnNew(bnPastTargetAvg);
++
++    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindex->GetBlockTime();
++    int64_t nTargetTimespan = nPastBlocks * params.nPowTargetSpacing;
++
++    if (nActualTimespan < nTargetTimespan/3)
++        nActualTimespan = nTargetTimespan/3;
++    if (nActualTimespan > nTargetTimespan*3)
++        nActualTimespan = nTargetTimespan*3;
++
++    // Retarget
++    bnNew *= nActualTimespan;
++    bnNew /= nTargetTimespan;
++
++    if (bnNew > nTargetLimit) {
++        bnNew = nTargetLimit;
++    }
++
++    return bnNew.GetCompact();
++}
++
+ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params, bool fProofOfStake)
+ {
+     bool fNegative;
+diff --git a/src/pow.h b/src/pow.h
+index 2414892967..692bc17027 100644
+--- a/src/pow.h
++++ b/src/pow.h
+@@ -16,7 +16,9 @@ class uint256;
+
+ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfStake);
+ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params&, bool fProofOfStake = false);
+-unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params&, bool fProofOfStake = false);
++unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params&, bool fProofOfStake = false);
++unsigned int CalculateNextWorkRequired_QTUM(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params);
++unsigned int CalculateNextWorkRequired_Dash(const CBlockIndex* pindexLast, const Consensus::Params& params);
+
+ /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
+ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&, bool fProofOfStake = false);
+diff --git a/src/rpc/blockchain.cpp b/src/rpc/blockchain.cpp
+index 8d9175fa3e..c65897fd4b 100644
+--- a/src/rpc/blockchain.cpp
++++ b/src/rpc/blockchain.cpp
+@@ -9,6 +9,7 @@
+ #include <blockfilter.h>
+ #include <chain.h>
+ #include <chainparams.h>
++#include <checkpointsync.h>
+ #include <coins.h>
+ #include <consensus/validation.h>
+ #include <core_io.h>
+@@ -87,9 +88,6 @@ double GetDifficulty(const CBlockIndex* blockindex)
+
+ double GetPoWMHashPS()
+ {
+-    if (pindexBestHeader->nHeight >= Params().GetConsensus().nLastPOWBlock)
+-        return 0;
+-
+     int nPoWInterval = 72;
+     int64_t nTargetSpacingWorkMin = 30, nTargetSpacingWork = 30;
+
+@@ -172,10 +170,11 @@ double GetEstimatedAnnualROI()
+     int nHeight = pindex ? pindex->nHeight : 0;
+     const Consensus::Params& consensusParams = Params().GetConsensus();
+     double subsidy = GetBlockSubsidy(nHeight, consensusParams);
++    int nBlocktimeDownscaleFactor = consensusParams.BlocktimeDownscaleFactor(nHeight);
+     if(networkWeight > 0)
+     {
+         // Formula: 100 * 675 blocks/day * 365 days * subsidy) / Network Weight
+-        result = 24637500 * subsidy / networkWeight;
++        result = nBlocktimeDownscaleFactor * 24637500 * subsidy / networkWeight;
+     }
+
+     return result;
+@@ -527,7 +526,7 @@ static UniValue getdifficulty(const JSONRPCRequest& request)
+
+ static std::vector<RPCResult> MempoolEntryDescription() { return {
+     RPCResult{RPCResult::Type::NUM, "vsize", "virtual transaction size as defined in BIP 141. This is different from actual serialized size for witness transactions as witness data is discounted."},
+-    RPCResult{RPCResult::Type::NUM, "size", "(DEPRECATED) same as vsize. Only returned if qtumd is started with -deprecatedrpc=size\n"
++    RPCResult{RPCResult::Type::NUM, "size", "(DEPRECATED) same as vsize. Only returned if vipstarcoind is started with -deprecatedrpc=size\n"
+                                             "size will be completely removed in v0.20."},
+     RPCResult{RPCResult::Type::NUM, "weight", "transaction weight as defined in BIP 141."},
+     RPCResult{RPCResult::Type::STR_AMOUNT, "fee", "transaction fee in " + CURRENCY_UNIT + " (DEPRECATED)"},
+@@ -917,6 +916,30 @@ static UniValue getaccountinfo(const JSONRPCRequest& request)
+     }
+     return result;
+ }
++// Get contract code method
++static UniValue getcontractcode(const JSONRPCRequest& request)
++{
++    if (request.fHelp || request.params.size() < 1)
++        throw std::runtime_error(
++            "getcontractcode \"address\"\n"
++            "\nArgument:\n"
++            "1. \"address\"          (string, required) The contract address\n"
++        );
++
++    LOCK(cs_main);
++
++    std::string strAddr = request.params[0].get_str();
++    if(strAddr.size() != 40 || !CheckHex(strAddr))
++        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address");
++
++    dev::Address addrAccount(strAddr);
++    if(!globalState->addressInUse(addrAccount))
++        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
++
++    std::vector<uint8_t> code(globalState->code(addrAccount));
++
++    return HexStr(code.begin(), code.end());
++}
+
+ static UniValue getstorage(const JSONRPCRequest& request)
+ {
+@@ -1444,7 +1467,7 @@ UniValue searchlogs(const JSONRPCRequest& request)
+                     {"fromBlock", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of the earliest block (latest may be given to mean the most recent block)."},
+                     {"toBlock", RPCArg::Type::NUM, RPCArg::Optional::NO, "The number of the latest block (-1 may be given to mean the most recent block)."},
+                     {"address", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "An address or a list of addresses to only get logs from particular account(s)."},
+-                    {"topics", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "An array of values from which at least one must appear in the log entries. The order is important, if you want to leave topics out use null, e.g. [\"null\", \"0x00...\"]."},
++                    {"topics", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "An array of values from which at least one must appear in the log entries. The order is important, if you want to leave topics out use null, e.g. [null, \"0x00...\"]."},
+                     {"minconf", RPCArg::Type::NUM, /* default */ "0", "Minimal number of confirmations before a log is returned"},
+                 },
+                RPCResult{
+@@ -1546,7 +1569,7 @@ UniValue getdelegationinfoforaddress(const JSONRPCRequest& request)
+             RPCHelpMan{"getdelegationinfoforaddress",
+                 "\nGet delegation information for an address.\n",
+                 {
+-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string"},
++                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The VIPSTARCOIN address string"},
+                 },
+                 RPCResult{
+                     RPCResult::Type::OBJ, "", "",
+@@ -1639,7 +1662,7 @@ UniValue getdelegationsforstaker(const JSONRPCRequest& request)
+                 "requires -logevents to be enabled\n"
+                 "\nGet the current list of delegates for a super staker.\n",
+                 {
+-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string for staker"},
++                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The VIPSTARCOIN address string for staker"},
+                 },
+                RPCResult{
+             RPCResult::Type::ARR, "", "",
+@@ -1767,6 +1790,63 @@ UniValue listcontracts(const JSONRPCRequest& request)
+ 	return result;
+ }
+
++// RPC commands related to sync checkpoints
++// get information of sync-checkpoint (first introduced in ppcoin)
++static UniValue getcheckpoint(const JSONRPCRequest& request)
++{
++    if (request.fHelp || request.params.size() != 0)
++        throw std::runtime_error(
++            "getcheckpoint\n"
++            "Show info of synchronized checkpoint.\n");
++
++    UniValue result(UniValue::VOBJ);
++    CBlockIndex* pindexCheckpoint;
++
++    result.pushKV("synccheckpoint", hashSyncCheckpoint.ToString());
++    if (::BlockIndex().count(hashSyncCheckpoint))
++    {
++        pindexCheckpoint = ::BlockIndex()[hashSyncCheckpoint];
++        result.pushKV("height", pindexCheckpoint->nHeight);
++        result.pushKV("timestamp", (boost::int64_t) pindexCheckpoint->GetBlockTime());
++    }
++    if (gArgs.IsArgSet("-checkpointkey"))
++        result.pushKV("checkpointmaster", true);
++
++    return result;
++}
++
++static UniValue sendcheckpoint(const JSONRPCRequest& request)
++{
++    if (request.fHelp || request.params.size() != 1)
++        throw std::runtime_error(
++            "sendcheckpoint <blockhash>\n"
++            "Send a synchronized checkpoint.\n");
++
++    if (!gArgs.IsArgSet("-checkpointkey") || CSyncCheckpoint::strMasterPrivKey.empty())
++        throw std::runtime_error("Not a checkpointmaster node, first set checkpointkey in configuration and restart client. ");
++
++    std::string strHash = request.params[0].get_str();
++    uint256 hash = uint256S(strHash);
++
++    if (!SendSyncCheckpoint(hash))
++        throw std::runtime_error("Failed to send checkpoint, check log. ");
++
++    UniValue result(UniValue::VOBJ);
++    CBlockIndex* pindexCheckpoint;
++
++    result.pushKV("synccheckpoint", hashSyncCheckpoint.ToString());
++    if (::BlockIndex().count(hashSyncCheckpoint))
++    {
++        pindexCheckpoint = ::BlockIndex()[hashSyncCheckpoint];
++        result.pushKV("height", pindexCheckpoint->nHeight);
++        result.pushKV("timestamp", (boost::int64_t) pindexCheckpoint->GetBlockTime());
++    }
++    if (gArgs.IsArgSet("-checkpointkey"))
++        result.pushKV("checkpointmaster", true);
++
++    return result;
++}
++
+ static UniValue pruneblockchain(const JSONRPCRequest& request)
+ {
+             RPCHelpMan{"pruneblockchain", "",
+@@ -1888,8 +1968,8 @@ UniValue gettxout(const JSONRPCRequest& request)
+                                 {RPCResult::Type::STR_HEX, "hex", ""},
+                                 {RPCResult::Type::NUM, "reqSigs", "Number of required signatures"},
+                                 {RPCResult::Type::STR_HEX, "type", "The type, eg pubkeyhash"},
+-                                {RPCResult::Type::ARR, "addresses", "array of qtum addresses",
+-                                    {{RPCResult::Type::STR, "address", "qtum address"}}},
++                                {RPCResult::Type::ARR, "addresses", "array of VIPSTARCOIN addresses",
++                                    {{RPCResult::Type::STR, "address", "VIPSTARCOIN address"}}},
+                             }},
+                         {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
+                     }},
+@@ -3513,6 +3593,8 @@ static const CRPCCommand commands[] =
+     { "blockchain",         "getblock",               &getblock,               {"blockhash","verbosity|verbose"} },
+     { "blockchain",         "getblockhash",           &getblockhash,           {"height"} },
+     { "blockchain",         "getblockheader",         &getblockheader,         {"blockhash","verbose"} },
++    { "blockchain",         "getcheckpoint",          &getcheckpoint,          {} },
++    { "blockchain",         "sendcheckpoint",         &sendcheckpoint,         {"blockhash"} },
+     { "blockchain",         "getchaintips",           &getchaintips,           {} },
+     { "blockchain",         "getdifficulty",          &getdifficulty,          {} },
+     { "blockchain",         "getmempoolancestors",    &getmempoolancestors,    {"txid","verbose"} },
+@@ -3526,6 +3608,7 @@ static const CRPCCommand commands[] =
+     { "blockchain",         "savemempool",            &savemempool,            {} },
+     { "blockchain",         "verifychain",            &verifychain,            {"checklevel","nblocks"} },
+     { "blockchain",         "getaccountinfo",         &getaccountinfo,         {"contract_address"} },
++    { "blockchain",         "getcontractcode",        &getcontractcode,        {"contract_address"} },
+     { "blockchain",         "getstorage",             &getstorage,             {"address, index, blockNum"} },
+
+     { "blockchain",         "preciousblock",          &preciousblock,          {"blockhash"} },
+diff --git a/src/rpc/mining.cpp b/src/rpc/mining.cpp
+index f971baae39..589cb3a2bf 100644
+--- a/src/rpc/mining.cpp
++++ b/src/rpc/mining.cpp
+@@ -7,6 +7,7 @@
+ #include <chain.h>
+ #include <chainparams.h>
+ #include <consensus/consensus.h>
++#include <consensus/merkle.h>
+ #include <consensus/params.h>
+ #include <consensus/validation.h>
+ #include <core_io.h>
+@@ -14,9 +15,12 @@
+ #include <miner.h>
+ #include <net.h>
+ #include <node/context.h>
++#include <outputtype.h>
+ #include <policy/fees.h>
++#include <policy/policy.h> // DEFAULT_BLOCK_MIN_TX_FEE
+ #include <pow.h>
+ #include <pos.h>
++#include <primitives/transaction.h>
+ #include <rpc/blockchain.h>
+ #include <rpc/server.h>
+ #include <rpc/util.h>
+@@ -24,6 +28,7 @@
+ #include <script/script.h>
+ #include <script/signingprovider.h>
+ #include <shutdown.h>
++#include <script/standard.h>
+ #include <txmempool.h>
+ #include <univalue.h>
+ #include <util/fees.h>
+@@ -60,7 +65,7 @@ static UniValue GetNetworkHashPS(int lookup, int height) {
+
+     // If lookup is -1, then use blocks since last difficulty change.
+     if (lookup <= 0)
+-        lookup = pb->nHeight % Params().GetConsensus().DifficultyAdjustmentInterval(pb->nHeight) + 1;
++        lookup = 1000;
+
+     // If lookup is larger than chain, then set it to chain length.
+     if (lookup > pb->nHeight)
+@@ -110,6 +115,13 @@ static UniValue getnetworkhashps(const JSONRPCRequest& request)
+
+ static UniValue generateBlocks(const CTxMemPool& mempool, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries)
+ {
++    if(!g_rpc_node->connman)
++        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
++
++
++    if (Params().MiningRequiresPeers() && g_rpc_node->connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
++        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
++
+     int nHeightEnd = 0;
+     int nHeight = 0;
+
+@@ -156,7 +168,7 @@ static UniValue generatetodescriptor(const JSONRPCRequest& request)
+         "\nMine blocks immediately to a specified descriptor (before the RPC call returns)\n",
+         {
+             {"num_blocks", RPCArg::Type::NUM, RPCArg::Optional::NO, "How many blocks are generated immediately."},
+-            {"descriptor", RPCArg::Type::STR, RPCArg::Optional::NO, "The descriptor to send the newly generated qtum to."},
++            {"descriptor", RPCArg::Type::STR, RPCArg::Optional::NO, "The descriptor to send the newly generated VIPSTARCOIN to."},
+             {"maxtries", RPCArg::Type::NUM, /* default */ "1000000", "How many iterations to try."},
+         },
+         RPCResult{
+@@ -202,7 +214,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
+                 "\nMine blocks immediately to a specified address (before the RPC call returns)\n",
+                 {
+                     {"nblocks", RPCArg::Type::NUM, RPCArg::Optional::NO, "How many blocks are generated immediately."},
+-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The address to send the newly generated qtum to."},
++                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The address to send the newly generated VIPSTARCOIN to."},
+                     {"maxtries", RPCArg::Type::NUM, /* default */ "1000000", "How many iterations to try."},
+                 },
+                 RPCResult{
+@@ -213,7 +225,7 @@ static UniValue generatetoaddress(const JSONRPCRequest& request)
+                 RPCExamples{
+             "\nGenerate 11 blocks to myaddress\n"
+             + HelpExampleCli("generatetoaddress", "11 \"myaddress\"")
+-            + "If you are running the qtum core wallet, you can get a new address to send the newly generated qtum to with:\n"
++            + "If you are running the VIPSTARCOIN core wallet, you can get a new address to send the newly generated VIPSTARCOIN to with:\n"
+             + HelpExampleCli("getnewaddress", "")
+                 },
+             }.Check(request);
+@@ -465,6 +477,189 @@ static std::string gbt_vb_name(const Consensus::DeploymentPos pos) {
+     return s;
+ }
+
++#ifdef ENABLE_WALLET
++CScript getwork_coinbase_script;
++
++void GenerateCoinbaseAddress(std::shared_ptr<CWallet> const pwallet) {
++    // Create address for reward
++    CTxDestination dest;
++    std::string label;
++    std::string error;
++    pwallet->GetNewDestination(OutputType::LEGACY, label, dest, error);
++    getwork_coinbase_script = GetScriptForDestination(dest);
++}
++
++UniValue getwork(const JSONRPCRequest& request)
++{
++    if (request.fHelp || request.params.size() > 1)
++        throw std::runtime_error(
++            "getwork ( \"data\" )\n"
++            "\nIf 'data' is not specified, it returns the formatted hash data to work on.\n"
++            "If 'data' is specified, tries to solve the block and returns true if it was successful.\n"
++            "\nArguments:\n"
++            "1. \"data\"       (string, optional) The hex encoded data to solve\n"
++            "\nResult (when 'data' is not specified):\n"
++            "{\n"
++            "  \"data\" : \"xxxxx\",      (string) The block data\n"
++            "  \"target\" : \"xxxx\"      (string) The little endian hash target\n"
++            "}\n"
++            "\nResult (when 'data' is specified):\n"
++            "true|false       (boolean) If solving the block specified in the 'data' was successfull\n"
++            "\nExamples:\n"
++            + HelpExampleCli("getwork", "")
++            + HelpExampleRpc("getwork", "")
++        );
++
++    if(!g_rpc_node->connman)
++        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
++
++    if (g_rpc_node->connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
++        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
++
++    if (::ChainstateActive().IsInitialBlockDownload())
++        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is downloading blocks...");
++
++    std::shared_ptr<CWallet> const pwallet = GetWalletForJSONRPCRequest(request);
++
++    typedef std::map<uint256, std::pair<CBlock*, CScript> > mapNewBlock_t;
++    static mapNewBlock_t mapNewBlock;    // FIXME: thread safety
++
++    typedef std::map<uint256, std::vector<CTransactionRef> > mapNewTransaction_t;
++    static mapNewTransaction_t mapNewTransaction;    // FIXME: thread safety
++
++    static std::vector<CBlockTemplate*> vNewBlockTemplate;
++
++    if (request.params.size() == 0)
++    {
++        // Update block
++        static unsigned int nTransactionsUpdatedLast;
++        static CBlockIndex* pindexPrev;
++        static int64_t nStart;
++        static std::unique_ptr<CBlockTemplate> pblocktemplate;
++
++        if (pindexPrev != ::ChainActive().Tip() ||
++            (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
++        {
++            if (pindexPrev != ::ChainActive().Tip())
++            {
++                // Deallocate old blocks since they're obsolete now
++                mapNewBlock.clear();
++                mapNewTransaction.clear();
++
++                for (auto & pblocktemplate : vNewBlockTemplate)
++                    delete pblocktemplate;
++                vNewBlockTemplate.clear();
++            }
++
++            // Clear pindexPrev so future calls make a new block, despite any failures from here on
++            pindexPrev = nullptr;
++
++            // Store the ::ChainActive().Tip() used before CreateNewBlock, to avoid races
++            nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
++            CBlockIndex* pindexPrevNew = ::ChainActive().Tip();
++            nStart = GetTime();
++
++            if (getwork_coinbase_script.empty()) {
++                GenerateCoinbaseAddress(pwallet);
++
++                // Log to make sure that the global getwork_coinbase_script is set, remove in future.
++                CTxDestination dest;
++                ExtractDestination(getwork_coinbase_script, dest);
++                LogPrintf("Address generated: %s\n", EncodeDestination(dest));
++            }
++
++            // Create new block
++            pblocktemplate = BlockAssembler(mempool, Params()).CreateNewBlock(getwork_coinbase_script, false);
++            if (!pblocktemplate)
++                throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
++
++            // Need to update only after we know CreateNewBlock succeeded
++            pindexPrev = pindexPrevNew;
++        }
++
++        CBlock* pblock = &pblocktemplate->block; // pointer for convenience
++        const Consensus::Params& consensusParams = Params().GetConsensus();
++
++        // Update nTime
++        UpdateTime(pblock, consensusParams, pindexPrev);
++        pblock->nNonce = 0;
++
++        // Update nExtraNonce
++        static unsigned int nExtraNonce = 0;
++        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
++
++        // Save
++        //LogPrintf("%s: mapNewBlock save hashMerkleRoot: %s, with extraNonce: %i, total: %i\n", __func__, pblock->hashMerkleRoot.ToString().c_str(), nExtraNonce, mapNewBlock.size());
++        mapNewBlock[pblock->hashMerkleRoot] = std::make_pair(pblock, pblock->vtx[0]->vin[0].scriptSig);
++
++        mapNewTransaction[pblock->hashMerkleRoot] = pblock->vtx;
++
++        //LogPrintf("%s: getwork Block created: %s\n", __func__, pblock->ToString().c_str());
++
++        // Pre-build hash buffers
++        char pdata[192];
++        FormatHashBuffers(pblock, pdata);
++
++        arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
++
++        UniValue result(UniValue::VOBJ);
++        result.pushKV("data",     HexStr(BEGIN(pdata), END(pdata)));
++        result.pushKV("target",   HexStr(BEGIN(hashTarget), END(hashTarget)));
++        return result;
++    }
++    else
++    {
++        struct unnamed2
++        {
++            int nVersion;
++            uint256 hashPrevBlock;
++            uint256 hashMerkleRoot;
++            unsigned int nTime;
++            unsigned int nBits;
++            unsigned int nNonce;
++            uint256 hashStateRoot; // qtum
++            uint256 hashUTXORoot; // qtum
++            unsigned char workpadding[37];
++        } block;
++
++        // Parse parameters
++        std::vector<unsigned char> vchData = ParseHex(request.params[0].get_str());
++
++        if (vchData.size() != 192) {
++            LogPrintf("%s: Invalid parameter vchData.size(): %u\n", __func__, vchData.size());
++            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
++        }
++        memset(&block, 0, sizeof(block));
++        memcpy(&block, &vchData[0], 181);
++
++        for (unsigned int i = 0; i < 180/4; i++) // sizeof(tmp)/4
++            ((unsigned int*)&block)[i] = ByteReverse(((unsigned int*)&block)[i]);
++        if (!mapNewBlock.count(block.hashMerkleRoot)) {
++            LogPrintf("%s: Previous block contents not found. hashMerkleRoot: %s\n", __func__, block.hashMerkleRoot.ToString().c_str());
++            throw JSONRPCError(RPC_VERIFY_ERROR, "Previous block contents not found");
++        }
++
++        CBlock* pblock = mapNewBlock[block.hashMerkleRoot].first;
++
++        pblock->nTime = block.nTime;
++        pblock->nNonce = block.nNonce;
++        pblock->hashMerkleRoot = block.hashMerkleRoot;
++
++        const CChainParams& chainParams = Params();
++
++        pblock->vtx = mapNewTransaction[block.hashMerkleRoot];
++        LogPrintf("%s: getwork Block submitted: %s", __func__, pblock->ToString().c_str());
++
++        bool success = CheckWork(chainParams, pblock);
++        if (success){
++            GenerateCoinbaseAddress(pwallet);
++        }
++
++        return success;
++    }
++}
++#endif
++
+ static UniValue getblocktemplate(const JSONRPCRequest& request)
+ {
+             RPCHelpMan{"getblocktemplate",
+@@ -699,7 +894,7 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
+
+         // Create new block
+         CScript scriptDummy = CScript() << OP_TRUE;
+-        pblocktemplate = BlockAssembler(mempool, Params()).CreateNewBlock(scriptDummy, true, ::ChainActive().Tip()->nHeight>=Params().GetConsensus().nLastPOWBlock?true:false);
++        pblocktemplate = BlockAssembler(mempool, Params()).CreateNewBlock(scriptDummy, true, true);
+         if (!pblocktemplate)
+             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
+
+@@ -835,6 +1030,9 @@ static UniValue getblocktemplate(const JSONRPCRequest& request)
+     result.pushKV("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1);
+     result.pushKV("mutable", aMutable);
+     result.pushKV("noncerange", "00000000ffffffff");
++    result.pushKV("hashstateroot", pblock->hashStateRoot.GetHex());
++    result.pushKV("hashutxoroot", pblock->hashUTXORoot.GetHex());
++
+     int64_t nSigOpLimit = dgpMaxBlockSigOps;
+     int64_t nSizeLimit = dgpMaxBlockSerSize;
+     if (fPreSegWit) {
+@@ -1031,12 +1229,11 @@ static UniValue estimatesmartfee(const JSONRPCRequest& request)
+     UniValue errors(UniValue::VARR);
+     FeeCalculation feeCalc;
+     CFeeRate feeRate = ::feeEstimator.estimateSmartFee(conf_target, &feeCalc, conservative);
+-    if (feeRate != CFeeRate(0)) {
+-        result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
+-    } else {
+-        errors.push_back("Insufficient data or no feerate found");
+-        result.pushKV("errors", errors);
++    auto minFee = CFeeRate(DEFAULT_BLOCK_MIN_TX_FEE);
++    if (feeRate < minFee) {
++        feeRate = minFee;
+     }
++    result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
+     result.pushKV("blocks", feeCalc.returnedTarget);
+     return result;
+ }
+@@ -1167,6 +1364,9 @@ static const CRPCCommand commands[] =
+     { "mining",             "getmininginfo",          &getmininginfo,          {} },
+     { "mining",             "prioritisetransaction",  &prioritisetransaction,  {"txid","dummy","fee_delta"} },
+     { "mining",             "getblocktemplate",       &getblocktemplate,       {"template_request"} },
++#ifdef ENABLE_WALLET
++    { "mining",             "getwork",	              &getwork,                {"data"} },
++#endif
+     { "mining",             "submitblock",            &submitblock,            {"hexdata","dummy"} },
+     { "mining",             "submitheader",           &submitheader,           {"hexdata"} },
+
+diff --git a/src/rpc/rawtransaction_util.cpp b/src/rpc/rawtransaction_util.cpp
+index f4a8233b49..747fa991a1 100644
+--- a/src/rpc/rawtransaction_util.cpp
++++ b/src/rpc/rawtransaction_util.cpp
+@@ -159,7 +159,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
+             if (Contract.exists("senderAddress")){
+                 senderAddress = DecodeDestination(Contract["senderAddress"].get_str());
+                 if (!IsValidDestination(senderAddress))
+-                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Qtum address to send from");
++                    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid VIPSTARCOIN address to send from");
+                 if (!IsValidContractSenderAddress(senderAddress))
+                     throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid contract sender address. Only P2PK and P2PKH allowed");
+                 else
+@@ -227,7 +227,7 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
+         } else {
+             CTxDestination destination = DecodeDestination(name_);
+             if (!IsValidDestination(destination)) {
+-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid Qtum address: ") + name_);
++                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid VIPSTARCOIN address: ") + name_);
+             }
+
+             if (!destinations.insert(destination).second) {
+diff --git a/src/txdb.cpp b/src/txdb.cpp
+index a1b310ad1e..ddde3aa5a1 100644
+--- a/src/txdb.cpp
++++ b/src/txdb.cpp
+@@ -849,3 +849,23 @@ bool CBlockTreeDB::EraseBlockIndex(const std::vector<uint256> &vect)
+         batch.Erase(std::make_pair(DB_BLOCK_INDEX, *it));
+     return WriteBatch(batch);
+ }
++
++bool CBlockTreeDB::ReadSyncCheckpoint(uint256& hashCheckpoint)
++{
++    return Read(std::string("hashSyncCheckpoint"), hashCheckpoint);
++}
++
++bool CBlockTreeDB::WriteSyncCheckpoint(uint256 hashCheckpoint)
++{
++    return Write(std::string("hashSyncCheckpoint"), hashCheckpoint);
++}
++
++bool CBlockTreeDB::ReadCheckpointPubKey(std::string& strPubKey)
++{
++    return Read(std::string("strCheckpointPubKey"), strPubKey);
++}
++
++bool CBlockTreeDB::WriteCheckpointPubKey(const std::string& strPubKey)
++{
++    return Write(std::string("strCheckpointPubKey"), strPubKey);
++}
+diff --git a/src/txdb.h b/src/txdb.h
+index 5c18ef3ee1..28ed15937e 100644
+--- a/src/txdb.h
++++ b/src/txdb.h
+@@ -192,6 +192,10 @@ public:
+     bool UpdateSpentIndex(const std::vector<std::pair<CSpentIndexKey, CSpentIndexValue> >&vect);
+     bool blockOnchainActive(const uint256 &hash);
+
++    bool ReadSyncCheckpoint(uint256& hashCheckpoint);
++    bool WriteSyncCheckpoint(uint256 hashCheckpoint);
++    bool ReadCheckpointPubKey(std::string& strPubKey);
++    bool WriteCheckpointPubKey(const std::string& strPubKey);
+     //////////////////////////////////////////////////////////////////////////////
+ };
+
+diff --git a/src/validation.cpp b/src/validation.cpp
+index 2708839101..e79b5cc727 100644
+--- a/src/validation.cpp
++++ b/src/validation.cpp
+@@ -9,6 +9,7 @@
+ #include <chain.h>
+ #include <chainparams.h>
+ #include <checkpoints.h>
++#include <checkpointsync.h>
+ #include <checkqueue.h>
+ #include <consensus/consensus.h>
+ #include <consensus/merkle.h>
+@@ -65,7 +66,7 @@
+ #include <boost/thread.hpp>
+
+ #if defined(NDEBUG)
+-# error "Qtum cannot be compiled without assertions."
++# error "VIPSTARCOIN cannot be compiled without assertions."
+ #endif
+
+ #define MICRO 0.000001
+@@ -1437,22 +1438,30 @@ bool ReadRawBlockFromDisk(std::vector<uint8_t>& block, const CBlockIndex* pindex
+     return ReadRawBlockFromDisk(block, block_pos, message_start);
+ }
+
+-CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
++CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams)
+ {
+-    if(nHeight <= consensusParams.nLastBigReward)
+-        return 20000 * COIN;
+-
+-    int subsidyHalvingInterval = consensusParams.SubsidyHalvingInterval(nHeight);
+-    int subsidyHalvingWeight = consensusParams.SubsidyHalvingWeight(nHeight);
+-    int halvings = (subsidyHalvingWeight - 1) / subsidyHalvingInterval;
++    CAmount nSubsidy = 9500 * COIN;
++    if (nHeight <= 2000)
++        return 1 * COIN;
++    if (nHeight <= 28000)
++        return 3000 * COIN;
++    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
+     // Force block reward to zero when right shift is undefined.
+-    if (halvings >= 7)
++    if (halvings >= 128)
+         return 0;
+-
+-    int blocktimeDownscaleFactor = consensusParams.BlocktimeDownscaleFactor(nHeight);
+-    CAmount nSubsidy = 4 * COIN / blocktimeDownscaleFactor;
+-    // Subsidy is cut in half every 985500 blocks which will occur approximately every 4 years.
+     nSubsidy >>= halvings;
++    if (nSubsidy < 100 * COIN)
++        return 100 * COIN;
++    return nSubsidy;
++}
++
++CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
++{
++    CAmount nSubsidy = 100 * COIN;
++    if (nHeight == 1 || nHeight == 100 || nHeight == 200 || nHeight == 300 || nHeight == 400 || nHeight == 500)
++        return 10000000000 * COIN;
++    if (nHeight <= 2000)
++        return 1 * COIN;
+     return nSubsidy;
+ }
+
+@@ -2016,7 +2025,7 @@ DisconnectResult CChainState::DisconnectBlock(const CBlock& block, const CBlockI
+
+                 if (pfClean == NULL && fAddressIndex) {
+                     const auto &undo = txundo.vprevout[j];
+-                    const bool isTxCoinStake = tx.IsCoinStake();
++                    const bool isTxCoinStake = tx.IsCoinStake() || tx.IsCoinBase();
+                     const CTxIn input = tx.vin[j];
+                     const CTxOut &prevout = view.GetOutputFor(input);
+
+@@ -2464,59 +2473,9 @@ bool CheckReward(const CBlock& block, BlockValidationState& state, int nHeight,
+     else
+     {
+         // Check full reward
+-        CAmount blockReward = nFees + GetBlockSubsidy(nHeight, consensusParams);
++        CAmount blockReward = nFees + GetProofOfStakeReward(nHeight, consensusParams);
+         if (nActualStakeReward > blockReward)
+             return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-amount", strprintf("CheckReward(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward));
+-
+-        // The first proof-of-stake blocks get full reward, the rest of them are split between recipients
+-        int rewardRecipients = 1;
+-        int nPrevHeight = nHeight -1;
+-        if(nPrevHeight >= consensusParams.nFirstMPoSBlock && nPrevHeight < consensusParams.nLastMPoSBlock)
+-            rewardRecipients = consensusParams.nMPoSRewardRecipients;
+-
+-        // Check reward recipients number
+-        if(rewardRecipients < 1)
+-            return error("CheckReward(): invalid reward recipients");
+-
+-        // Check reward can cover the gas refunds
+-        if(blockReward < gasRefunds){
+-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-gas-greater-than-reward", "CheckReward(): Block Reward is less than total gas refunds");
+-        }
+-
+-        CAmount splitReward = (blockReward - gasRefunds) / rewardRecipients;
+-
+-        // Check that the reward is in the second output for the staker and the third output for the delegate
+-        // Delegation contract data like the fee is checked in CheckProofOfStake
+-        if(block.HasProofOfDelegation())
+-        {
+-            CAmount nReward = blockReward - gasRefunds - splitReward * (rewardRecipients -1);
+-            CAmount nValueStaker = block.vtx[offset]->vout[1].nValue;
+-            CAmount nValueDelegate = delegateOutputExist ? block.vtx[offset]->vout[2].nValue : 0;
+-            CAmount nMinedReward = nValueStaker + nValueDelegate - nValueCoinPrev;
+-            if(nReward != nMinedReward)
+-                return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-delegate-reward", "CheckReward(): The block reward is not split correctly between the staker and the delegate");
+-        }
+-
+-        //if only 1 then no MPoS logic required
+-        if(rewardRecipients == 1){
+-            return true;
+-        }
+-
+-        // Generate the list of mpos outputs including all of their parameters
+-        std::vector<CTxOut> mposOutputList;
+-        if(!GetMPoSOutputs(mposOutputList, splitReward, nPrevHeight, consensusParams))
+-            return error("CheckReward(): cannot create the list of MPoS outputs");
+-
+-        for(size_t i = 0; i < mposOutputList.size(); i++){
+-            it=std::find(vTempVouts.begin(), vTempVouts.end(), mposOutputList[i]);
+-            if(it==vTempVouts.end()){
+-                return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-mpos-missing", "CheckReward(): An MPoS participant was not properly paid");
+-            }else{
+-                vTempVouts.erase(it);
+-            }
+-        }
+-
+-        vTempVouts.clear();
+     }
+
+     return true;
+@@ -2926,8 +2885,6 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
+     uint32_t sizeBlockDGP = qtumDGP.getBlockSize(pindex->nHeight + (pindex->nHeight+1 >= chainparams.GetConsensus().QIP7Height ? 0 : 1));
+     uint64_t minGasPrice = qtumDGP.getMinGasPrice(pindex->nHeight + (pindex->nHeight+1 >= chainparams.GetConsensus().QIP7Height ? 0 : 1));
+     uint64_t blockGasLimit = qtumDGP.getBlockGasLimit(pindex->nHeight + (pindex->nHeight+1 >= chainparams.GetConsensus().QIP7Height ? 0 : 1));
+-    dgpMaxBlockSize = sizeBlockDGP ? sizeBlockDGP : dgpMaxBlockSize;
+-    updateBlockSizeParams(dgpMaxBlockSize);
+     CBlock checkBlock(block.GetBlockHeader());
+     std::vector<CTxOut> checkVouts;
+
+@@ -2937,6 +2894,9 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
+         return state.Invalid(BlockValidationResult::BLOCK_CHECKPOINT, "bad-fork-hardened-checkpoint", strprintf("%s: expected hardened checkpoint at height %d", __func__, pindex->nHeight));
+     }
+
++    // Check that the block satisfies synchronized checkpoint
++    if (!IsInitialBlockDownload() && !CheckSyncCheckpoint(block.GetHash(), pindex->nHeight))
++        return state.Invalid(BlockValidationResult::BLOCK_CHECKPOINT, "bad-block-checkpoint-sync", strprintf("%s: Block rejected by synchronized checkpoint", __func__));
+
+     // Move this check from CheckBlock to ConnectBlock as it depends on DGP values
+     if (block.vtx.empty() || block.vtx.size() > dgpMaxBlockSize || ::GetSerializeSize(block, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) > dgpMaxBlockSize) // qtum
+@@ -3436,7 +3396,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
+
+             for (unsigned int k = 0; k < tx.vout.size(); k++) {
+                 const CTxOut &out = tx.vout[k];
+-                const bool isTxCoinStake = tx.IsCoinStake();
++                const bool isTxCoinStake = tx.IsCoinStake() || tx.IsCoinBase();
+
+                 CTxDestination dest;
+                 if (ExtractDestination({tx.GetHash(), k}, out.scriptPubKey, dest)) {
+@@ -3554,13 +3514,6 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
+ //////////////////////////////////////////////////////////////////
+
+     pindex->nMoneySupply = (pindex->pprev? pindex->pprev->nMoneySupply : 0) + nValueOut - nValueIn;
+-    //only start checking this error after block 5000 and only on testnet and mainnet, not regtest
+-    if(pindex->nHeight > 5000 && !Params().MineBlocksOnDemand()) {
+-        //sanity check in case an exploit happens that allows new coins to be minted
+-        if(pindex->nMoneySupply > (uint64_t)(100000000 + ((pindex->nHeight - 5000) * 4)) * COIN){
+-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "incorrect-money-supply", "ConnectBlock(): Unknown error caused actual money supply to exceed expected money supply");
+-        }
+-    }
+
+     if (!WriteUndoDataForBlock(blockundo, state, pindex, chainparams))
+         return false;
+@@ -3628,7 +3581,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
+
+         if (logicalTS <= prevLogicalTS) {
+             logicalTS = prevLogicalTS + 1;
+-            LogPrintf("%s: Previous logical timestamp is newer Actual[%d] prevLogical[%d] Logical[%d]\n", __func__, pindex->nTime, prevLogicalTS, logicalTS);
++            LogPrint(BCLog::INDEX, "%s: Previous logical timestamp is newer Actual[%d] prevLogical[%d] Logical[%d]\n", __func__, pindex->nTime, prevLogicalTS, logicalTS);
+         }
+
+         if (!pblocktree->WriteTimestampIndex(CTimestampIndexKey(logicalTS, pindex->GetBlockHash())))
+@@ -5182,6 +5135,11 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
+         }
+     }
+
++    // Check that the block satisfies checkpoint sync
++    if (!::ChainstateActive().IsInitialBlockDownload() && !CheckSyncCheckpoint(block.GetHash(), nHeight, pindexPrev)) {
++        return state.Invalid(BlockValidationResult::BLOCK_CHECKPOINT, "bad-block-checkpoint-sync", strprintf("%s: rejected by checkpoint sync %s", __func__, block.GetHash().ToString()));
++    }
++
+     // Check that the block satisfies synchronized checkpoint
+     if (!Checkpoints::CheckSync(nHeight))
+         return state.Invalid(BlockValidationResult::BLOCK_HEADER_SYNC, "bad-fork-prior-to-synch-checkpoint", strprintf("%s: forked chain older than synchronized checkpoint (height %d)", __func__, nHeight));
+@@ -5194,6 +5152,14 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
+     if (block.IsProofOfStake() && block.GetBlockTime() > FutureDrift(nAdjustedTime, nHeight, consensusParams))
+         return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
+
++    // Limit block in future accepted in chain to only a time window of 15 min
++    if (block.GetBlockTime() > GetAdjustedTime() + 15 * 60)
++        return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
++
++    // Check timestamp against prev it should not be more then 15 minutes outside blockchain time
++    if (block.GetBlockTime() <= pindexPrev->GetBlockTime() - 15 * 60)
++        return state.Invalid(BlockValidationResult::BLOCK_TIME_PAST, "time-too-old", "block timestamp is too early");
++
+     // Reject outdated version blocks when 95% (75% on testnet) of the network has upgraded:
+     // check for version 2, 3 and 4 upgrades
+     if((block.nVersion < 2 && nHeight >= consensusParams.BIP34Height) ||
+@@ -5288,10 +5254,6 @@ bool CChainState::UpdateHashProof(const CBlock& block, BlockValidationState& sta
+     int nHeight = pindex->nHeight;
+     uint256 hash = block.GetHash();
+
+-    //reject proof of work at height consensusParams.nLastPOWBlock
+-    if (block.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
+-        return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("UpdateHashProof() : reject proof-of-work at height %d", nHeight));
+-
+     // Check coinstake timestamp
+     if (block.IsProofOfStake() && !CheckCoinStakeTimestamp(block.GetBlockTime(), nHeight, consensusParams))
+         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "timestamp-invalid", strprintf("UpdateHashProof() : coinstake timestamp violation nTimeBlock=%d", block.GetBlockTime()));
+@@ -5444,16 +5406,12 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
+             }
+         }
+
+-        // Reject proof of work at height consensusParams.nLastPOWBlock
+-        int nHeight = pindexPrev->nHeight + 1;
+-        if (block.IsProofOfWork() && nHeight > chainparams.GetConsensus().nLastPOWBlock)
+-            return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("reject proof-of-work at height %d", nHeight));
+-
+         if(block.IsProofOfStake())
+         {
+-            // Reject proof of stake before height coinbaseMaturity
+-            int coinbaseMaturity = chainparams.GetConsensus().CoinbaseMaturity(nHeight);
+-            if (nHeight < coinbaseMaturity)
++            int nHeight = pindexPrev->nHeight + 1;
++
++            // Reject proof of stake before height
++            if (nHeight < Params().GetConsensus().CoinbaseMaturity(nHeight))
+                 return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pos", strprintf("reject proof-of-stake at height %d", nHeight));
+
+             // Check coin stake timestamp
+@@ -5560,7 +5518,7 @@ static FlatFilePos SaveBlockToDisk(const CBlock& block, int nHeight, const CChai
+ }
+
+ /** Store block on disk. If dbp is non-nullptr, the file is known to already reside on disk */
+-bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock)
++bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock, CConnman* connman)
+ {
+     const CBlock& block = *pblock;
+
+@@ -5594,11 +5552,6 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, Block
+
+     // Get block height
+     int nHeight = pindex->nHeight;
+-
+-    // Check for the last proof of work block
+-    if (block.IsProofOfWork() && nHeight > chainparams.GetConsensus().nLastPOWBlock)
+-        return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("%s: reject proof-of-work at height %d", __func__, nHeight));
+-
+     // Check that the block satisfies synchronized checkpoint
+     if (!Checkpoints::CheckSync(nHeight))
+         return error("AcceptBlock() : rejected by synchronized checkpoint");
+@@ -5683,6 +5636,9 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, Block
+
+     CheckBlockIndex(chainparams.GetConsensus());
+
++    if (!IsInitialBlockDownload())
++        AcceptPendingSyncCheckpoint(connman);
++
+     return true;
+ }
+
+@@ -5710,7 +5666,7 @@ bool CheckCanonicalBlockSignature(const CBlockHeader* pblock)
+     return ret;
+ }
+
+-bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock)
++bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool *fNewBlock, CConnman* connman)
+ {
+     AssertLockNotHeld(cs_main);
+
+@@ -5728,7 +5684,7 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
+         bool ret = CheckBlock(*pblock, state, chainparams.GetConsensus());
+         if (ret) {
+             // Store to disk
+-            ret = ::ChainstateActive().AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock);
++            ret = ::ChainstateActive().AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, nullptr, fNewBlock, connman);
+         }
+         if (!ret) {
+             GetMainSignals().BlockChecked(*pblock, state);
+@@ -5742,6 +5698,10 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
+     if (!::ChainstateActive().ActivateBestChain(state, chainparams, pblock))
+         return error("%s: ActivateBestChain failed (%s)", __func__, state.ToString());
+
++    // If responsible for sync-checkpoint send it
++    if (!CSyncCheckpoint::strMasterPrivKey.empty())
++        SendSyncCheckpoint(AutoSelectSyncCheckpoint(), connman);
++
+     return true;
+ }
+
+@@ -6077,6 +6037,12 @@ bool static LoadBlockIndexDB(const CChainParams& chainparams) EXCLUSIVE_LOCKS_RE
+         }
+     }
+
++    // Load hashSyncCheckpoint
++    if (!pblocktree->ReadSyncCheckpoint(hashSyncCheckpoint))
++         LogPrintf("LoadBlockIndexDB(): synchronized checkpoint not read\n");
++    else
++         LogPrintf("LoadBlockIndexDB(): synchronized checkpoint %s\n", hashSyncCheckpoint.ToString());
++
+     // Check presence of blk files
+     LogPrintf("Checking all blk files are present...\n");
+     std::set<int> setBlkDataFiles;
+@@ -6196,12 +6162,6 @@ bool CVerifyDB::VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview,
+             break;
+         }
+
+-        ///////////////////////////////////////////////////////////////////// // qtum
+-        uint32_t sizeBlockDGP = qtumDGP.getBlockSize(pindex->nHeight);
+-        dgpMaxBlockSize = sizeBlockDGP ? sizeBlockDGP : dgpMaxBlockSize;
+-        updateBlockSizeParams(dgpMaxBlockSize);
+-        /////////////////////////////////////////////////////////////////////
+-
+         CBlock block;
+         // check level 0: read from disk
+         if (!ReadBlockFromDisk(block, pindex, chainparams.GetConsensus()))
+diff --git a/src/validation.h b/src/validation.h
+index 656a036aa9..e482e70673 100644
+--- a/src/validation.h
++++ b/src/validation.h
+@@ -230,7 +230,8 @@ static const unsigned int MIN_BLOCKS_TO_KEEP = 288;
+ /** Minimum blocks required to signal NODE_NETWORK_LIMITED */
+ static const unsigned int NODE_NETWORK_LIMITED_MIN_BLOCKS = 288;
+
+-static const signed int DEFAULT_CHECKBLOCKS = 6;
++static const signed int DEFAULT_CHECKBLOCKS = 6 * 10;
++static const signed int DEFAULT_AUTOCHECKPOINT = 10;
+ static const unsigned int DEFAULT_CHECKLEVEL = 3;
+
+ // Require that user allocate at least 550 MiB for block & undo files (blk???.dat and rev???.dat)
+@@ -265,7 +266,7 @@ int64_t FutureDrift(uint32_t nTime, int nHeight, const Consensus::Params& consen
+  * @param[out]  fNewBlock A boolean which is set to indicate if the block was first received via this call
+  * @returns     If the block was processed, independently of block validity
+  */
+-bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool* fNewBlock) LOCKS_EXCLUDED(cs_main);
++bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<const CBlock> pblock, bool fForceProcessing, bool* fNewBlock, CConnman* connman = nullptr) LOCKS_EXCLUDED(cs_main);
+
+ /**
+  * Process incoming block headers.
+@@ -305,6 +306,7 @@ bool GetTransaction(const uint256& hash, CTransactionRef& tx, const Consensus::P
+  */
+ bool ActivateBestChain(BlockValidationState& state, const CChainParams& chainparams, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());
+ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
++CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams);
+
+ /** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
+ double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex* pindex);
+@@ -906,7 +908,7 @@ public:
+         const CChainParams& chainparams,
+         std::shared_ptr<const CBlock> pblock) LOCKS_EXCLUDED(cs_main);
+
+-    bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
++    bool AcceptBlock(const std::shared_ptr<const CBlock>& pblock, BlockValidationState& state, const CChainParams& chainparams, CBlockIndex** ppindex, bool fRequested, const FlatFilePos* dbp, bool* fNewBlock, CConnman* connman = nullptr) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
+
+     // Block (dis)connection on a given view:
+     DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* pindex, CCoinsViewCache& view, bool* pfClean);
+diff --git a/src/wallet/wallet.cpp b/src/wallet/wallet.cpp
+index ccd19a7a60..e71de6f446 100644
+--- a/src/wallet/wallet.cpp
++++ b/src/wallet/wallet.cpp
+@@ -3576,24 +3576,13 @@ bool CWallet::CreateCoinStakeFromMine(interfaces::Chain::Lock& locked_chain, con
+     }
+
+     const Consensus::Params& consensusParams = Params().GetConsensus();
+-    int64_t nRewardPiece = 0;
+     // Calculate reward
+     {
+         int64_t nReward = nTotalFees + GetBlockSubsidy(pindexPrev->nHeight + 1, consensusParams);
+         if (nReward < 0)
+             return false;
+
+-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
+-        {
+-            // Keep whole reward
+-            nCredit += nReward;
+-        }
+-        else
+-        {
+-            // Split the reward when mpos is used
+-            nRewardPiece = nReward / consensusParams.nMPoSRewardRecipients;
+-            nCredit += nRewardPiece + nReward % consensusParams.nMPoSRewardRecipients;
+-        }
++        nCredit += nReward;
+    }
+
+     if (nCredit >= GetStakeSplitThreshold())
+@@ -3613,12 +3602,6 @@ bool CWallet::CreateCoinStakeFromMine(interfaces::Chain::Lock& locked_chain, con
+     else
+         txNew.vout[1].nValue = nCredit;
+
+-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
+-    {
+-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams))
+-            return error("CreateCoinStake : failed to create MPoS reward outputs");
+-    }
+-
+     // Append the Refunds To Sender to the transaction outputs
+     for(unsigned int i = 2; i < tx.vout.size(); i++)
+     {
+@@ -3784,24 +3767,10 @@ bool CWallet::CreateCoinStakeFromDelegate(interfaces::Chain::Lock& locked_chain,
+         if (nTotalReward < 0)
+             return false;
+
+-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
+-        {
+-            // Keep whole reward
+-            int64_t nRewardStaker = 0;
+-            if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker))
+-                return error("CreateCoinStake: Failed to split reward");
+-            nCredit += nRewardStaker;
+-        }
+-        else
+-        {
+-            // Split the reward when mpos is used
+-            nRewardPiece = nTotalReward / consensusParams.nMPoSRewardRecipients;
+-            int64_t nRewardStaker = 0;
+-            int64_t nReward = nRewardPiece + nTotalReward % consensusParams.nMPoSRewardRecipients;
+-            if(!SplitOfflineStakeReward(nReward, delegation.fee, nRewardOffline, nRewardStaker))
+-                return error("CreateCoinStake: Failed to split reward");
+-            nCredit += nRewardStaker;
+-        }
++        int64_t nRewardStaker = 0;
++        if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker))
++            return error("CreateCoinStake: Failed to split reward");
++        nCredit += nRewardStaker;
+     }
+
+     // Set output amount
+@@ -3811,12 +3780,6 @@ bool CWallet::CreateCoinStakeFromDelegate(interfaces::Chain::Lock& locked_chain,
+         txNew.vout[2].nValue = nRewardOffline;
+     }
+
+-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
+-    {
+-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams))
+-            return error("CreateCoinStake : failed to create MPoS reward outputs");
+-    }
+-
+     // Append the Refunds To Sender to the transaction outputs
+     for(unsigned int i = 2; i < tx.vout.size(); i++)
+     {
+
+diff --git a/src/cpp-ethereum b/src/cpp-ethereum
+index 3f8e2fa7a3..9d1b4f1541 160000
+--- a/src/cpp-ethereum
++++ b/src/cpp-ethereum
+@@ -1 +1 @@
+-Subproject commit 3f8e2fa7a3b977f8361609ccd5002bdf86003ddd
++Subproject commit 9d1b4f1541a7e92719f3a52f0717fa8fc316efac
+diff --git a/src/logging.cpp b/src/logging.cpp
+index 66a9912936..b8e6240159 100644
+--- a/src/logging.cpp
++++ b/src/logging.cpp
+@@ -184,6 +184,7 @@ const CLogCategoryDesc LogCategories[] =
+     {BCLog::VALIDATION, "validation"},
+     {BCLog::COINSTAKE, "coinstake"},
+     {BCLog::HTTPPOLL, "http-poll"},
++    {BCLog::INDEX, "index"},
+     {BCLog::ALL, "1"},
+     {BCLog::ALL, "all"},
+ };
+diff --git a/src/logging.h b/src/logging.h
+index 506e39d089..39f79b4939 100644
+--- a/src/logging.h
++++ b/src/logging.h
+@@ -59,6 +59,7 @@ namespace BCLog {
+         VALIDATION  = (1 << 21),
+         COINSTAKE   = (1 << 22),
+         HTTPPOLL    = (1 << 23),
++        INDEX       = (1 << 24),
+         ALL         = ~(uint32_t)0,
+     };
+
+diff --git a/src/net.h b/src/net.h
+index 799ebdf880..9e3c49f460 100644
+--- a/src/net.h
++++ b/src/net.h
+@@ -799,6 +799,8 @@ public:
+     bool fGetAddr{false};
+     std::chrono::microseconds m_next_addr_send GUARDED_BY(cs_sendProcessing){0};
+     std::chrono::microseconds m_next_local_addr_send GUARDED_BY(cs_sendProcessing){0};
++    uint256 hashCheckpointKnown;
++    bool supportACPMessages{false};
+
+     bool IsAddrRelayPeer() const { return m_addr_known != nullptr; }
+
+diff --git a/src/protocol.cpp b/src/protocol.cpp
+index bd3ed25a8a..20f2930602 100644
+--- a/src/protocol.cpp
++++ b/src/protocol.cpp
+@@ -40,6 +40,7 @@ const char *SENDCMPCT="sendcmpct";
+ const char *CMPCTBLOCK="cmpctblock";
+ const char *GETBLOCKTXN="getblocktxn";
+ const char *BLOCKTXN="blocktxn";
++const char *CHECKPOINT="checkpoint";
+ } // namespace NetMsgType
+
+ /** All known message types. Keep this in the same order as the list of
+@@ -71,6 +72,7 @@ const static std::string allNetMessageTypes[] = {
+     NetMsgType::CMPCTBLOCK,
+     NetMsgType::GETBLOCKTXN,
+     NetMsgType::BLOCKTXN,
++    NetMsgType::CHECKPOINT,
+ };
+ const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
+
+diff --git a/src/protocol.h b/src/protocol.h
+index 6639ae2aac..26631ef22f 100644
+--- a/src/protocol.h
++++ b/src/protocol.h
+@@ -234,6 +234,11 @@ extern const char *GETBLOCKTXN;
+  * @since protocol version 70014 as described by BIP 152
+  */
+ extern const char *BLOCKTXN;
++/**
++ * Contains a checkpoint braodcasted by a central checkpointing node
++ * @since protocol version 61000
++ */
++extern const char *CHECKPOINT;
+ };
+
+ /* Get a vector of all valid message types (see above) */
+@@ -262,6 +267,11 @@ enum ServiceFlags : uint64_t {
+     // serving the last 288 (2 day) blocks
+     // See BIP159 for details on how this is implemented.
+     NODE_NETWORK_LIMITED = (1 << 10),
++    // NODE_ACP means the node supports Automatic Checkpointing
++    // If this is turned off then the node will not receive checkpoints from other nodes aware of this
++    // flag. Bit 24 from the start of the experimental range has been set for this Feathercoin feature
++    // to not clash with Bitcoin's future developments.
++    NODE_ACP = (1 << 24),
+
+     // Bits 24-31 are reserved for temporary experiments. Just pick a bit that
+     // isn't getting used, or one not being used much, and notify the
+diff --git a/src/qtum/qtumDGP.cpp b/src/qtum/qtumDGP.cpp
+index 2a51bfa14b..92d10f5b81 100644
+--- a/src/qtum/qtumDGP.cpp
++++ b/src/qtum/qtumDGP.cpp
+@@ -48,80 +48,23 @@ bool QtumDGP::checkLimitSchedule(const std::vector<uint32_t>& defaultData, const
+ dev::eth::EVMSchedule QtumDGP::getGasSchedule(int blockHeight){
+     clear();
+     dataSchedule = scheduleDataForBlockNumber(blockHeight);
+-    dev::eth::EVMSchedule schedule = globalSealEngine->chainParams().scheduleForBlockNumber(blockHeight);
+-    if(initStorages(GasScheduleDGP, blockHeight, ParseHex("26fadbe2"))){
+-        schedule = createEVMSchedule(schedule, blockHeight);
+-    }
+-    return schedule;
+-}
+
+-uint64_t QtumDGP::getUint64FromDGP(unsigned int blockHeight, const dev::Address& contract, std::vector<unsigned char> data){
+-    uint64_t value = 0;
+-    if(initStorages(contract, blockHeight, data)){
+-        if(!dgpevm){
+-            parseStorageOneUint64(value);
+-        } else {
+-            parseDataOneUint64(value);
+-        }
+-    }
+-    return value;
++    return globalSealEngine->chainParams().scheduleForBlockNumber(blockHeight);
+ }
+
+ uint32_t QtumDGP::getBlockSize(unsigned int blockHeight){
+     clear();
+-    uint32_t result = DEFAULT_BLOCK_SIZE_DGP / Params().GetConsensus().BlocktimeDownscaleFactor(blockHeight);
+-    uint32_t blockSize = getUint64FromDGP(blockHeight, BlockSizeDGP, ParseHex("92ac3c62"));
+-    if(blockSize <= MAX_BLOCK_SIZE_DGP && blockSize >= MIN_BLOCK_SIZE_DGP){
+-        result = blockSize;
+-    }
+-    return result;
++    return DEFAULT_BLOCK_SIZE_DGP / Params().GetConsensus().BlocktimeDownscaleFactor(blockHeight);
+ }
+
+ uint64_t QtumDGP::getMinGasPrice(unsigned int blockHeight){
+     clear();
+-    uint64_t result = DEFAULT_MIN_GAS_PRICE_DGP;
+-    uint64_t minGasPrice = getUint64FromDGP(blockHeight, GasPriceDGP, ParseHex("3fb58819"));
+-    if(minGasPrice <= MAX_MIN_GAS_PRICE_DGP && minGasPrice >= MIN_MIN_GAS_PRICE_DGP){
+-        result = minGasPrice;
+-    }
+-    return result;
++    return DEFAULT_MIN_GAS_PRICE_DGP;
+ }
+
+ uint64_t QtumDGP::getBlockGasLimit(unsigned int blockHeight){
+     clear();
+-    uint64_t result = DEFAULT_BLOCK_GAS_LIMIT_DGP;
+-    uint64_t blockGasLimit = getUint64FromDGP(blockHeight, BlockGasLimitDGP, ParseHex("2cc8377d"));
+-    if(blockGasLimit <= MAX_BLOCK_GAS_LIMIT_DGP && blockGasLimit >= MIN_BLOCK_GAS_LIMIT_DGP){
+-        result = blockGasLimit;
+-    }
+-    return result;
+-}
+-
+-bool QtumDGP::initStorages(const dev::Address& addr, unsigned int blockHeight, std::vector<unsigned char> data){
+-    initStorageDGP(addr);
+-    createParamsInstance();
+-    dev::Address address = getAddressForBlock(blockHeight);
+-    if(address != dev::Address()){
+-        if(!dgpevm){
+-            initStorageTemplate(address);
+-        } else {
+-            initDataTemplate(address, data);
+-        }
+-        return true;
+-    }
+-    return false;
+-}
+-
+-void QtumDGP::initStorageDGP(const dev::Address& addr){
+-    storageDGP = state->storage(addr);
+-}
+-
+-void QtumDGP::initStorageTemplate(const dev::Address& addr){
+-    storageTemplate = state->storage(addr);
+-}
+-
+-void QtumDGP::initDataTemplate(const dev::Address& addr, std::vector<unsigned char>& data){
+-    dataTemplate = CallContract(addr, data)[0].execRes.output;
++    return DEFAULT_BLOCK_GAS_LIMIT_DGP;
+ }
+
+ void QtumDGP::createParamsInstance(){
+@@ -186,19 +129,6 @@ void QtumDGP::parseDataScheduleContract(std::vector<uint32_t>& uint32Values){
+     }
+ }
+
+-void QtumDGP::parseStorageOneUint64(uint64_t& value){
+-    dev::h256 blockSizeHash = sha3(dev::h256(dev::u256(0)));
+-    if(storageTemplate.count(blockSizeHash)){
+-        value = dev::toUint64(storageTemplate.find(blockSizeHash)->second.second);
+-    }
+-}
+-
+-void QtumDGP::parseDataOneUint64(uint64_t& value){
+-    if(dataTemplate.size() == 32){
+-        value = dev::toUint64(dev::u256(dev::h256(dataTemplate)));
+-    }
+-}
+-
+ dev::eth::EVMSchedule QtumDGP::createEVMSchedule(const dev::eth::EVMSchedule &_schedule, int blockHeight){
+     dev::eth::EVMSchedule schedule = _schedule;
+     std::vector<uint32_t> uint32Values;
+diff --git a/src/qtum/qtumDGP.h b/src/qtum/qtumDGP.h
+index ca171c5bdf..71a7b33a1a 100644
+--- a/src/qtum/qtumDGP.h
++++ b/src/qtum/qtumDGP.h
+@@ -40,14 +40,6 @@ public:
+
+ private:
+
+-    bool initStorages(const dev::Address& addr, unsigned int blockHeight, std::vector<unsigned char> data = std::vector<unsigned char>());
+-
+-    void initStorageDGP(const dev::Address& addr);
+-
+-    void initStorageTemplate(const dev::Address& addr);
+-
+-    void initDataTemplate(const dev::Address& addr, std::vector<unsigned char>& data);
+-
+     void initDataSchedule();
+
+     bool checkLimitSchedule(const std::vector<uint32_t>& defaultData, const std::vector<uint32_t>& checkData, int blockHeight);
+@@ -56,16 +48,10 @@ private:
+
+     dev::Address getAddressForBlock(unsigned int blockHeight);
+
+-    uint64_t getUint64FromDGP(unsigned int blockHeight, const dev::Address& contract, std::vector<unsigned char> data);
+-
+     void parseStorageScheduleContract(std::vector<uint32_t>& uint32Values);
+
+     void parseDataScheduleContract(std::vector<uint32_t>& uint32Values);
+
+-    void parseStorageOneUint64(uint64_t& blockSize);
+-
+-    void parseDataOneUint64(uint64_t& value);
+-
+     dev::eth::EVMSchedule createEVMSchedule(const dev::eth::EVMSchedule& schedule, int blockHeight);
+
+     void clear();
+diff --git a/src/qtum/qtumstate.cpp b/src/qtum/qtumstate.cpp
+index ac2fb99029..6a8f842148 100644
+--- a/src/qtum/qtumstate.cpp
++++ b/src/qtum/qtumstate.cpp
+@@ -94,7 +94,7 @@ ResultExecute QtumState::execute(EnvInfo const& _envInfo, SealEngineFace const&
+         printfErrorLog(dev::eth::toTransactionException(_e));
+         res.excepted = dev::eth::toTransactionException(_e);
+         res.gasUsed = _t.gas();
+-        if(ChainActive().Height() < consensusParams.nFixUTXOCacheHFHeight  && _p != Permanence::Reverted){
++        if(_p != Permanence::Reverted){
+             deleteAccounts(_sealEngine.deleteAddresses);
+             commit(CommitBehaviour::RemoveEmptyAccounts);
+         } else {
+diff --git a/src/qtum/qtumstate.h b/src/qtum/qtumstate.h
+index defe83ab77..90943fe26c 100644
+--- a/src/qtum/qtumstate.h
++++ b/src/qtum/qtumstate.h
+@@ -81,8 +81,6 @@ public:
+
+     void setRootUTXO(dev::h256 const& _r) { cacheUTXO.clear(); stateUTXO.setRoot(_r); }
+
+-    void setCacheUTXO(dev::Address const& address, Vin const& vin) { cacheUTXO.insert(std::make_pair(address, vin)); }
+-
+     dev::h256 rootHashUTXO() const { return stateUTXO.root(); }
+
+     std::unordered_map<dev::Address, Vin> vins() const; // temp
+diff --git a/src/rpc/client.cpp b/src/rpc/client.cpp
+index ec3dd3b055..9c16a4f439 100644
+--- a/src/rpc/client.cpp
++++ b/src/rpc/client.cpp
+@@ -68,6 +68,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
+     { "listtransactions", 3, "include_watchonly" },
+     { "walletpassphrase", 1, "timeout" },
+     { "walletpassphrase", 2, "stakingonly" },
++    { "getwork", 0, "data" },
+     { "getblocktemplate", 0, "template_request" },
+     { "listsinceblock", 1, "target_confirmations" },
+     { "listsinceblock", 2, "include_watchonly" },
+diff --git a/src/test/validation_tests.cpp b/src/test/validation_tests.cpp
+index 0ffe020a77..79f13dc4dc 100644
+--- a/src/test/validation_tests.cpp
++++ b/src/test/validation_tests.cpp
+@@ -15,19 +15,9 @@ BOOST_FIXTURE_TEST_SUITE(validation_tests, TestingSetup)
+
+ static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
+ {
+-    int maxHalvings = 7;
+-    CAmount nInitialSubsidy = 4 * COIN;
+-
+-    CAmount nPreviousSubsidy = nInitialSubsidy * 2 ; // for height == LastPoWBlock + 1
+-    BOOST_CHECK_EQUAL(nPreviousSubsidy, nInitialSubsidy * 2);
+-    for (int nHalvings = 0; nHalvings < maxHalvings; nHalvings++) {
+-        int nHeight = nHalvings * consensusParams.nSubsidyHalvingInterval + consensusParams.nLastBigReward + 1;
+-        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
+-        BOOST_CHECK(nSubsidy <= nInitialSubsidy);
+-        BOOST_CHECK_EQUAL(nSubsidy, nPreviousSubsidy / 2);
+-        nPreviousSubsidy = nSubsidy;
+-    }
+-    BOOST_CHECK_EQUAL(GetBlockSubsidy(maxHalvings * consensusParams.nSubsidyHalvingInterval + consensusParams.nLastBigReward + 1, consensusParams), 0);
++    Consensus::Params consensusParams;
++    consensusParams.nSubsidyHalvingInterval = nSubsidyHalvingInterval;
++    TestBlockSubsidyHalvings(consensusParams);
+ }
+
+ static void TestBlockSubsidyHalvings(int nSubsidyHalvingInterval)
+@@ -55,43 +45,11 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
+     consensusParams.nReduceBlocktimeHeight = 800000; // Check for the halving after fork for target spacing
+     int nMaxHeight = 14000000 * consensusParams.nBlocktimeDownscaleFactor;
+     CAmount nSum = 0;
+-    for (int nHeight = 1; nHeight < nMaxHeight; nHeight++) {
+-        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
+-        int nSubsidyHalvingWeight = consensusParams.SubsidyHalvingWeight(nHeight);
+-        int nSubsidyHalvingInterval = consensusParams.SubsidyHalvingInterval(nHeight);
+-        int nBlocktimeDownscaleFactor = consensusParams.BlocktimeDownscaleFactor(nHeight);
+-
+-        if(nSubsidyHalvingWeight <= 0){
+-            BOOST_CHECK_EQUAL(nSubsidy, (20000 * COIN));
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval){
+-            BOOST_CHECK_EQUAL(nSubsidy, 4 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*2){
+-            BOOST_CHECK_EQUAL(nSubsidy, 2 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*3){
+-            BOOST_CHECK_EQUAL(nSubsidy, 1 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*4){
+-            BOOST_CHECK_EQUAL(nSubsidy, 0.5 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*5){
+-            BOOST_CHECK_EQUAL(nSubsidy, 0.25 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*6){
+-            BOOST_CHECK_EQUAL(nSubsidy, 0.125 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*7){
+-            BOOST_CHECK_EQUAL(nSubsidy, 0.0625 * COIN / nBlocktimeDownscaleFactor);
+-        }
+-        else{
+-            BOOST_CHECK_EQUAL(nSubsidy, 0);
+-        }
+-        nSum += nSubsidy;
++    for (int nHeight = 0; nHeight < 14000000; nHeight += 1000) {
++        BOOST_CHECK(nSubsidy <= 1250 * COIN);
++        nSum += nSubsidy * 1000;
+         BOOST_CHECK(MoneyRange(nSum));
+     }
+-    BOOST_CHECK_EQUAL(nSum, 10782240625000000ULL);
+ }
+
+ static bool ReturnFalse() { return false; }
+diff --git a/src/txmempool.cpp b/src/txmempool.cpp
+index f2edef4768..47d25b93f4 100644
+--- a/src/txmempool.cpp
++++ b/src/txmempool.cpp
+@@ -6,6 +6,7 @@
+ #include <txmempool.h>
+
+ #include <algorithm>
++#include <chainparams.h>
+ #include <consensus/consensus.h>
+ #include <consensus/tx_verify.h>
+ #include <consensus/validation.h>
+@@ -611,6 +612,13 @@ static void CheckInputsAndUpdateCoins(const CTransaction& tx, CCoinsViewCache& m
+     TxValidationState dummy_state; // Not used. CheckTxInputs() should always pass
+     CAmount txfee = 0;
+     bool fCheckResult = tx.IsCoinBase() || Consensus::CheckTxInputs(tx, dummy_state, mempoolDuplicate, spendheight, txfee);
++
++    int nHeight;
++    {
++        LOCK(cs_main);
++        nHeight = ::ChainActive().Tip()->nHeight;
++    }
++
+     assert(fCheckResult);
+     UpdateCoins(tx, mempoolDuplicate, std::numeric_limits<int>::max());
+ }
+diff --git a/src/util/strencodings.h b/src/util/strencodings.h
+index 6ce17ec01e..943668b0b4 100644
+--- a/src/util/strencodings.h
++++ b/src/util/strencodings.h
+@@ -16,6 +16,8 @@
+ #include <string>
+ #include <vector>
+
++#define BEGIN(a)            ((char*)&(a))
++#define END(a)              ((char*)&((&(a))[1]))
+ #define ARRAYLEN(array)     (sizeof(array)/sizeof((array)[0]))
+
+ /** Used by SanitizeString() */
+diff --git a/src/version.h b/src/version.h
+index c79f2f10ce..9aaf6e7881 100644
+--- a/src/version.h
++++ b/src/version.h
+@@ -18,7 +18,7 @@ static const int INIT_PROTO_VERSION = 209;
+ static const int GETHEADERS_VERSION = 31800;
+
+ //! disconnect from peers older than this proto version
+-static const int MIN_PEER_PROTO_VERSION = 70016;
++static const int MIN_PEER_PROTO_VERSION = 70003;
+
+ //! disconnect from peers older than this proto version after QIP7
+ static const int MIN_PEER_PROTO_VERSION_AFTER_QIP7 = 70017;
+@@ -37,18 +37,18 @@ static const int CADDR_TIME_VERSION = 31402;
+ static const int BIP0031_VERSION = 60000;
+
+ //! "filter*" commands are disabled without NODE_BLOOM after and including this version
+-static const int NO_BLOOM_VERSION = 70011;
++static const int NO_BLOOM_VERSION = 70000;
+
+ //! "sendheaders" command and announcing blocks with headers starts with this version
+-static const int SENDHEADERS_VERSION = 70012;
++static const int SENDHEADERS_VERSION = 70000;
+
+ //! "feefilter" tells peers to filter invs to you by fee starts with this version
+-static const int FEEFILTER_VERSION = 70013;
++static const int FEEFILTER_VERSION = 70000;
+
+ //! short-id-based block download starts with this version
+-static const int SHORT_IDS_BLOCKS_VERSION = 70014;
++static const int SHORT_IDS_BLOCKS_VERSION = 70000;
+
+ //! not banning for invalid compact blocks starts with this version
+-static const int INVALID_CB_NO_BAN_VERSION = 70015;
++static const int INVALID_CB_NO_BAN_VERSION = 70000;
+
+ #endif // BITCOIN_VERSION_H
