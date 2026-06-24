@@ -156,7 +156,7 @@ double GetPoSKernelPS()
 
     if (nStakesTime)
         result = dStakeKernelsTriedAvg / nStakesTime;
-    
+
     result *= stakeTimestampMask + 1;
 
     return result;
@@ -223,7 +223,7 @@ UniValue blockheaderToJSON(const CBlockIndex* tip, const CBlockIndex* blockindex
         result.pushKV("previousblockhash", blockindex->pprev->GetBlockHash().GetHex());
     if (pnext)
         result.pushKV("nextblockhash", pnext->GetBlockHash().GetHex());
-	
+
     result.pushKV("flags", strprintf("%s", blockindex->IsProofOfStake()? "proof-of-stake" : "proof-of-work"));
     result.pushKV("proofhash", blockindex->hashProof.GetHex());
     result.pushKV("modifier", blockindex->nStakeModifier.GetHex());
@@ -847,7 +847,18 @@ static UniValue getblockhash(const JSONRPCRequest& request)
 
     LOCK(cs_main);
 
-    int nHeight = request.params[0].get_int();
+    int nHeight;
+    if (request.params[0].isNum()) {
+        nHeight = request.params[0].get_int();
+    } else if (request.params[0].isStr()) {
+        try {
+            nHeight = std::stoi(request.params[0].get_str());
+        } catch (...) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is not a valid integer string");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be an integer");
+    }
     if (nHeight < 0 || nHeight > ::ChainActive().Height())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Block height out of range");
 
@@ -885,7 +896,7 @@ static UniValue getaccountinfo(const JSONRPCRequest& request)
     dev::Address addrAccount(strAddr);
     if(!globalState->addressInUse(addrAccount))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
-    
+
     UniValue result(UniValue::VOBJ);
 
     result.pushKV("address", strAddr);
@@ -900,7 +911,7 @@ static UniValue getaccountinfo(const JSONRPCRequest& request)
         e.pushKV(dev::toHex(dev::h256(j.second.first)), dev::toHex(dev::h256(j.second.second)));
         storageUV.pushKV(j.first.hex(), e);
     }
-        
+
     result.pushKV("storage", storageUV);
 
     result.pushKV("code", HexStr(code.begin(), code.end()));
@@ -962,7 +973,7 @@ static UniValue getstorage(const JSONRPCRequest& request)
 
     std::string strAddr = request.params[0].get_str();
     if(strAddr.size() != 40 || !CheckHex(strAddr))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address"); 
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address");
 
     TemporaryState ts(globalState);
     if (request.params.size() > 1)
@@ -975,7 +986,7 @@ static UniValue getstorage(const JSONRPCRequest& request)
 
             if(blockNum != -1)
                 ts.SetRoot(uintToh256(::ChainActive()[blockNum]->hashStateRoot), uintToh256(::ChainActive()[blockNum]->hashUTXORoot));
-                
+
         } else {
             throw JSONRPCError(RPC_INVALID_PARAMS, "Incorrect block number");
         }
@@ -984,7 +995,7 @@ static UniValue getstorage(const JSONRPCRequest& request)
     dev::Address addrAccount(strAddr);
     if(!globalState->addressInUse(addrAccount))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
-    
+
     UniValue result(UniValue::VOBJ);
 
     bool onlyIndex = request.params.size() > 2;
@@ -1006,7 +1017,7 @@ static UniValue getstorage(const JSONRPCRequest& request)
         UniValue e(UniValue::VOBJ);
 
         storage = {{elem->first, {elem->second.first, elem->second.second}}};
-    } 
+    }
     for (const auto& j: storage)
     {
         UniValue e(UniValue::VOBJ);
@@ -1258,7 +1269,7 @@ UniValue callcontract(const JSONRPCRequest& request)
             + HelpExampleRpc("callcontract", "\"\" 60606040525b33600060006101000a81548173ffffffffffffffffffffffffffffffffffffffff02191690836c010000000000000000000000009081020402179055506103786001600050819055505b600c80605b6000396000f360606040526008565b600256")
                 },
             }.Check(request);
- 
+
     return CallToContract(request.params);
 }
 
@@ -1310,7 +1321,7 @@ UniValue waitforlogs(const JSONRPCRequest& request_) {
                     {"filter", RPCArg::Type::STR, /* default */ "{}", "\"{ addresses?: Hex160String[], topics?: Hex256String[] }\", Filter conditions for logs."},
                     {"minconf", RPCArg::Type::NUM, /* default */ "6", "Minimal number of confirmations before a log is returned"},
                 },
-                RPCResult{RPCResult::Type::STR, "", 
+                RPCResult{RPCResult::Type::STR, "",
                 "An object with the following properties:\n"
                 "1. logs (LogEntry[]) Array of matchiing log entries. This may be empty if `filter` removed all entries."
                 "2. count (int) How many log entries are returned."
@@ -1540,7 +1551,7 @@ UniValue gettransactionreceipt(const JSONRPCRequest& request)
             + HelpExampleRpc("gettransactionreceipt", "3b04bc73afbbcf02cfef2ca1127b60fb0baf5f8946a42df67f1659671a2ec53c")
                 },
             }.Check(request);
- 
+
     if(!fLogEvents)
         throw JSONRPCError(RPC_INTERNAL_ERROR, "Events indexing disabled");
 
@@ -1550,7 +1561,7 @@ UniValue gettransactionreceipt(const JSONRPCRequest& request)
     if(hashTemp.size() != 64){
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect hash");
     }
-    
+
     uint256 hash(uint256S(hashTemp));
 
     std::vector<TransactionReceiptInfo> transactionReceiptInfo = pstorageresult->getResult(uintToh256(hash));
@@ -3579,6 +3590,66 @@ static UniValue qrc20listtransactions(const JSONRPCRequest& request)
     return res;
 }
 
+static UniValue getreplaybaseline(const JSONRPCRequest& request)
+{
+    RPCHelpMan{"getreplaybaseline",
+        "\nReturns baseline info for block replay validation at the given height.\n",
+        {
+            {"height", RPCArg::Type::NUM, RPCArg::Optional::NO, "The block height"},
+        },
+        RPCResult{
+            RPCResult::Type::OBJ, "", "",
+            {
+                {RPCResult::Type::NUM, "height", "The block height"},
+                {RPCResult::Type::STR_HEX, "hash", "The block hash"},
+                {RPCResult::Type::STR_HEX, "bits", "The block nBits"},
+                {RPCResult::Type::STR_HEX, "hashStateRoot", "The state root hash"},
+                {RPCResult::Type::STR_HEX, "hashUTXORoot", "The UTXO root hash"},
+                {RPCResult::Type::NUM, "moneysupply", "The money supply"},
+            }
+        },
+        RPCExamples{
+            HelpExampleCli("getreplaybaseline", "1000000")
+            + HelpExampleRpc("getreplaybaseline", "1000000")
+        }
+    }.Check(request);
+
+    int nHeight;
+    if (request.params[0].isNum()) {
+        nHeight = request.params[0].get_int();
+    } else if (request.params[0].isStr()) {
+        try {
+            nHeight = std::stoi(request.params[0].get_str());
+        } catch (...) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is not a valid integer string");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be an integer");
+    }
+    if (nHeight < 0) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be non-negative");
+    }
+
+    const CBlockIndex* pblockindex = nullptr;
+    {
+        LOCK(cs_main);
+        if (nHeight > ::ChainActive().Height()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is out of range");
+        }
+        pblockindex = ::ChainActive()[nHeight];
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("height", nHeight);
+    result.pushKV("hash", pblockindex->GetBlockHash().GetHex());
+    result.pushKV("bits", strprintf("%08x", pblockindex->nBits));
+    result.pushKV("hashStateRoot", pblockindex->hashStateRoot.GetHex());
+    result.pushKV("hashUTXORoot", pblockindex->hashUTXORoot.GetHex());
+    result.pushKV("moneysupply", (uint64_t)pblockindex->nMoneySupply);
+
+    return result;
+}
+
 void RegisterBlockchainRPCCommands(CRPCTable &t)
 {
 // clang-format off
@@ -3586,6 +3657,7 @@ static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
     { "blockchain",         "getblockchaininfo",      &getblockchaininfo,      {} },
+    { "blockchain",         "getreplaybaseline",      &getreplaybaseline,      {"height"} },
     { "blockchain",         "getchaintxstats",        &getchaintxstats,        {"nblocks", "blockhash"} },
     { "blockchain",         "getblockstats",          &getblockstats,          {"hash_or_height", "stats"} },
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       {} },

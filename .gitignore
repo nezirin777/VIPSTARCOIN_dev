@@ -163,3 +163,6 @@ Debug
 
 
 *~
+baseline_v1.2.4.1.ndjson
+*.ndjson
+*.ndjson.progress
