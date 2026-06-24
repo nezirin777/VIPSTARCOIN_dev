@@ -151,3 +151,83 @@ vipstarcoin-cli -rpcuser=nezirin -rpcpassword=eclipse getreplaybaseline 0
 ```bash
 RPC_USER=nezirin RPC_PASS=eclipse node extract_baseline.js
 ```
+
+---
+
+## Qtum 上流バニラビルド時の既知問題と対処（Phase 6 Step 1-a 検証済み）
+
+> **対象**: `~/qtum-v22.1`（Qtum 公式リポジトリのバニラコード）
+> WSL2 + MinGW 環境で上流 Qtum をビルドする際に発生した問題と対策の記録。
+> Step 1-b 以降の移植作業でも同様の問題が再発しうるため、手順を記録する。
+
+---
+
+### 問題1: GMP — `Cannot determine executable suffix`
+
+**症状**: `depends` のビルド中、gmp の configure フェーズで停止する。
+
+```
+configure: error: cannot determine suffix of executables
+```
+
+**原因**: クロスコンパイル環境でのホスト側実行ファイル拡張子の自動検出に失敗する。
+
+**対処**: VIPS v1.2.4.1 で適用済みの修正版 `depends/packages/gmp.mk` を上流リポジトリにコピーして上書きする。
+
+```bash
+cp ~/VIPSTARCOIN_dev/depends/packages/gmp.mk ~/qtum-vXX.X/depends/packages/gmp.mk
+```
+
+> **Step 1-b 以降**: 同じ対処で対応可能。VIPS 側の `gmp.mk` を流用する。
+
+---
+
+### 問題2: evmone/evmc サブモジュール競合
+
+**症状**: 本体ビルド開始直後に以下のエラーが発生する。
+
+```
+fatal error: evmc/evmc.hpp: No such file or directory
+```
+
+`git submodule update --init --recursive` を実行しても、`src/evmone` ディレクトリが
+既に存在（中身あり）するため Git が安全策としてクローンをアボートする。
+
+**対処**: 競合ディレクトリを強制削除してからサブモジュール更新を実行する。
+
+```bash
+rm -rf src/evmone
+git submodule update --init --recursive
+```
+
+> ⚠️ **Step 1-b（22.0 移植）で特に要注意**。
+> 22.0 では `src/cpp-ethereum` → `src/evmone` へのサブモジュール自体の置き換えが発生する。
+> VIPS リポジトリ側に `src/cpp-ethereum` が残った状態で上流の `src/evmone` を導入する際、
+> このディレクトリ競合が高確率で発生する。移植前に両ディレクトリの状態を確認すること。
+
+---
+
+### 問題3: secp256k1 — `gen_context` が PE バイナリとしてビルドされる
+
+**症状**: secp256k1 のビルド中に以下のエラーが発生して停止する。
+
+```
+./gen_context: No such file or directory
+make[3]: *** [Error 127]
+```
+
+**原因**: ビルド中にテーブルを動的生成する内部ツール `gen_context` が、
+MinGW クロスコンパイラによって Windows 向け PE バイナリとしてコンパイルされる。
+WSL2（Linux）上では実行不可能なため `make` が失敗する。
+
+**対処**: `gen_context` のみをホスト側 gcc で ELF バイナリとして手動ビルドして上書きする。
+
+```bash
+cd src/secp256k1
+gcc -O2 -I. -I./src src/gen_context.c -o gen_context
+cd ../..
+make -j$(nproc) 2>&1 | tee build.log
+```
+
+> **Step 1-b 以降**: secp256k1 を含むすべての Step で同様に発生しうる。
+> `make` が `Error 127` で止まった場合はまずこの問題を疑うこと。
