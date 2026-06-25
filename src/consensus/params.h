@@ -8,6 +8,7 @@
 
 #include <uint256.h>
 #include <limits>
+#include <string>
 
 namespace Consensus {
 
@@ -126,6 +127,12 @@ struct Params {
     int64_t nPowTargetTimespan;
     int64_t nPowTargetTimespanV2;
     int64_t nRBTPowTargetTimespan;
+    int64_t nPosTargetTimespan;
+    int64_t nPosTargetTimespanV2;
+    int nDiffAdjustChange;
+    int nDiffDamping;
+    unsigned int nDiffChange;
+    std::string checkpointPubKey;
     uint256 nMinimumChainWork;
     /** By default assume that the signatures in ancestors of this block are valid */
     uint256 defaultAssumeValid;

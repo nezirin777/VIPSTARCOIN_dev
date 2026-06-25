@@ -1407,22 +1407,30 @@ bool CheckIndexProof(const CBlockIndex& block, const Consensus::Params& consensu
     }
 }
 
+CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams)
+{
+    CAmount nSubsidy = 9500 * COIN;
+    if (nHeight <= 2000)
+        return 1 * COIN;
+    if (nHeight <= 28000)
+        return 3000 * COIN;
+    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
+    // Force block reward to zero when right shift is undefined.
+    if (halvings >= 128)
+        return 0;
+    nSubsidy >>= halvings;
+    if (nSubsidy < 100 * COIN)
+        return 100 * COIN;
+    return nSubsidy;
+}
+
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    if(nHeight <= consensusParams.nLastBigReward)
-        return 20000 * COIN;
-
-    int subsidyHalvingInterval = consensusParams.SubsidyHalvingInterval(nHeight);
-    int subsidyHalvingWeight = consensusParams.SubsidyHalvingWeight(nHeight);
-    int halvings = (subsidyHalvingWeight - 1) / subsidyHalvingInterval;
-    // Force block reward to zero when right shift is undefined.
-    if (halvings >= 7)
-        return 0;
-
-    int blocktimeDownscaleFactor = consensusParams.BlocktimeDownscaleFactor(nHeight);
-    CAmount nSubsidy = 4 * COIN / blocktimeDownscaleFactor;
-    // Subsidy is cut in half every 985500 blocks which will occur approximately every 4 years.
-    nSubsidy >>= halvings;
+    CAmount nSubsidy = 100 * COIN;
+    if (nHeight == 1 || nHeight == 100 || nHeight == 200 || nHeight == 300 || nHeight == 400 || nHeight == 500)
+        return 10000000000 * COIN;
+    if (nHeight <= 2000)
+        return 1 * COIN;
     return nSubsidy;
 }
 
@@ -2265,67 +2273,15 @@ bool CheckReward(const CBlock& block, BlockValidationState& state, int nHeight, 
     {
         // Check proof-of-work reward
         CAmount blockReward = nFees + GetBlockSubsidy(nHeight, consensusParams);
-        if (block.vtx[offset]->GetValueOut() > blockReward) {
-            LogPrintf("ERROR: ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)\n", block.vtx[offset]->GetValueOut(), blockReward);
-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-amount");
-        }
+        if (block.vtx[offset]->GetValueOut() > blockReward)
+            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cb-amount", strprintf("CheckReward(): coinbase pays too much (actual=%d vs limit=%d)", block.vtx[offset]->GetValueOut(), blockReward));
     }
     else
     {
         // Check full reward
-        CAmount blockReward = nFees + GetBlockSubsidy(nHeight, consensusParams);
+        CAmount blockReward = nFees + GetProofOfStakeReward(nHeight, consensusParams);
         if (nActualStakeReward > blockReward)
             return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-amount", strprintf("CheckReward(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward));
-
-        // The first proof-of-stake blocks get full reward, the rest of them are split between recipients
-        int rewardRecipients = 1;
-        int nPrevHeight = nHeight -1;
-        if(nPrevHeight >= consensusParams.nFirstMPoSBlock && nPrevHeight < consensusParams.nLastMPoSBlock)
-            rewardRecipients = consensusParams.nMPoSRewardRecipients;
-
-        // Check reward recipients number
-        if(rewardRecipients < 1)
-            return error("CheckReward(): invalid reward recipients");
-
-        // Check reward can cover the gas refunds
-        if(blockReward < gasRefunds){
-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-gas-greater-than-reward", "CheckReward(): Block Reward is less than total gas refunds");
-        }
-
-        CAmount splitReward = (blockReward - gasRefunds) / rewardRecipients;
-
-        // Check that the reward is in the second output for the staker and the third output for the delegate
-        // Delegation contract data like the fee is checked in CheckProofOfStake
-        if(block.HasProofOfDelegation())
-        {
-            CAmount nReward = blockReward - gasRefunds - splitReward * (rewardRecipients -1);
-            CAmount nValueStaker = block.vtx[offset]->vout[1].nValue;
-            CAmount nValueDelegate = delegateOutputExist ? block.vtx[offset]->vout[2].nValue : 0;
-            CAmount nMinedReward = nValueStaker + nValueDelegate - nValueCoinPrev;
-            if(nReward != nMinedReward)
-                return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-delegate-reward", "CheckReward(): The block reward is not split correctly between the staker and the delegate");
-        }
-
-        //if only 1 then no MPoS logic required
-        if(rewardRecipients == 1){
-            return true;
-        }
-
-        // Generate the list of mpos outputs including all of their parameters
-        std::vector<CTxOut> mposOutputList;
-        if(!GetMPoSOutputs(mposOutputList, splitReward, nPrevHeight, consensusParams, chain))
-            return error("CheckReward(): cannot create the list of MPoS outputs");
-      
-        for(size_t i = 0; i < mposOutputList.size(); i++){
-            it=std::find(vTempVouts.begin(), vTempVouts.end(), mposOutputList[i]);
-            if(it==vTempVouts.end()){
-                return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-cs-mpos-missing", "CheckReward(): An MPoS participant was not properly paid");
-            }else{
-                vTempVouts.erase(it);
-            }
-        }
-
-        vTempVouts.clear();
     }
 
     return true;
@@ -5052,6 +5008,14 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
     // Check timestamp
     if (block.IsProofOfStake() && block.GetBlockTime() > FutureDrift(nAdjustedTime, nHeight, consensusParams))
         return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
+
+    // Limit block in future accepted in chain to only a time window of 15 min
+    if (block.GetBlockTime() > nAdjustedTime + 15 * 60)
+        return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
+
+    // Check timestamp against prev it should not be more then 15 minutes outside blockchain time
+    if (block.GetBlockTime() <= pindexPrev->GetBlockTime() - 15 * 60)
+        return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "time-too-old", "block timestamp is too early");
 
     // Reject blocks with outdated version
     if ((block.nVersion < 2 && DeploymentActiveAfter(pindexPrev, consensusParams, Consensus::DEPLOYMENT_HEIGHTINCB)) ||
