@@ -23,6 +23,8 @@
 #include <util/moneystr.h>
 #include <util/system.h>
 #include <validation.h>
+#include <memory>
+
 #include <util/threadnames.h>
 #include <key_io.h>
 #include <qtum/qtumledger.h>
@@ -37,6 +39,72 @@
 #include <utility>
 
 namespace node {
+uint32_t ByteReverse(uint32_t value)
+{
+    value = ((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8);
+    return (value<<16) | (value>>16);
+}
+
+void FormatHashBuffers(CBlock* pblock, char* pdata)
+{
+    unsigned char workpadding[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0xff, 0xff, 0xff, 0xff, 0x00};
+    struct
+    {
+        struct unnamed2
+        {
+            int nVersion;
+            uint256 hashPrevBlock;
+            uint256 hashMerkleRoot;
+            unsigned int nTime;
+            unsigned int nBits;
+            unsigned int nNonce;
+            uint256 hashStateRoot; // qtum
+            uint256 hashUTXORoot; // qtum
+            unsigned char workpadding[48];//37
+        }
+        block;
+        unsigned char pchPadding0[64];
+    }
+    tmp;
+    memset(&tmp, 0, sizeof(tmp));
+
+    tmp.block.nVersion       = pblock->nVersion;
+    tmp.block.hashPrevBlock  = pblock->hashPrevBlock;
+    tmp.block.hashMerkleRoot = pblock->hashMerkleRoot;
+    tmp.block.nTime          = pblock->nTime;
+    tmp.block.nBits          = pblock->nBits;
+    tmp.block.nNonce         = pblock->nNonce;
+    tmp.block.hashStateRoot  = pblock->hashStateRoot; // qtum
+    tmp.block.hashUTXORoot   = pblock->hashUTXORoot; // qtum
+    memcpy((unsigned char *)(tmp.block.workpadding), workpadding, sizeof(workpadding));
+    // Byte swap all the input buffer
+    for (unsigned int i = 0; i < 180/4; i++) // sizeof(tmp)/4
+        ((unsigned int*)&tmp.block)[i] = ByteReverse(((unsigned int*)&tmp.block)[i]);
+    memcpy(pdata, &tmp.block, 192); // 192 // 128
+}
+bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman)
+{
+    uint256 hash = pblock->GetHash();
+    arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
+    if (UintToArith256(hash) > hashTarget)
+        return false;
+    // Found a solution
+    {
+        LOCK(cs_main);
+        if (pblock->hashPrevBlock != chainman.ActiveChain().Tip()->GetBlockHash())
+            return error("CheckWork: Generated block is stale!");
+        // Process this block the same as if we had received it from another node
+        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+        bool fNewBlock = false;
+        if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, &fNewBlock))
+            return error("CheckWork: block not accepted");
+    }
+    return true;
+}
 unsigned int nMaxStakeLookahead = MAX_STAKE_LOOKAHEAD;
 unsigned int nBytecodeTimeBuffer = BYTECODE_TIME_BUFFER;
 unsigned int nStakeTimeBuffer = STAKE_TIME_BUFFER;
@@ -170,7 +238,7 @@ void BlockAssembler::RebuildRefundTransaction(CBlock* pblock){
     pblock->vtx[refundtx] = MakeTransactionRef(std::move(contrTx));
 }
 
-std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fProofOfStake, int64_t* pTotalFees, int32_t txProofTime, int32_t nTimeLimit)
+std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx, bool fProofOfStake, int64_t* pTotalFees, int32_t txProofTime, int32_t nTimeLimit, bool externalGBT)
 {
     int64_t nTimeStart = GetTimeMicros();
 
@@ -276,7 +344,7 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     txGasLimit = gArgs.GetIntArg("-staker-max-tx-gas-limit", softBlockGasLimit);
 
     nBlockMaxWeight = blockSizeDGP ? blockSizeDGP * WITNESS_SCALE_FACTOR : nBlockMaxWeight;
-    
+
     dev::h256 oldHashStateRoot(globalState->rootHash());
     dev::h256 oldHashUTXORoot(globalState->rootHashUTXO());
     ////////////////////////////////////////////////// deploy offline staking contract
@@ -478,7 +546,7 @@ bool BlockAssembler::AttemptToAddContractToBlock(CTxMemPool::txiter iter, uint64
         // Contract staking is disabled for the staker
         return false;
     }
-    
+
     dev::h256 oldHashStateRoot(globalState->rootHash());
     dev::h256 oldHashUTXORoot(globalState->rootHashUTXO());
     // operate on local vars first, then later apply to `this`

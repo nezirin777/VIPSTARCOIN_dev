@@ -652,6 +652,38 @@ static RPCHelpMan getblockhash()
     };
 }
 
+static RPCHelpMan getcontractcode()
+{
+    return RPCHelpMan{"getcontractcode",
+                "\nGet contract code method.\n",
+                {
+                    {"address", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
+                },
+                RPCResult{
+                    RPCResult::Type::STR_HEX, "code", "The contract byte code"},
+                RPCExamples{
+                    HelpExampleCli("getcontractcode", "eb23c0b3e6042821da281a2e2364feb22dd543e3")
+            + HelpExampleRpc("getcontractcode", "eb23c0b3e6042821da281a2e2364feb22dd543e3")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+
+    std::string strAddr = request.params[0].get_str();
+    if(strAddr.size() != 40 || !CheckHex(strAddr))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address");
+
+    dev::Address addrAccount(strAddr);
+    if(!globalState->addressInUse(addrAccount))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
+
+    std::vector<uint8_t> code(globalState->code(addrAccount));
+
+    return HexStr(code);
+},
+    };
+}
+
 static RPCHelpMan getaccountinfo()
 {
     return RPCHelpMan{"getaccountinfo",
@@ -3722,10 +3754,75 @@ static RPCHelpMan qrc20listtransactions()
     };
 }
 
+static RPCHelpMan getreplaybaseline()
+{
+    return RPCHelpMan{"getreplaybaseline",
+                "\nReturns baseline info for block replay validation at the given height.\n",
+                {
+                    {"height", RPCArg::Type::NUM, RPCArg::Optional::NO, "The block height"},
+                },
+                RPCResult{
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::NUM, "height", "The block height"},
+                        {RPCResult::Type::STR_HEX, "hash", "The block hash"},
+                        {RPCResult::Type::STR_HEX, "bits", "The block nBits"},
+                        {RPCResult::Type::STR_HEX, "hashStateRoot", "The state root hash"},
+                        {RPCResult::Type::STR_HEX, "hashUTXORoot", "The UTXO root hash"},
+                        {RPCResult::Type::NUM, "moneysupply", "The money supply"},
+                    }
+                },
+                RPCExamples{
+                    HelpExampleCli("getreplaybaseline", "1000000")
+            + HelpExampleRpc("getreplaybaseline", "1000000")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    int nHeight;
+    if (request.params[0].isNum()) {
+        nHeight = request.params[0].get_int();
+    } else if (request.params[0].isStr()) {
+        try {
+            nHeight = std::stoi(request.params[0].get_str());
+        } catch (...) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is not a valid integer string");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be an integer");
+    }
+
+    ChainstateManager& chainman = EnsureAnyChainman(request.context);
+    const CBlockIndex* pblockindex = nullptr;
+    {
+        LOCK(cs_main);
+        if (nHeight < 0 || nHeight > chainman.ActiveChain().Height()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is out of range");
+        }
+        pblockindex = chainman.ActiveChain()[nHeight];
+    }
+
+    if (!pblockindex) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block index not found");
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("height", nHeight);
+    result.pushKV("hash", pblockindex->GetBlockHash().GetHex());
+    result.pushKV("bits", strprintf("%08x", pblockindex->nBits));
+    result.pushKV("hashStateRoot", pblockindex->hashStateRoot.GetHex());
+    result.pushKV("hashUTXORoot", pblockindex->hashUTXORoot.GetHex());
+    result.pushKV("moneysupply", (uint64_t)pblockindex->nMoneySupply);
+
+    return result;
+},
+    };
+}
+
 void RegisterBlockchainRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
         {"blockchain", &getblockchaininfo},
+        {"blockchain", &getreplaybaseline},
         {"blockchain", &getchaintxstats},
         {"blockchain", &getblockstats},
         {"blockchain", &getbestblockhash},
@@ -3742,6 +3839,7 @@ void RegisterBlockchainRPCCommands(CRPCTable& t)
         {"blockchain", &pruneblockchain},
         {"blockchain", &verifychain},
         {"blockchain", &getaccountinfo},
+        {"blockchain", &getcontractcode},
         {"blockchain", &getstorage},
         {"blockchain", &preciousblock},
         {"blockchain", &scantxoutset},
