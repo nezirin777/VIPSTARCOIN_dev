@@ -3327,13 +3327,6 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
 //////////////////////////////////////////////////////////////////
 
     pindex->nMoneySupply = (pindex->pprev? pindex->pprev->nMoneySupply : 0) + nValueOut - nValueIn;
-    //only start checking this error after block 5000 and only on testnet and mainnet, not regtest
-    if(pindex->nHeight > 5000 && !m_params.MineBlocksOnDemand()) {
-        //sanity check in case an exploit happens that allows new coins to be minted
-        if(pindex->nMoneySupply > (uint64_t)(100000000 + ((pindex->nHeight - 5000) * 4)) * COIN){
-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "incorrect-money-supply", "ConnectBlock(): Unknown error caused actual money supply to exceed expected money supply");
-        }
-    }
 
     if (!WriteUndoDataForBlock(blockundo, state, pindex, m_params)) {
         return false;
@@ -4979,8 +4972,10 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
 
     // Check proof of work
     const Consensus::Params& consensusParams = params.GetConsensus();
-    if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams, block.IsProofOfStake()))
+    if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams, block.IsProofOfStake())) {
+        LogPrintf("DEBUG_HEADER_FAIL: bad-diffbits at height=%d (block.nBits=0x%08x vs expected=0x%08x)\n", nHeight, block.nBits, GetNextWorkRequired(pindexPrev, &block, consensusParams, block.IsProofOfStake()));
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "bad-diffbits", "incorrect difficulty value");
+    }
 
     // Check against checkpoints
     if (fCheckpointsEnabled) {
@@ -4989,17 +4984,20 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
         // BlockIndex().
         CBlockIndex* pcheckpoint = blockman.GetLastCheckpoint(params.Checkpoints());
         if (pcheckpoint && nHeight < pcheckpoint->nHeight) {
-            LogPrintf("ERROR: %s: forked chain older than last checkpoint (height %d)\n", __func__, nHeight);
+            LogPrintf("DEBUG_HEADER_FAIL: bad-fork-prior-to-checkpoint at height=%d (last checkpoint=%d)\n", nHeight, pcheckpoint->nHeight);
             return state.Invalid(BlockValidationResult::BLOCK_CHECKPOINT, "bad-fork-prior-to-checkpoint");
         }
         if(!blockman.CheckHardened(nHeight, block.GetHash(), params.Checkpoints())) {
+            LogPrintf("DEBUG_HEADER_FAIL: bad-fork-hardened-checkpoint at height=%d\n", nHeight);
             return state.Invalid(BlockValidationResult::BLOCK_CHECKPOINT, "bad-fork-hardened-checkpoint", strprintf("%s: expected hardened checkpoint at height %d", __func__, nHeight));
         }
     }
 
     // Check that the block satisfies synchronized checkpoint
-    if (!blockman.CheckSync(nHeight, chain.Tip()))
+    if (!blockman.CheckSync(nHeight, chain.Tip())) {
+        LogPrintf("DEBUG_HEADER_FAIL: bad-fork-prior-to-synch-checkpoint at height=%d\n", nHeight);
         return state.Invalid(BlockValidationResult::BLOCK_HEADER_SYNC, "bad-fork-prior-to-synch-checkpoint", strprintf("%s: forked chain older than synchronized checkpoint (height %d)", __func__, nHeight));
+    }
 
     // Check timestamp against prev
     if (pindexPrev && block.IsProofOfStake() && block.GetBlockTime() <= pindexPrev->GetMedianTimePast())
@@ -5010,17 +5008,22 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
         return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
 
     // Limit block in future accepted in chain to only a time window of 15 min
-    if (block.GetBlockTime() > nAdjustedTime + 15 * 60)
+    if (block.GetBlockTime() > nAdjustedTime + 15 * 60) {
+        LogPrintf("DEBUG_HEADER_FAIL: time-too-new at height=%d (blockTime=%d > adjustedTime=%d + 15min)\n", nHeight, block.GetBlockTime(), nAdjustedTime);
         return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
+    }
 
     // Check timestamp against prev it should not be more then 15 minutes outside blockchain time
-    if (block.GetBlockTime() <= pindexPrev->GetBlockTime() - 15 * 60)
+    if (block.GetBlockTime() <= pindexPrev->GetBlockTime() - 15 * 60) {
+        LogPrintf("DEBUG_HEADER_FAIL: time-too-old at height=%d (blockTime=%d <= prevTime=%d - 15min)\n", nHeight, block.GetBlockTime(), pindexPrev->GetBlockTime());
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "time-too-old", "block timestamp is too early");
+    }
 
     // Reject blocks with outdated version
     if ((block.nVersion < 2 && DeploymentActiveAfter(pindexPrev, consensusParams, Consensus::DEPLOYMENT_HEIGHTINCB)) ||
         (block.nVersion < 3 && DeploymentActiveAfter(pindexPrev, consensusParams, Consensus::DEPLOYMENT_DERSIG)) ||
         (block.nVersion < 4 && DeploymentActiveAfter(pindexPrev, consensusParams, Consensus::DEPLOYMENT_CLTV))) {
+            LogPrintf("DEBUG_HEADER_FAIL: bad-version=0x%08x at height=%d\n", block.nVersion, nHeight);
             return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, strprintf("bad-version(0x%08x)", block.nVersion),
                                  strprintf("rejected nVersion=0x%08x block", block.nVersion));
     }
