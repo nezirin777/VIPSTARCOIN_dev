@@ -43,8 +43,11 @@
 #include <memory>
 #include <stdint.h>
 
+using node::ByteReverse;
 using node::BlockAssembler;
 using node::CBlockTemplate;
+using node::CheckWork;
+using node::FormatHashBuffers;
 using node::IncrementExtraNonce;
 using node::NodeContext;
 using node::RegenerateCommitments;
@@ -154,8 +157,14 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
     return true;
 }
 
-static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries)
+static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries, const CConnman* connman)
 {
+    if (!connman)
+        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+
+    if (Params().MiningRequiresPeers() && connman->GetNodeCount(ConnectionDirection::Both) == 0)
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
+
     int nHeightEnd = 0;
     int nHeight = 0;
 
@@ -253,7 +262,8 @@ static RPCHelpMan generatetodescriptor()
     const CTxMemPool& mempool = EnsureMemPool(node);
     ChainstateManager& chainman = EnsureChainman(node);
 
-    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries);
+    const CConnman& connman = EnsureConnman(node);
+    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries, &connman);
 },
     };
 }
@@ -301,7 +311,8 @@ static RPCHelpMan generatetoaddress()
 
     CScript coinbase_script = GetScriptForDestination(destination);
 
-    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries);
+    const CConnman& connman = EnsureConnman(node);
+    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries, &connman);
 },
     };
 }
@@ -510,6 +521,178 @@ static std::string gbt_vb_name(const Consensus::DeploymentPos pos) {
     }
     return s;
 }
+
+#ifdef ENABLE_WALLET
+#include <wallet/wallet.h>
+#include <wallet/rpc/util.h>
+using wallet::CWallet;
+using wallet::GetWalletForJSONRPCRequest;
+CScript getwork_coinbase_script;
+
+void GenerateCoinbaseAddress(std::shared_ptr<CWallet> const pwallet) {
+    CTxDestination dest;
+    std::string label;
+    bilingual_str error;
+    pwallet->GetNewDestination(OutputType::LEGACY, label, dest, error);
+    getwork_coinbase_script = GetScriptForDestination(dest);
+}
+
+static RPCHelpMan getwork()
+{
+    return RPCHelpMan{"getwork",
+                "\nIf 'data' is not specified, it returns the formatted hash data to work on.\n"
+                "If 'data' is specified, tries to solve the block and returns true if it was successful.\n",
+                {
+                    {"data", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "The hex encoded data to solve"},
+                },
+                RPCResult{
+                    RPCResult::Type::ANY, "", "If data is not specified, returns block template data. If data is specified, returns true/false."
+                },
+                RPCExamples{
+                    HelpExampleCli("getwork", "")
+            + HelpExampleRpc("getwork", "")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    std::shared_ptr<CWallet> const pwallet = GetWalletForJSONRPCRequest(request);
+    if (!pwallet) {
+        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Method not found (wallet must be enabled)");
+    }
+
+    NodeContext& node = EnsureAnyNodeContext(request.context);
+    const CTxMemPool& mempool = EnsureMemPool(node);
+    ChainstateManager& chainman = EnsureChainman(node);
+
+    if (chainman.ActiveChainstate().IsInitialBlockDownload()) {
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is downloading blocks...");
+    }
+
+    typedef std::map<uint256, std::pair<CBlock*, CScript> > mapNewBlock_t;
+    static mapNewBlock_t mapNewBlock;
+
+    typedef std::map<uint256, std::vector<CTransactionRef> > mapNewTransaction_t;
+    static mapNewTransaction_t mapNewTransaction;
+
+    static std::vector<CBlockTemplate*> vNewBlockTemplate;
+
+    if (request.params.size() == 0)
+    {
+        static unsigned int nTransactionsUpdatedLast;
+        static const CBlockIndex* pindexPrev = nullptr;
+        static int64_t nStart;
+        static std::unique_ptr<CBlockTemplate> pblocktemplate;
+
+        LOCK(cs_main);
+
+        if (pindexPrev != chainman.ActiveChain().Tip() ||
+            (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
+        {
+            if (pindexPrev != chainman.ActiveChain().Tip())
+            {
+                mapNewBlock.clear();
+                mapNewTransaction.clear();
+
+                for (auto & pbt : vNewBlockTemplate)
+                    delete pbt;
+                vNewBlockTemplate.clear();
+            }
+
+            pindexPrev = nullptr;
+
+            nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
+            const CBlockIndex* pindexPrevNew = chainman.ActiveChain().Tip();
+            nStart = GetTime();
+
+            if (getwork_coinbase_script.empty()) {
+                GenerateCoinbaseAddress(pwallet);
+                CTxDestination dest;
+                ExtractDestination(getwork_coinbase_script, dest);
+                LogPrintf("getwork: Address generated: %s\n", EncodeDestination(dest));
+            }
+
+            pblocktemplate = BlockAssembler(chainman.ActiveChainstate(), mempool, Params()).CreateNewBlock(getwork_coinbase_script, false, false, nullptr, 0, 0, true);
+            if (!pblocktemplate)
+                throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
+
+            pindexPrev = pindexPrevNew;
+        }
+
+        CBlock* pblock = &pblocktemplate->block;
+        const Consensus::Params& consensusParams = Params().GetConsensus();
+
+        UpdateTime(pblock, consensusParams, pindexPrev);
+        pblock->nNonce = 0;
+
+        static unsigned int nExtraNonce = 0;
+        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
+
+        mapNewBlock[pblock->hashMerkleRoot] = std::make_pair(pblock, pblock->vtx[0]->vin[0].scriptSig);
+        mapNewTransaction[pblock->hashMerkleRoot] = pblock->vtx;
+
+        char pdata[192];
+        FormatHashBuffers(pblock, pdata);
+
+        arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
+
+        UniValue result(UniValue::VOBJ);
+        result.pushKV("data",     HexStr(std::vector<unsigned char>(pdata, pdata + 192)));
+        result.pushKV("target",   hashTarget.GetHex());
+        return result;
+    }
+    else
+    {
+        struct unnamed2
+        {
+            int nVersion;
+            uint256 hashPrevBlock;
+            uint256 hashMerkleRoot;
+            unsigned int nTime;
+            unsigned int nBits;
+            unsigned int nNonce;
+            uint256 hashStateRoot;
+            uint256 hashUTXORoot;
+            unsigned char workpadding[37];
+        } block_data;
+
+        std::vector<unsigned char> vchData = ParseHex(request.params[0].get_str());
+
+        if (vchData.size() != 192) {
+            LogPrintf("%s: Invalid parameter vchData.size(): %u\n", __func__, vchData.size());
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
+        }
+        memset(&block_data, 0, sizeof(block_data));
+        memcpy(&block_data, &vchData[0], 181);
+
+        for (unsigned int i = 0; i < 180/4; i++)
+            ((unsigned int*)&block_data)[i] = ByteReverse(((unsigned int*)&block_data)[i]);
+        if (!mapNewBlock.count(block_data.hashMerkleRoot)) {
+            LogPrintf("%s: Previous block contents not found. hashMerkleRoot: %s\n", __func__, block_data.hashMerkleRoot.ToString().c_str());
+            throw JSONRPCError(RPC_VERIFY_ERROR, "Previous block contents not found");
+        }
+
+        CBlock* pblock = mapNewBlock[block_data.hashMerkleRoot].first;
+
+        pblock->nTime = block_data.nTime;
+        pblock->nNonce = block_data.nNonce;
+        pblock->hashMerkleRoot = block_data.hashMerkleRoot;
+
+        const CChainParams& chainParams = Params();
+
+        pblock->vtx = mapNewTransaction[block_data.hashMerkleRoot];
+        LogPrintf("%s: getwork Block submitted: %s\n", __func__, pblock->ToString().c_str());
+
+        bool success = CheckWork(chainParams, pblock, chainman);
+        if (success){
+            GenerateCoinbaseAddress(pwallet);
+        }
+
+        return success;
+    }
+},
+    };
+}
+#endif
+
 
 static RPCHelpMan getblocktemplate()
 {
@@ -1118,16 +1301,15 @@ static RPCHelpMan estimatesmartfee()
     UniValue result(UniValue::VOBJ);
     UniValue errors(UniValue::VARR);
     FeeCalculation feeCalc;
-    CFeeRate feeRate{fee_estimator.estimateSmartFee(conf_target, &feeCalc, conservative)};
-    if (feeRate != CFeeRate(0)) {
-        CFeeRate min_mempool_feerate{mempool.GetMinFee(gArgs.GetIntArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE) * 1000000)};
-        CFeeRate min_relay_feerate{::minRelayTxFee};
-        feeRate = std::max({feeRate, min_mempool_feerate, min_relay_feerate});
-        result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
-    } else {
-        errors.push_back("Insufficient data or no feerate found");
-        result.pushKV("errors", errors);
+    CFeeRate feeRate = fee_estimator.estimateSmartFee(conf_target, &feeCalc, conservative);
+
+    // VIPS: clamp estimated fee to minimum block fee rate to prevent transaction stuck
+    CFeeRate minFee = CFeeRate(DEFAULT_BLOCK_MIN_TX_FEE);
+    if (feeRate < minFee) {
+        feeRate = minFee;
     }
+
+    result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
     result.pushKV("blocks", feeCalc.returnedTarget);
     return result;
 },
@@ -1264,6 +1446,9 @@ static const CRPCCommand commands[] =
     { "mining",              &getnetworkhashps,        },
     { "mining",              &prioritisetransaction,   },
     { "mining",              &getblocktemplate,        },
+#ifdef ENABLE_WALLET
+    { "mining",              &getwork,                 },
+#endif
     { "mining",              &submitblock,             },
     { "mining",              &submitheader,            },
 
