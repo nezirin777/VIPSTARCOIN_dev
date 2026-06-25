@@ -23,6 +23,54 @@
 #include <util/convert.h>
 #include <util/moneystr.h>
 #include <util/system.h>
+
+uint32_t ByteReverse(uint32_t value)
+{
+    value = ((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8);
+    return (value<<16) | (value>>16);
+}
+
+void FormatHashBuffers(CBlock* pblock, char* pdata)
+{
+    unsigned char workpadding[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                   0xff, 0xff, 0xff, 0xff, 0x00};
+    struct
+    {
+        struct unnamed2
+        {
+            int nVersion;
+            uint256 hashPrevBlock;
+            uint256 hashMerkleRoot;
+            unsigned int nTime;
+            unsigned int nBits;
+            unsigned int nNonce;
+            uint256 hashStateRoot; // qtum
+            uint256 hashUTXORoot; // qtum
+            unsigned char workpadding[48];//37
+        }
+        block;
+        unsigned char pchPadding0[64];
+    }
+    tmp;
+    memset(&tmp, 0, sizeof(tmp));
+
+    tmp.block.nVersion       = pblock->nVersion;
+    tmp.block.hashPrevBlock  = pblock->hashPrevBlock;
+    tmp.block.hashMerkleRoot = pblock->hashMerkleRoot;
+    tmp.block.nTime          = pblock->nTime;
+    tmp.block.nBits          = pblock->nBits;
+    tmp.block.nNonce         = pblock->nNonce;
+    tmp.block.hashStateRoot  = pblock->hashStateRoot; // qtum
+    tmp.block.hashUTXORoot   = pblock->hashUTXORoot; // qtum
+    memcpy((unsigned char *)(tmp.block.workpadding), workpadding, sizeof(workpadding));
+    // Byte swap all the input buffer
+    for (unsigned int i = 0; i < 180/4; i++) // sizeof(tmp)/4
+        ((unsigned int*)&tmp.block)[i] = ByteReverse(((unsigned int*)&tmp.block)[i]);
+    memcpy(pdata, &tmp.block, 192); // 192 // 128
+}
 #include <util/threadnames.h>
 #include <node/blockstorage.h>
 #include <net.h>

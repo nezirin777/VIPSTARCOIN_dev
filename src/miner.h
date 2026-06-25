@@ -340,4 +340,7 @@ void RegenerateCommitments(CBlock& block, ChainstateManager& chainman);
 /** Check if staking is enabled */
 bool CanStake();
 
+uint32_t ByteReverse(uint32_t value);
+void FormatHashBuffers(CBlock* pblock, char* pdata);
+
 #endif // BITCOIN_MINER_H
