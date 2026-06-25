@@ -2339,6 +2339,14 @@ void PeerManagerImpl::ProcessHeadersMessage(CNode& pfrom, const Peer& peer,
     BlockValidationState state;
     if (!ProcessNetBlockHeaders(&pfrom, headers, state, m_chainparams, &pindexLast)) {
         if (state.IsInvalid()) {
+            LogPrintf("DEBUG_PUNISH_REASON: peer=%d, reason=%s, debug_msg=%s\n", pfrom.GetId(), state.GetRejectReason(), state.GetDebugMessage());
+            for (size_t i = 0; i < headers.size(); ++i) {
+                const auto& h = headers[i];
+                LogPrintf("DEBUG_PUNISH_HEADER[%d]: height_approx=%d, version=0x%08x, time=%d, bits=0x%08x, isPoS=%d, prevoutStake=%s\n",
+                    (int)i, (pindexLast ? (int)pindexLast->nHeight + 1 + (int)i : (int)i),
+                    h.nVersion, h.nTime, h.nBits, h.IsProofOfStake() ? 1 : 0,
+                    h.prevoutStake.ToString());
+            }
             MaybePunishNodeForBlock(pfrom.GetId(), state, via_compact_block, "invalid header received");
             return;
         }
