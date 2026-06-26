@@ -4707,7 +4707,7 @@ bool CWallet::IsTokenTxMine(const CTokenTx &wtx) const
         CTokenInfo info = it->second;
         if(wtx.strContractAddress == info.strContractAddress)
         {
-            if(wtx.strSenderAddress == info.strSenderAddress || 
+            if(wtx.strSenderAddress == info.strSenderAddress ||
                 wtx.strReceiverAddress == info.strSenderAddress)
             {
                 ret = true;

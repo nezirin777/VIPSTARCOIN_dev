@@ -77,6 +77,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "listtransactions", 3, "include_watchonly" },
     { "walletpassphrase", 1, "timeout" },
     { "walletpassphrase", 2, "stakingonly" },
+    { "getwork", 0, "data" }, // VIPS仕様: 復活したgetworkの送信データを正しくJSONパースさせる変換定義を追加
     { "getblocktemplate", 0, "template_request" },
     { "listsinceblock", 1, "target_confirmations" },
     { "listsinceblock", 2, "include_watchonly" },

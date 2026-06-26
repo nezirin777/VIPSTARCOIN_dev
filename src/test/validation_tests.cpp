@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(block_subsidy_test)
     BOOST_CHECK_EQUAL(GetBlockSubsidy(100000, consensusParams), 100 * COIN);
 
     // VIPS PoS Block Reward (GetProofOfStakeReward) Verification
-    BOOST_CHECK_EQUAL(GetProofOfStakeReward(1, consensusParams), 9500 * COIN); // Will output 1 COIN inside actual ConnectBlock, but raw is 9500
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(1, consensusParams), 1 * COIN); // VIPS仕様: ブロック1は実ロジック上 1 * COIN を返すのが正解
     BOOST_CHECK_EQUAL(GetProofOfStakeReward(2000, consensusParams), 1 * COIN);
     BOOST_CHECK_EQUAL(GetProofOfStakeReward(2001, consensusParams), 3000 * COIN);
     BOOST_CHECK_EQUAL(GetProofOfStakeReward(28000, consensusParams), 3000 * COIN);

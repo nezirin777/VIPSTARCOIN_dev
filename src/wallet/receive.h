@@ -8,9 +8,8 @@
 #include <consensus/amount.h>
 #include <wallet/ismine.h>
 #include <wallet/transaction.h>
-#include <wallet/wallet.h>
-
 namespace wallet {
+class CWallet;
 isminetype InputIsMine(const CWallet& wallet, const CTxIn& txin) EXCLUSIVE_LOCKS_REQUIRED(wallet.cs_wallet);
 
 /** Returns whether all of the inputs match the filter */
