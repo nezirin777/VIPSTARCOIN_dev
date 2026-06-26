@@ -276,7 +276,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("qtum4.dynu.net"); // Qtum testnet
+        // vSeeds.emplace_back("qtum4.dynu.net"); // Qtum testnet (Disabled for safety)
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,132);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);

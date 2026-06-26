@@ -2,18 +2,55 @@
 
 *.exe
 *.pdb
+
+# -------------------------------------------------------
+# Legacy binary names (Bitcoin upstream / kept for reference)
+# -------------------------------------------------------
+src/bitcoin
+src/bitcoind
+src/bitcoin-cli
+src/bitcoin-gui
+src/bitcoin-node
+src/bitcoin-tx
+src/bitcoin-util
+src/bitcoin-wallet
+src/test/test_bitcoin
+src/qt/test/test_bitcoin-qt
+src/qt/bitcoin-qt
+Bitcoin-Qt.app
+
+# Qtum binary names (kept for reference)
 src/qtum
-src/qtumd
 src/qtum-cli
+src/qtum-tx
+src/qtumd
+src/qtum-wallet
 src/qtum-gui
 src/qtum-node
-src/qtum-tx
 src/qtum-util
 src/qtum-chainstate
-src/qtum-wallet
-src/test/fuzz/fuzz
-src/test/test_qtum
+src/bench/bench_qtum
+src/qt/qtum-qt
 src/qt/test/test_qtum-qt
+src/test/test_qtum
+src/test/test_qtum_fuzzy
+
+# -------------------------------------------------------
+# VIPSTARCOIN binary names
+# -------------------------------------------------------
+src/vipstarcoin
+src/vipstarcoind
+src/vipstarcoin-cli
+src/vipstarcoin-gui
+src/vipstarcoin-node
+src/vipstarcoin-tx
+src/vipstarcoin-util
+src/vipstarcoin-wallet
+src/test/fuzz/fuzz
+src/test/test_vipstarcoin
+src/qt/test/test_vipstarcoin-qt
+src/qt/vipstarcoin-qt
+VIPSTARCOIN-Qt.app
 
 # autoreconf
 Makefile.in
@@ -37,8 +74,12 @@ config.log
 config.status
 configure
 libtool
+
+# Config headers (bitcoin-config.h regardless of project in Autotools)
 src/config/bitcoin-config.h
 src/config/bitcoin-config.h.in
+src/config/vipstarcoin-config.h
+src/config/vipstarcoin-config.h.in
 src/config/stamp-h1
 src/obj
 share/setup.nsi
@@ -47,14 +88,21 @@ share/qt/Info.plist
 src/qt/*.moc
 src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
-
 src/qt/test/moc*.cpp
 
+# Qt Creator project files (Bitcoin upstream)
 src/qt/bitcoin-qt.config
 src/qt/bitcoin-qt.creator
 src/qt/bitcoin-qt.creator.user
 src/qt/bitcoin-qt.files
 src/qt/bitcoin-qt.includes
+
+# Qt Creator project files (VIPSTARCOIN)
+src/qt/vipstarcoin-qt.config
+src/qt/vipstarcoin-qt.creator
+src/qt/vipstarcoin-qt.creator.user
+src/qt/vipstarcoin-qt.files
+src/qt/vipstarcoin-qt.includes
 
 .deps
 .dirstamp
@@ -84,16 +132,19 @@ src/qt/bitcoin-qt.includes
 !contrib/guix/patches/*.patch
 !depends/patches/**/*.patch
 
-#libtool object files
+# libtool object files
 *.lo
 *.la
 
-# Compilation and Qt preprocessor part
+# Compilation and Qt preprocessor
 *.qm
 Makefile
 !depends/Makefile
 src/qt/qtum-qt
 Qtum-Qt.app
+src/qt/bitcoin-qt
+Bitcoin-Qt.app
+background.tiff*
 
 # Qt Creator
 Makefile.am.user
@@ -101,6 +152,8 @@ Makefile.am.user
 # Unit-tests
 Makefile.test
 qtum-qt_test
+bitcoin-qt_test
+vipstarcoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -112,18 +165,19 @@ build
 # Previous releases
 releases
 
-#lcov
+# lcov
 *.gcno
 *.gcda
 /*.info
 test_bitcoin.coverage/
+test_vipstarcoin.coverage/
 total.coverage/
 fuzz.coverage/
 coverage_percent.txt
 /cov_tool_wrapper.sh
 qa-assets/
 
-#build tests
+# Build tests
 linux-coverage-build
 linux-build
 win32-build
@@ -135,7 +189,10 @@ test/.mypy_cache/
 
 /doc/doxygen/
 
+# Consensus library pkg-config
 libbitcoinconsensus.pc
+libvipstarcoinconsensus.pc
+
 contrib/devtools/split-debug.sh
 
 # Output from running db4 installation
@@ -154,7 +211,17 @@ dist/
 .cproject
 .project
 .settings/language.settings.xml
+
 src/test/buildenv.py
 Debug
 src/secp256k1/gen_context
 src/secp256k1/src/ecmult_static_context.h
+
+# IDE / Editor workspace
+.idea
+
+# Phase 6 baseline extraction
+*.ndjson
+*.ndjson.progress
+
+めも
