@@ -271,7 +271,7 @@ static RPCHelpMan listsuperstakervaluesforaddress()
                     "\nList super staker configuration values for address." +
                     HELP_REQUIRING_PASSPHRASE,
                     {
-                        {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The super staker Qtum address."},
+                        {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The super staker VIPSTARCOIN address."},
                     },
                     RPCResult{
                         RPCResult::Type::OBJ, "", "",
@@ -340,7 +340,7 @@ static RPCHelpMan removesuperstakervaluesforaddress()
                     "\nRemove super staker configuration values for address." +
                     HELP_REQUIRING_PASSPHRASE,
                     {
-                        {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The super staker Qtum address."},
+                        {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The super staker VIPSTARCOIN address."},
                     },
                     RPCResult{RPCResult::Type::NONE, "", ""},
                     RPCExamples{
@@ -640,7 +640,7 @@ static RPCHelpMan loadwallet()
 {
     return RPCHelpMan{"loadwallet",
                 "\nLoads a wallet from a wallet file or directory."
-                "\nNote that all wallet command-line options used when starting qtumd will be"
+                "\nNote that all wallet command-line options used when starting vipstarcoind will be"
                 "\napplied to the new wallet.\n",
                 {
                     {"filename", RPCArg::Type::STR, RPCArg::Optional::NO, "The wallet directory or .dat file."},

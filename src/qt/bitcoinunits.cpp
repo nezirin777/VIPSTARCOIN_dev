@@ -31,9 +31,9 @@ QList<BitcoinUnit> BitcoinUnits::availableUnits()
 QString BitcoinUnits::longName(Unit unit)
 {
     switch (unit) {
-    case Unit::BTC: return QString("QTUM");
-    case Unit::mBTC: return QString("mQTUM");
-    case Unit::uBTC: return QString::fromUtf8("µQTUM (bits)");
+    case Unit::BTC: return QString("VIPS");
+    case Unit::mBTC: return QString("mVIPS");
+    case Unit::uBTC: return QString::fromUtf8("μVIPS (bits)");
     case Unit::SAT: return QString("Satoshi (sat)");
     } // no default case, so the compiler can warn about missing cases
     assert(false);
@@ -53,9 +53,9 @@ QString BitcoinUnits::shortName(Unit unit)
 QString BitcoinUnits::description(Unit unit)
 {
     switch (unit) {
-    case Unit::BTC: return QString("Qtums");
-    case Unit::mBTC: return QString("Milli-Qtums (1 / 1" THIN_SP_UTF8 "000)");
-    case Unit::uBTC: return QString("Micro-Qtums (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case Unit::BTC: return QString("VIPSTARCOIN");
+    case Unit::mBTC: return QString("Milli-VIPSTARCOIN (1 / 1" THIN_SP_UTF8 "000)");
+    case Unit::uBTC: return QString("Micro-VIPSTARCOIN (bits) (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     case Unit::SAT: return QString("Satoshi (sat) (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     } // no default case, so the compiler can warn about missing cases
     assert(false);
@@ -131,7 +131,7 @@ QString BitcoinUnits::format(Unit unit, const CAmount& nIn, bool fPlus, Separato
 }
 
 
-// NOTE: Using formatWithUnit in an HTML context risks wrapping
+// NOTE: Using formatWithUnit in an VIPS context risks wrapping
 // quantities at the thousands separator. More subtly, it also results
 // in a standard space rather than a thin space, due to a bug in Qt's
 // XML whitespace canonicalisation

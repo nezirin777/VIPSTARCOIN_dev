@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 The Bitcoin Core developers
+// Copyright (c) 2018-2021 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -18,7 +18,7 @@
 #include <tuple>
 
 const std::string UNIX_EPOCH_TIME = "UNIX epoch time";
-const std::string EXAMPLE_ADDRESS[2] = {"QM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd", "QX1GkJdye9WoUnrE2v6ZQhQ72EUVDtGXQX"};
+const std::string EXAMPLE_ADDRESS[2] = {"VJRt3y2XZwt93fNT6qQVoC5yCLDA5MFcRR", "QX1GkJdye9WoUnrE2v6ZQhQ72EUVDtGXQX"};
 
 GlobalMutex cs_blockchange;
 std::condition_variable cond_blockchange;
@@ -175,12 +175,12 @@ std::string ShellQuoteIfNeeded(const std::string& s)
 
 std::string HelpExampleCli(const std::string& methodname, const std::string& args)
 {
-    return "> qtum-cli " + methodname + " " + args + "\n";
+    return "> vipstarcoin-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleCliNamed(const std::string& methodname, const RPCArgList& args)
 {
-    std::string result = "> qtum-cli -named " + methodname;
+    std::string result = "> vipstarcoin-cli -named " + methodname;
     for (const auto& argpair: args) {
         const auto& value = argpair.second.isStr()
                 ? argpair.second.get_str()
