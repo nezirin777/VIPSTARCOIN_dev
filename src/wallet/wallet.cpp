@@ -2387,25 +2387,14 @@ bool CWallet::CreateCoinStakeFromMine(unsigned int nBits, const CAmount& nTotalF
     }
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    int64_t nRewardPiece = 0;
     // Calculate reward
     {
         int64_t nReward = nTotalFees + GetBlockSubsidy(pindexPrev->nHeight + 1, consensusParams);
         if (nReward < 0)
             return false;
 
-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
-        {
-            // Keep whole reward
-            nCredit += nReward;
-        }
-        else
-        {
-            // Split the reward when mpos is used
-            nRewardPiece = nReward / consensusParams.nMPoSRewardRecipients;
-            nCredit += nRewardPiece + nReward % consensusParams.nMPoSRewardRecipients;
-        }
-   }
+        nCredit += nReward;
+    }
 
     if (nCredit >= GetStakeSplitThreshold())
     {
@@ -2424,11 +2413,7 @@ bool CWallet::CreateCoinStakeFromMine(unsigned int nBits, const CAmount& nTotalF
     else
         txNew.vout[1].nValue = nCredit;
 
-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
-    {
-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams, chain().chainman().ActiveChain()))
-            return error("CreateCoinStake : failed to create MPoS reward outputs");
-    }
+
 
     // Append the Refunds To Sender to the transaction outputs
     for(unsigned int i = 2; i < tx.vout.size(); i++)
@@ -2588,7 +2573,6 @@ bool CWallet::CreateCoinStakeFromDelegate(unsigned int nBits, const CAmount& nTo
         return false;
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    int64_t nRewardPiece = 0;
     int64_t nRewardOffline = 0;
     // Calculate reward
     {
@@ -2596,24 +2580,10 @@ bool CWallet::CreateCoinStakeFromDelegate(unsigned int nBits, const CAmount& nTo
         if (nTotalReward < 0)
             return false;
 
-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
-        {
-            // Keep whole reward
-            int64_t nRewardStaker = 0;
-            if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker))
-                return error("CreateCoinStake: Failed to split reward");
-            nCredit += nRewardStaker;
-        }
-        else
-        {
-            // Split the reward when mpos is used
-            nRewardPiece = nTotalReward / consensusParams.nMPoSRewardRecipients;
-            int64_t nRewardStaker = 0;
-            int64_t nReward = nRewardPiece + nTotalReward % consensusParams.nMPoSRewardRecipients;
-            if(!SplitOfflineStakeReward(nReward, delegation.fee, nRewardOffline, nRewardStaker))
-                return error("CreateCoinStake: Failed to split reward");
-            nCredit += nRewardStaker;
-        }
+        int64_t nRewardStaker = 0;
+        if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker))
+            return error("CreateCoinStake: Failed to split reward");
+        nCredit += nRewardStaker;
     }
 
     // Set output amount
@@ -2623,11 +2593,7 @@ bool CWallet::CreateCoinStakeFromDelegate(unsigned int nBits, const CAmount& nTo
         txNew.vout[2].nValue = nRewardOffline;
     }
 
-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
-    {
-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams, chain().chainman().ActiveChain()))
-            return error("CreateCoinStake : failed to create MPoS reward outputs");
-    }
+
 
     // Append the Refunds To Sender to the transaction outputs
     for(unsigned int i = 2; i < tx.vout.size(); i++)
