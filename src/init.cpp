@@ -113,7 +113,7 @@ static const char* DEFAULT_ASMAP_FILENAME="ip_asn.map";
 /**
  * The PID file facilities.
  */
-static const char* BITCOIN_PID_FILENAME = "qtumd.pid";
+static const char* BITCOIN_PID_FILENAME = "vipstarcoind.pid";
 
 static fs::path GetPidFile(const ArgsManager& args)
 {
@@ -623,9 +623,9 @@ void SetupServerArgs(ArgsManager& argsman)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/qtumproject/qtum>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/vipstar-dev/VIPSTARCOIN>";
 
-    return CopyrightHolders(strprintf(_("Copyright (C) %i").translated, COPYRIGHT_YEAR) + " ") + "\n" +
+    return CopyrightHolders(strprintf(_("Copyright (C) 2018-%i").translated, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +
            strprintf(_("Please contribute if you find %s useful. "
                        "Visit %s for further information about the software.").translated,
@@ -662,7 +662,7 @@ void DeleteBlockChainData()
     fs::path datadir = gArgs.GetDataDirNet();
     fs::remove_all(datadir / "chainstate");
     fs::remove_all(gArgs.GetBlocksDirPath());
-    fs::remove_all(datadir / "stateQtum");
+    fs::remove_all(datadir / "stateVIPSTARCOIN");
     fs::remove(datadir / "banlist.dat");
     fs::remove(datadir / FEE_ESTIMATES_FILENAME);
     fs::remove(datadir / "mempool.dat");
@@ -1714,7 +1714,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
                 }
 
                 dev::eth::NoProof::init();
-                fs::path qtumStateDir = gArgs.GetDataDirNet() / "stateQtum";
+                fs::path qtumStateDir = gArgs.GetDataDirNet() / "stateVIPSTARCOIN";
                 bool fStatus = fs::exists(qtumStateDir);
                 const std::string dirQtum(qtumStateDir.string());
                 const dev::h256 hashDB(dev::sha3(dev::rlp("")));
