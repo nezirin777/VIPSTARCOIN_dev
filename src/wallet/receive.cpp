@@ -333,6 +333,17 @@ bool CachedTxIsTrusted(const CWallet& wallet, const CWalletTx& wtx)
 
 Balance GetBalance(const CWallet& wallet, const int min_depth, bool avoid_reuse)
 {
+    // 60秒以内のキャッシュがあれば走査をスキップして即復帰
+    int64_t nNow = GetTime();
+    {
+        LOCK(wallet.cs_wallet);
+        auto key = std::make_pair(min_depth, avoid_reuse);
+        auto it = wallet.m_balance_cache.find(key);
+        if (it != wallet.m_balance_cache.end() && nNow < it->second.nTime + 60) {
+            return it->second.balance;
+        }
+    }
+
     Balance ret;
     isminefilter reuse_filter = avoid_reuse ? ISMINE_NO : ISMINE_USED;
     {
@@ -358,6 +369,13 @@ Balance GetBalance(const CWallet& wallet, const int min_depth, bool avoid_reuse)
             ret.m_mine_stake += CachedTxGetStakeCredit(wallet, wtx);
             ret.m_watchonly_stake += CachedTxGetStakeWatchOnlyCredit(wallet, wtx);
         }
+    }
+
+    // キャッシュを更新
+    {
+        LOCK(wallet.cs_wallet);
+        auto key = std::make_pair(min_depth, avoid_reuse);
+        wallet.m_balance_cache[key] = { nNow, ret };
     }
     return ret;
 }

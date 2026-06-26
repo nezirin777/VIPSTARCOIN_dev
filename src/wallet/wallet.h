@@ -26,6 +26,7 @@
 #include <wallet/transaction.h>
 #include <wallet/walletdb.h>
 #include <wallet/walletutil.h>
+#include <wallet/receive.h>
 #include <consensus/params.h>
 #include <pos.h>
 #include <qtum/qtumdelegation.h>
@@ -653,7 +654,23 @@ public:
     void CommitTransaction(CTransactionRef tx, mapValue_t mapValue, std::vector<std::pair<std::string, std::string>> orderForm);
 
     uint64_t GetStakeWeight(uint64_t* pStakerWeight = nullptr, uint64_t* pDelegateWeight = nullptr) const;
-    uint64_t GetSuperStakerWeight(const uint160& staker) const;
+
+        // --- ROZ-MOFUMOFU-ME バックポート：ステーキングウェイトキャッシュ ---
+        mutable int64_t nLastStakeWeightCheck = 0;
+        mutable uint64_t nCachedWeight = 0;
+        mutable uint64_t nCachedStakerWeight = 0;
+        mutable uint64_t nCachedDelegateWeight = 0;
+
+        uint64_t GetSuperStakerWeight(const uint160& staker) const;
+
+        // --- ROZ-MOFUMOFU-ME バックポート：残高キャッシュ構造体 ---
+        struct BalanceCacheEntry {
+            int64_t nTime = 0;
+            Balance balance;
+        };
+        mutable std::map<std::pair<int, bool>, BalanceCacheEntry> m_balance_cache;
+
+    bool CreateCoinStake(unsigned int nBits, const CAmount& nTotalFees, uint32_t nTimeBlock, CMutableTransaction& tx, PKHash& pkhash, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoins, std::vector<COutPoint>& setSelectedCoins, std::vector<COutPoint>& setDelegateCoins, bool selectedOnly, bool sign, std::vector<unsigned char>& vchPoD, COutPoint& headerPrevout);
     bool CanSuperStake(const std::set<std::pair<const CWalletTx*,unsigned int> >& setCoins, const std::vector<COutPoint>& setDelegateCoins) const;
     bool GetSenderDest(const CTransaction& tx, CTxDestination& txSenderDest, bool sign=true) const;
     bool GetHDKeyPath(const CTxDestination& dest, std::string& hdkeypath) const;
@@ -796,7 +813,7 @@ public:
     int GetVersion() const { LOCK(cs_wallet); return nWalletVersion; }
 
     //! disable transaction for coinstake
-    void DisableTransaction(const CTransaction &tx);   
+    void DisableTransaction(const CTransaction &tx);
 
     //! Get wallet transactions that conflict with given transaction (spend same outputs)
     std::set<uint256> GetConflicts(const uint256& txid) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet);
@@ -828,7 +845,7 @@ public:
      */
     boost::signals2::signal<void(const uint256& hashTx, ChangeType status)> NotifyTransactionChanged;
 
-    /** 
+    /**
      * Wallet token transaction added, removed or updated.
      * @note called with lock cs_wallet held.
      */
