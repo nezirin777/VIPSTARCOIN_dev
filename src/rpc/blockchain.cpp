@@ -3865,6 +3865,70 @@ static RPCHelpMan qrc20listtransactions()
     };
 }
 
+static RPCHelpMan getreplaybaseline()
+{
+    return RPCHelpMan{"getreplaybaseline",
+                "\nReturns baseline info for block replay validation at the given height.\n",
+                {
+                    {"height", RPCArg::Type::NUM, RPCArg::Optional::NO, "The block height"},
+                },
+                RPCResult{
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::NUM, "height", "The block height"},
+                        {RPCResult::Type::STR_HEX, "hash", "The block hash"},
+                        {RPCResult::Type::STR_HEX, "bits", "The block nBits"},
+                        {RPCResult::Type::STR_HEX, "hashStateRoot", "The state root hash"},
+                        {RPCResult::Type::STR_HEX, "hashUTXORoot", "The UTXO root hash"},
+                        {RPCResult::Type::NUM, "moneysupply", "The money supply"},
+                    }
+                },
+                RPCExamples{
+                    HelpExampleCli("getreplaybaseline", "1000000")
+            + HelpExampleRpc("getreplaybaseline", "1000000")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    int nHeight;
+    if (request.params[0].isNum()) {
+        nHeight = request.params[0].get_int();
+    } else if (request.params[0].isStr()) {
+        try {
+            nHeight = std::stoi(request.params[0].get_str());
+        } catch (...) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is not a valid integer string");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be an integer");
+    }
+
+    ChainstateManager& chainman = EnsureAnyChainman(request.context);
+    const CBlockIndex* pblockindex = nullptr;
+    {
+        LOCK(cs_main);
+        if (nHeight < 0 || nHeight > chainman.ActiveChain().Height()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is out of range");
+        }
+        pblockindex = chainman.ActiveChain()[nHeight];
+    }
+
+    if (!pblockindex) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block index not found");
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("height", nHeight);
+    result.pushKV("hash", pblockindex->GetBlockHash().GetHex());
+    result.pushKV("bits", strprintf("%08x", pblockindex->nBits));
+    result.pushKV("hashStateRoot", pblockindex->hashStateRoot.GetHex());
+    result.pushKV("hashUTXORoot", pblockindex->hashUTXORoot.GetHex());
+    result.pushKV("moneysupply", (uint64_t)pblockindex->nMoneySupply);
+
+    return result;
+},
+    };
+}
+
 void RegisterBlockchainRPCCommands(CRPCTable &t)
 {
 // clang-format off
@@ -3872,6 +3936,7 @@ static const CRPCCommand commands[] =
 { //  category              actor (function)
   //  --------------------- ------------------------
     { "blockchain",         &getblockchaininfo,                  },
+    { "blockchain",         &getreplaybaseline,                  },
     { "blockchain",         &getchaintxstats,                    },
     { "blockchain",         &getblockstats,                      },
     { "blockchain",         &getbestblockhash,                   },
