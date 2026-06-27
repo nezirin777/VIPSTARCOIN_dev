@@ -5114,9 +5114,7 @@ bool CChainState::UpdateHashProof(const CBlock& block, BlockValidationState& sta
     int nHeight = pindex->nHeight;
     uint256 hash = block.GetHash();
 
-    //reject proof of work at height consensusParams.nLastPOWBlock
-    if (block.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
-        return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("UpdateHashProof() : reject proof-of-work at height %d", nHeight));
+
     
     // Check coinstake timestamp
     if (block.IsProofOfStake() && !CheckCoinStakeTimestamp(block.GetBlockTime(), nHeight, consensusParams))
@@ -5269,11 +5267,7 @@ bool BlockManager::AcceptBlockHeader(const CBlockHeader& block, BlockValidationS
             }
         }
 
-        // Reject proof of work at height consensusParams.nLastPOWBlock
         int nHeight = pindexPrev->nHeight + 1;
-        if (block.IsProofOfWork() && nHeight > chainparams.GetConsensus().nLastPOWBlock)
-            return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("reject proof-of-work at height %d", nHeight));
-
         if(block.IsProofOfStake())
         {
             // Reject proof of stake before height coinbaseMaturity
@@ -5403,9 +5397,7 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, Block
     // Get block height
     int nHeight = pindex->nHeight;
 
-    // Check for the last proof of work block
-    if (block.IsProofOfWork() && nHeight > m_params.GetConsensus().nLastPOWBlock)
-        return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "reject-pow", strprintf("%s: reject proof-of-work at height %d", __func__, nHeight));
+
 
     // Check that the block satisfies synchronized checkpoint
     if (!m_blockman.CheckSync(nHeight, m_chain.Tip()))
