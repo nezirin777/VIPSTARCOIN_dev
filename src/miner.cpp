@@ -71,6 +71,34 @@ void FormatHashBuffers(CBlock* pblock, char* pdata)
         ((unsigned int*)&tmp.block)[i] = ByteReverse(((unsigned int*)&tmp.block)[i]);
     memcpy(pdata, &tmp.block, 192); // 192 // 128
 }
+
+#include <memory>
+class ChainstateManager;
+extern std::unique_ptr<ChainstateManager> g_chainman;
+
+bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman)
+{
+    uint256 hash = pblock->GetHash();
+    arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
+
+    if (UintToArith256(hash) > hashTarget)
+        return false;
+
+    // Found a solution
+    {
+        LOCK(cs_main);
+        if (pblock->hashPrevBlock != chainman.ActiveChain().Tip()->GetBlockHash())
+            return error("CheckWork: Generated block is stale!");
+
+        // Process this block the same as if we had received it from another node
+        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+        bool fNewBlock = false;
+        if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, &fNewBlock))
+            return error("CheckWork: block not accepted");
+    }
+
+    return true;
+}
 #include <util/threadnames.h>
 #include <node/blockstorage.h>
 #include <net.h>

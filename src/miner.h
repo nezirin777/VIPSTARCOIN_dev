@@ -342,5 +342,7 @@ bool CanStake();
 
 uint32_t ByteReverse(uint32_t value);
 void FormatHashBuffers(CBlock* pblock, char* pdata);
+class ChainstateManager;
+bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman);
 
 #endif // BITCOIN_MINER_H
