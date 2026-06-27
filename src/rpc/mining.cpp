@@ -147,8 +147,14 @@ static bool GenerateBlock(ChainstateManager& chainman, CBlock& block, uint64_t& 
     return true;
 }
 
-static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries)
+static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& mempool, const CScript& coinbase_script, int nGenerate, uint64_t nMaxTries, const CConnman* connman)
 {
+    if (!connman)
+        throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+
+    if (Params().MiningRequiresPeers() && connman->GetNodeCount(ConnectionDirection::Both) == 0)
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, PACKAGE_NAME " is not connected!");
+
     int nHeightEnd = 0;
     int nHeight = 0;
 
@@ -246,7 +252,8 @@ static RPCHelpMan generatetodescriptor()
     const CTxMemPool& mempool = EnsureMemPool(node);
     ChainstateManager& chainman = EnsureChainman(node);
 
-    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries);
+    const CConnman& connman = EnsureConnman(node);
+    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries, &connman);
 },
     };
 }
@@ -294,7 +301,8 @@ static RPCHelpMan generatetoaddress()
 
     CScript coinbase_script = GetScriptForDestination(destination);
 
-    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries);
+    const CConnman& connman = EnsureConnman(node);
+    return generateBlocks(chainman, mempool, coinbase_script, num_blocks, max_tries, &connman);
 },
     };
 }
