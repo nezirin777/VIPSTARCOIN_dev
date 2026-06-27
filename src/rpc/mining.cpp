@@ -1435,12 +1435,14 @@ static RPCHelpMan estimatesmartfee()
     UniValue errors(UniValue::VARR);
     FeeCalculation feeCalc;
     CFeeRate feeRate = fee_estimator.estimateSmartFee(conf_target, &feeCalc, conservative);
-    if (feeRate != CFeeRate(0)) {
-        result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
-    } else {
-        errors.push_back("Insufficient data or no feerate found");
-        result.pushKV("errors", errors);
+    
+    // VIPS: clamp estimated fee to minimum block fee rate to prevent transaction stuck
+    CFeeRate minFee = CFeeRate(DEFAULT_BLOCK_MIN_TX_FEE);
+    if (feeRate < minFee) {
+        feeRate = minFee;
     }
+    
+    result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
     result.pushKV("blocks", feeCalc.returnedTarget);
     return result;
 },
