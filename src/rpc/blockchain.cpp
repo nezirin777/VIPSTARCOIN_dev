@@ -953,6 +953,38 @@ static RPCHelpMan getblockhash()
     };
 }
 
+static RPCHelpMan getcontractcode()
+{
+    return RPCHelpMan{"getcontractcode",
+                "\nGet contract code method.\n",
+                {
+                    {"address", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
+                },
+                RPCResult{
+                    RPCResult::Type::STR_HEX, "code", "The contract byte code"},
+                RPCExamples{
+                    HelpExampleCli("getcontractcode", "eb23c0b3e6042821da281a2e2364feb22dd543e3")
+            + HelpExampleRpc("getcontractcode", "eb23c0b3e6042821da281a2e2364feb22dd543e3")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+
+    std::string strAddr = request.params[0].get_str();
+    if(strAddr.size() != 40 || !CheckHex(strAddr))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address");
+
+    dev::Address addrAccount(strAddr);
+    if(!globalState->addressInUse(addrAccount))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
+
+    std::vector<uint8_t> code(globalState->code(addrAccount));
+
+    return HexStr(code);
+},
+    };
+}
+
 static RPCHelpMan getaccountinfo()
 {
     return RPCHelpMan{"getaccountinfo",
@@ -3957,6 +3989,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         &savemempool,                        },
     { "blockchain",         &verifychain,                        },
     { "blockchain",         &getaccountinfo,                     },
+    { "blockchain",         &getcontractcode,                    },
     { "blockchain",         &getstorage,                         },
 
     { "blockchain",         &preciousblock,                      },
