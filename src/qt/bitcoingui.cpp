@@ -95,8 +95,22 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     m_network_style(networkStyle)
 {
     QSettings settings;
-    if (!restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
-        // Restore failed (perhaps missing setting), center the window
+    if (restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
+        // 復元されたウィンドウ位置が、現在接続されているいずれの画面の有効領域とも交差しない場合
+        bool intersects = false;
+        QRect windowRect = frameGeometry();
+        for (QScreen* screen : QGuiApplication::screens()) {
+            if (screen->availableGeometry().intersects(windowRect)) {
+                intersects = true;
+                break;
+            }
+        }
+        if (!intersects) {
+            // 画面外からの救出：プライマリスクリーンの中心へ移動
+            move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
+        }
+    } else {
+        // 復元失敗（初回起動時など）：プライマリスクリーンの中心へ移動
         move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
     }
 
