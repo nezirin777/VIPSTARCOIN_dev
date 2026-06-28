@@ -14,13 +14,13 @@
 // Example(s): We use assert(...) extensively with the assumption of it never
 //             being a noop at runtime.
 #if defined(NDEBUG)
-# error "Bitcoin cannot be compiled without assertions."
+# error "VIPSTARCOIN cannot be compiled without assertions."
 #endif
 
-// Assumption: We assume a C++17 (ISO/IEC 14882:2017) compiler (minimum requirement).
+// Assumption: We assume a C++17 (ISO/IEC 14882:2018) compiler (minimum requirement).
 // Example(s): We assume the presence of C++17 features everywhere :-)
 // ISO Standard C++17 [cpp.predefined]p1:
-// "The name __cplusplus is defined to the value 201703L when compiling a C++
+// "The name __cplusplus is defined to the value 201803L when compiling a C++
 //  translation unit."
 static_assert(__cplusplus >= 201703L, "C++17 standard assumed");
 

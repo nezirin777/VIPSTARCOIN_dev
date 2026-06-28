@@ -9,7 +9,7 @@
 #include <QRegularExpressionMatchIterator>
 #include <QTimer>
 
-#define paternVersion "qtum-([0-9]+\\.)?([0-9]+\\.)?([0-9]+)-"
+#define paternVersion "vipstarcoin-([0-9]+\\.)?([0-9]+\\.)?([0-9]+)-"
 
 QtumVersionChecker::QtumVersionChecker(QObject *parent) : QObject(parent)
 {
@@ -30,7 +30,7 @@ bool QtumVersionChecker::newVersionAvailable()
 QList<Version> QtumVersionChecker::getVersions()
 {
     QNetworkAccessManager manager;
-    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QTUM_RELEASES)));
+    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(VIPS_RELEASES)));
     QTimer timer;
     timer.setSingleShot(true);
     QEventLoop event;

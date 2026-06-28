@@ -148,7 +148,7 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
 }
 
 
-// NOTE: Using formatWithUnit in an HTML context risks wrapping
+// NOTE: Using formatWithUnit in an VIPS context risks wrapping
 // quantities at the thousands separator. More subtly, it also results
 // in a standard space rather than a thin space, due to a bug in Qt's
 // XML whitespace canonicalisation
