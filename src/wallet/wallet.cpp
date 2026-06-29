@@ -2154,11 +2154,16 @@ uint64_t CWallet::GetStakeWeight(uint64_t* pStakerWeight, uint64_t* pDelegateWei
 {
     // 5分（300秒）以内のキャッシュがあれば計算をスキップして即復帰
     int64_t nNow = GetTime();
-    if (nNow < nLastStakeWeightCheck + 300) {
-        if (pStakerWeight) *pStakerWeight = nCachedStakerWeight;
-        if (pDelegateWeight) *pDelegateWeight = nCachedDelegateWeight;
-        return nCachedWeight;
+    // ── ここを追加 ──────────────────────────────────
+    {
+        LOCK(cs_wallet);
+        if (nNow < nLastStakeWeightCheck + 300) {
+            if (pStakerWeight) *pStakerWeight = nCachedStakerWeight;
+            if (pDelegateWeight) *pDelegateWeight = nCachedDelegateWeight;
+            return nCachedWeight;
+        }
     }
+    // ────────────────────────────────────────────────
 
     uint64_t nWeight = 0;
     uint64_t nStakerWeight = 0;
@@ -2224,11 +2229,13 @@ uint64_t CWallet::GetStakeWeight(uint64_t* pStakerWeight, uint64_t* pDelegateWei
     if(pDelegateWeight) *pDelegateWeight = nDelegateWeight;
 
     // キャッシュを更新
-    nCachedWeight = nWeight;
-    nCachedStakerWeight = nStakerWeight;
-    nCachedDelegateWeight = nDelegateWeight;
-    nLastStakeWeightCheck = nNow;
-
+    {
+        LOCK(cs_wallet);
+        nCachedWeight = nWeight;
+        nCachedStakerWeight = nStakerWeight;
+        nCachedDelegateWeight = nDelegateWeight;
+        nLastStakeWeightCheck = nNow;
+    }
     return nWeight;
 }
 
