@@ -33,7 +33,7 @@ if [ "${BITCOIN_GENBUILD_NO_GIT}" != "1" ] && [ -e "$(command -v git)" ] && [ "$
 
     # otherwise generate suffix from git, i.e. string like "59887e8-dirty"
     GIT_COMMIT=$(git rev-parse --short=12 HEAD)
-    git diff-index --quiet HEAD -- || GIT_COMMIT="$GIT_COMMIT-dirty"
+    git diff-index --quiet HEAD -- || GIT_COMMIT="$GIT_COMMIT"
 fi
 
 if [ -n "$GIT_TAG" ]; then
