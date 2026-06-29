@@ -1752,7 +1752,7 @@ RPCHelpMan getdelegationinfoforaddress()
     return RPCHelpMan{"getdelegationinfoforaddress",
                 "\nGet delegation information for an address.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The vipstarcoin address string"},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -1849,7 +1849,7 @@ RPCHelpMan getdelegationsforstaker()
                 "requires -logevents to be enabled\n"
                 "\nGet the current list of delegates for a super staker.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string for staker"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The vipstarcoin address string for staker"},
                 },
                RPCResult{
             RPCResult::Type::ARR, "", "",
@@ -2214,9 +2214,9 @@ static RPCHelpMan gettxout()
                     {RPCResult::Type::STR_HEX, "hex", ""},
                     {RPCResult::Type::NUM, "reqSigs", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Number of required signatures"},
                     {RPCResult::Type::STR, "type", "The type, eg pubkeyhash"},
-                    {RPCResult::Type::STR, "address", /* optional */ true, "qtum address (only if a well-defined address exists)"},
-                    {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of qtum addresses",
-                        {{RPCResult::Type::STR, "address", "qtum address"}}},
+                    {RPCResult::Type::STR, "address", /* optional */ true, "vipstarcoin address (only if a well-defined address exists)"},
+                    {RPCResult::Type::ARR, "addresses", /* optional */ true, "(DEPRECATED, returned only if config option -deprecatedrpc=addresses is passed) Array of vipstarcoin addresses",
+                        {{RPCResult::Type::STR, "address", "vipstarcoin address"}}},
                 }},
                 {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
             }},
@@ -3726,7 +3726,7 @@ static RPCHelpMan qrc20balanceof()
                 "\nReturns the token balance for address\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address to check token balance"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address to check token balance"},
                 },
                 RPCResult{
                     RPCResult::Type::STR, "balance", "The token balance of the chosen address"},
@@ -3769,8 +3769,8 @@ static RPCHelpMan qrc20allowance()
                 "\nReturns remaining tokens allowed to spend for an address\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
-                    {"addressfrom", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address of the account owning tokens"},
-                    {"addressto", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address of the account able to transfer the tokens"},
+                    {"addressfrom", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address of the account owning tokens"},
+                    {"addressto", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address of the account able to transfer the tokens"},
                 },
                 RPCResult{
                     RPCResult::Type::STR, "allowance", "Amount of remaining tokens allowed to spent"},
@@ -3811,7 +3811,7 @@ static RPCHelpMan qrc20listtransactions()
                 "\nReturns transactions history for a specific address.\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address."},
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address to get history for."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address to get history for."},
                     {"fromblock", RPCArg::Type::NUM, RPCArg::Default{0}, "The number of the earliest block."},
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{6}, "Minimal number of confirmations."},
                 },
@@ -3820,8 +3820,8 @@ static RPCHelpMan qrc20listtransactions()
                 {
                     {RPCResult::Type::OBJ, "", "",
                         {
-                            {RPCResult::Type::STR, "receiver", "The receiver qtum address"},
-                            {RPCResult::Type::STR, "sender", "The sender qtum address"},
+                            {RPCResult::Type::STR, "receiver", "The receiver vipstarcoin address"},
+                            {RPCResult::Type::STR, "sender", "The sender vipstarcoin address"},
                             {RPCResult::Type::STR_AMOUNT, "amount", "The transferred token amount"},
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations of the most recent transaction included"},
                             {RPCResult::Type::STR_HEX, "blockHash", "The block hash"},
