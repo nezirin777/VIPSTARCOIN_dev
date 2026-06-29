@@ -29,10 +29,10 @@
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>Qtum-Qt</string>
+  <string>VIPSTARCOIN-Qt</string>
 
   <key>CFBundleName</key>
-  <string>Qtum-Qt</string>
+  <string>VIPSTARCOIN-Qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
@@ -46,7 +46,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>jp.vipstarcoin.QtumPayment</string>
+      <string>jp.vipstarcoin.VIPSTARCOINPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>vipstarcoin</string>
