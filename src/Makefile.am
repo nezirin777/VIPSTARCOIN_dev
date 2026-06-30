@@ -891,11 +891,11 @@ vipstarcoind_CXXFLAGS = $(qtum_bin_cxxflags)
 vipstarcoind_LDFLAGS = $(qtum_bin_ldflags)
 vipstarcoind_LDADD = $(LIBBITCOIN_SERVER) $(qtum_bin_ldadd)
 
-qtum_node_SOURCES = $(qtum_daemon_sources) init/bitcoin-node.cpp
-qtum_node_CPPFLAGS = $(qtum_bin_cppflags)
-qtum_node_CXXFLAGS = $(qtum_bin_cxxflags)
-qtum_node_LDFLAGS = $(qtum_bin_ldflags)
-qtum_node_LDADD = $(LIBBITCOIN_SERVER) $(qtum_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
+vipstarcoin_node_SOURCES = $(qtum_daemon_sources) init/bitcoin-node.cpp
+vipstarcoin_node_CPPFLAGS = $(qtum_bin_cppflags)
+vipstarcoin_node_CXXFLAGS = $(qtum_bin_cxxflags)
+vipstarcoin_node_LDFLAGS = $(qtum_bin_ldflags)
+vipstarcoin_node_LDADD = $(LIBBITCOIN_SERVER) $(qtum_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
 
 # bitcoin-cli binary #
 vipstarcoin_cli_SOURCES = bitcoin-cli.cpp
