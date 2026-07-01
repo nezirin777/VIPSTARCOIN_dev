@@ -253,10 +253,10 @@ RPCHelpMan getaddressdeltas()
                 },
             },
             RPCExamples{
-                HelpExampleCli("getaddressdeltas", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}'")
-        + HelpExampleRpc("getaddressdeltas", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}") +
-                HelpExampleCli("getaddressdeltas", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"start\": 5000, \"end\": 5500, \"chainInfo\": true}'")
-        + HelpExampleRpc("getaddressdeltas", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"start\": 5000, \"end\": 5500, \"chainInfo\": true}")
+                HelpExampleCli("getaddressdeltas", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}'")
+        + HelpExampleRpc("getaddressdeltas", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}") +
+                HelpExampleCli("getaddressdeltas", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"start\": 5000, \"end\": 5500, \"chainInfo\": true}'")
+        + HelpExampleRpc("getaddressdeltas", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"start\": 5000, \"end\": 5500, \"chainInfo\": true}")
             },
     [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -381,8 +381,8 @@ RPCHelpMan getaddressbalance()
                     }
                 },
                 RPCExamples{
-                    HelpExampleCli("getaddressbalance", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}'")
-            + HelpExampleRpc("getaddressbalance", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}")
+                    HelpExampleCli("getaddressbalance", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}'")
+            + HelpExampleRpc("getaddressbalance", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -482,10 +482,10 @@ RPCHelpMan getaddressutxos()
                     },
                 },
                 RPCExamples{
-                    HelpExampleCli("getaddressutxos", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}'")
-            + HelpExampleRpc("getaddressutxos", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}") +
-                    HelpExampleCli("getaddressutxos", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"chainInfo\": true}'")
-            + HelpExampleRpc("getaddressutxos", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"chainInfo\": true}")
+                    HelpExampleCli("getaddressutxos", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}'")
+            + HelpExampleRpc("getaddressutxos", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}") +
+                    HelpExampleCli("getaddressutxos", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"chainInfo\": true}'")
+            + HelpExampleRpc("getaddressutxos", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"chainInfo\": true}")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -581,8 +581,8 @@ RPCHelpMan getaddressmempool()
                     }
                 },
                 RPCExamples{
-                    HelpExampleCli("getaddressmempool", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}'")
-            + HelpExampleRpc("getaddressmempool", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}")
+                    HelpExampleCli("getaddressmempool", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}'")
+            + HelpExampleRpc("getaddressmempool", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -797,10 +797,10 @@ RPCHelpMan getaddresstxids()
                     }
                 },
                 RPCExamples{
-                    HelpExampleCli("getaddresstxids", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}'")
-            + HelpExampleRpc("getaddresstxids", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"]}") +
-                    HelpExampleCli("getaddresstxids", "'{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"start\": 5000, \"end\": 5500}'")
-            + HelpExampleRpc("getaddresstxids", "{\"addresses\": [\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\"], \"start\": 5000, \"end\": 5500}")
+                    HelpExampleCli("getaddresstxids", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}'")
+            + HelpExampleRpc("getaddresstxids", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"]}") +
+                    HelpExampleCli("getaddresstxids", "'{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"start\": 5000, \"end\": 5500}'")
+            + HelpExampleRpc("getaddresstxids", "{\"addresses\": [\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\"], \"start\": 5000, \"end\": 5500}")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -976,9 +976,9 @@ static RPCHelpMan createmultisig()
                 },
                 RPCExamples{
             "\nCreate a multisig address from 2 public keys\n"
-            + HelpExampleCli("createmultisig", "2 \"[\\\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\\\",\\\"VCnucQiukpHJikhurvtTE6at88RNzYiTZm\\\"]\"") +
+            + HelpExampleCli("createmultisig", "2 \"[\\\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\\\",\\\"VCnucQiukpHJikhurvtTE6at88RNzYiTZm\\\"]\"") +
             "\nAs a JSON-RPC call\n"
-            + HelpExampleRpc("createmultisig", "2, \"[\\\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\\\",\\\"VCnucQiukpHJikhurvtTE6at88RNzYiTZm\\\"]\"")
+            + HelpExampleRpc("createmultisig", "2, \"[\\\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\\\",\\\"VCnucQiukpHJikhurvtTE6at88RNzYiTZm\\\"]\"")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -1178,11 +1178,11 @@ static RPCHelpMan verifymessage()
             "\nUnlock the wallet for 30 seconds\n"
             + HelpExampleCli("walletpassphrase", "\"mypassphrase\" 30") +
             "\nCreate the signature\n"
-            + HelpExampleCli("signmessage", "\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\" \"my message\"") +
+            + HelpExampleCli("signmessage", "\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\" \"my message\"") +
             "\nVerify the signature\n"
-            + HelpExampleCli("verifymessage", "\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\" \"signature\" \"my message\"") +
+            + HelpExampleCli("verifymessage", "\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\" \"signature\" \"my message\"") +
             "\nAs a JSON-RPC call\n"
-            + HelpExampleRpc("verifymessage", "\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\", \"signature\", \"my message\"")
+            + HelpExampleRpc("verifymessage", "\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\", \"signature\", \"my message\"")
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
@@ -1226,7 +1226,7 @@ static RPCHelpMan signmessagewithprivkey()
             "\nCreate the signature\n"
             + HelpExampleCli("signmessagewithprivkey", "\"privkey\" \"my message\"") +
             "\nVerify the signature\n"
-            + HelpExampleCli("verifymessage", "\"VAuhyerY1AD9GzFnUvdGpwMUrnLe6MBCdi\" \"signature\" \"my message\"") +
+            + HelpExampleCli("verifymessage", "\"v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb\" \"signature\" \"my message\"") +
             "\nAs a JSON-RPC call\n"
             + HelpExampleRpc("signmessagewithprivkey", "\"privkey\", \"my message\"")
                 },
@@ -1547,20 +1547,20 @@ static RPCHelpMan echoipc()
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue {
             std::unique_ptr<interfaces::Echo> echo;
             if (interfaces::Ipc* ipc = Assert(EnsureAnyNodeContext(request.context).init)->ipc()) {
-                // Spawn a new bitcoin-node process and call makeEcho to get a
+                // Spawn a new vipstarcoin-node process and call makeEcho to get a
                 // client pointer to a interfaces::Echo instance running in
                 // that process. This is just for testing. A slightly more
                 // realistic test spawning a different executable instead of
-                // the same executable would add a new bitcoin-echo executable,
-                // and spawn bitcoin-echo below instead of bitcoin-node. But
-                // using bitcoin-node avoids the need to build and install a
+                // the same executable would add a new vipstarcoin-echo executable,
+                // and spawn vipstarcoin-echo below instead of vipstarcoin-node. But
+                // using vipstarcoin-node avoids the need to build and install a
                 // new executable just for this one test.
-                auto init = ipc->spawnProcess("bitcoin-node");
+                auto init = ipc->spawnProcess("vipstarcoin-node");
                 echo = init->makeEcho();
                 ipc->addCleanup(*echo, [init = init.release()] { delete init; });
             } else {
-                // IPC support is not available because this is a bitcoind
-                // process not a bitcoind-node process, so just create a local
+                // IPC support is not available because this is a vipstarcoind
+                // process not a vipstarcoin-node process, so just create a local
                 // interfaces::Echo object and return it so the `echoipc` RPC
                 // method will work, and the python test calling `echoipc`
                 // can expect the same result.

@@ -258,7 +258,7 @@
           <item>
            <widget class="QLabel" name="labelReward">
             <property name="text">
-             <string>4 VIPS/Block</string>
+             <string>9500 VIPS/Block</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

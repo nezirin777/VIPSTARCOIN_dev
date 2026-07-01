@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Bitcoin"
-            VALUE "FileDescription",    "bitcoin-util (CLI Bitcoin utility)"
+            VALUE "CompanyName",        "VIPSTARCOIN"
+            VALUE "FileDescription",    "vipstarcoin-util (CLI VIPSTARCOIN utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "bitcoin-util"
+            VALUE "InternalName",       "vipstarcoin-util"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "bitcoin-util.exe"
-            VALUE "ProductName",        "bitcoin-util"
+            VALUE "OriginalFilename",   "vipstarcoin-util.exe"
+            VALUE "ProductName",        "vipstarcoin-util"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

@@ -348,7 +348,7 @@ static RPCHelpMan addconnection()
                 { RPCResult::Type::STR, "connection_type", "Type of connection opened." },
             }},
         RPCExamples{
-            HelpExampleCli("addconnection", "\"192.168.0.6:8333\" \"outbound-full-relay\"")
+            HelpExampleCli("addconnection", "\"192.168.0.6:34888\" \"outbound-full-relay\"")
             + HelpExampleRpc("addconnection", "\"192.168.0.6:8333\" \"outbound-full-relay\"")
         },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
@@ -925,8 +925,8 @@ static RPCHelpMan addpeeraddress()
             },
         },
         RPCExamples{
-            HelpExampleCli("addpeeraddress", "\"1.2.3.4\" 3888")
-    + HelpExampleRpc("addpeeraddress", "\"1.2.3.4\", 3888")
+            HelpExampleCli("addpeeraddress", "\"1.2.3.4\" 31915")
+    + HelpExampleRpc("addpeeraddress", "\"1.2.3.4\", 31915")
         },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {

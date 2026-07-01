@@ -227,7 +227,7 @@ void SplitUTXOPage::on_splitCoinsClicked()
 
         QString questionString;
         if (bCreateUnsigned) {
-            questionString.append(tr("Do you want to draft this create contract transaction?"));
+            questionString.append(tr("Do you want to draft this split coins transaction?"));
             questionString.append("<br /><span style='font-size:10pt;'>");
             questionString.append(tr("Please, review your transaction proposal. This will produce a Partially Signed VIPSTARCOIN Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(PACKAGE_NAME));
             questionString.append("</span>");

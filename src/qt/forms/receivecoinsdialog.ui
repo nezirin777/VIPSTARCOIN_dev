@@ -428,7 +428,7 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
+<customwidgets>
   <customwidget>
    <class>BitcoinAmountField</class>
    <extends>QLineEdit</extends>
@@ -439,6 +439,8 @@
    <class>QRImageWidget</class>
    <extends>QLabel</extends>
    <header>qt/qrimagewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>QtumPushButton</class>
    <extends>QPushButton</extends>
    <header>qt/qtumpushbutton.h</header>
