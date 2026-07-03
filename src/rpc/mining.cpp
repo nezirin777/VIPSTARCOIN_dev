@@ -1082,7 +1082,7 @@ static RPCHelpMan getblocktemplate()
 
         // Create new block
         CScript scriptDummy = CScript() << OP_TRUE;
-        pblocktemplate = BlockAssembler(active_chainstate, mempool, Params()).CreateNewBlock(scriptDummy, true, active_chain.Tip()->nHeight>=Params().GetConsensus().nLastPOWBlock?true:false);
+        pblocktemplate = BlockAssembler(active_chainstate, mempool, Params()).CreateNewBlock(scriptDummy, true, true);
         if (!pblocktemplate)
             throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
@@ -1435,13 +1435,13 @@ static RPCHelpMan estimatesmartfee()
     UniValue errors(UniValue::VARR);
     FeeCalculation feeCalc;
     CFeeRate feeRate = fee_estimator.estimateSmartFee(conf_target, &feeCalc, conservative);
-    
+
     // VIPS: clamp estimated fee to minimum block fee rate to prevent transaction stuck
     CFeeRate minFee = CFeeRate(DEFAULT_BLOCK_MIN_TX_FEE);
     if (feeRate < minFee) {
         feeRate = minFee;
     }
-    
+
     result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
     result.pushKV("blocks", feeCalc.returnedTarget);
     return result;

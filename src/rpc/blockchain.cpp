@@ -112,9 +112,6 @@ double GetDifficulty(const CBlockIndex* blockindex)
 
 double GetPoWMHashPS(ChainstateManager& chainman)
 {
-    if (pindexBestHeader->nHeight >= Params().GetConsensus().nLastPOWBlock)
-        return 0;
-
     int nPoWInterval = 72;
     int64_t nTargetSpacingWorkMin = 30, nTargetSpacingWork = 30;
 
@@ -184,7 +181,7 @@ double GetPoSKernelPS()
 
     if (nStakesTime)
         result = dStakeKernelsTriedAvg / nStakesTime;
-    
+
     result *= stakeTimestampMask + 1;
 
     return result;
@@ -279,7 +276,7 @@ UniValue blockheaderToJSON(const CBlockIndex* tip, const CBlockIndex* blockindex
         result.pushKV("previousblockhash", blockindex->pprev->GetBlockHash().GetHex());
     if (pnext)
         result.pushKV("nextblockhash", pnext->GetBlockHash().GetHex());
-	
+
     result.pushKV("flags", strprintf("%s", blockindex->IsProofOfStake()? "proof-of-stake" : "proof-of-work"));
     result.pushKV("proofhash", blockindex->hashProof.GetHex());
     result.pushKV("modifier", blockindex->nStakeModifier.GetHex());
@@ -1016,7 +1013,7 @@ static RPCHelpMan getaccountinfo()
     dev::Address addrAccount(strAddr);
     if(!globalState->addressInUse(addrAccount))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
-    
+
     UniValue result(UniValue::VOBJ);
 
     result.pushKV("address", strAddr);
@@ -1031,7 +1028,7 @@ static RPCHelpMan getaccountinfo()
         e.pushKV(dev::toHex(dev::h256(j.second.first)), dev::toHex(dev::h256(j.second.second)));
         storageUV.pushKV(j.first.hex(), e);
     }
-        
+
     result.pushKV("storage", storageUV);
 
     result.pushKV("code", HexStr(code));
@@ -1082,7 +1079,7 @@ static RPCHelpMan getstorage()
     CChain& active_chain = chainman.ActiveChain();
     std::string strAddr = request.params[0].get_str();
     if(strAddr.size() != 40 || !CheckHex(strAddr))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address"); 
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect address");
 
     TemporaryState ts(globalState);
     if (!request.params[1].isNull())
@@ -1095,7 +1092,7 @@ static RPCHelpMan getstorage()
 
             if(blockNum != -1)
                 ts.SetRoot(uintToh256(active_chain[blockNum]->hashStateRoot), uintToh256(active_chain[blockNum]->hashUTXORoot));
-                
+
         } else {
             throw JSONRPCError(RPC_INVALID_PARAMS, "Incorrect block number");
         }
@@ -1104,7 +1101,7 @@ static RPCHelpMan getstorage()
     dev::Address addrAccount(strAddr);
     if(!globalState->addressInUse(addrAccount))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Address does not exist");
-    
+
     UniValue result(UniValue::VOBJ);
 
     bool onlyIndex = !request.params[2].isNull();
@@ -1126,7 +1123,7 @@ static RPCHelpMan getstorage()
         UniValue e(UniValue::VOBJ);
 
         storage = {{elem->first, {elem->second.first, elem->second.second}}};
-    } 
+    }
     for (const auto& j: storage)
     {
         UniValue e(UniValue::VOBJ);
@@ -1386,7 +1383,7 @@ RPCHelpMan callcontract()
                 },
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
 {
-    ChainstateManager& chainman = EnsureAnyChainman(request.context); 
+    ChainstateManager& chainman = EnsureAnyChainman(request.context);
     return CallToContract(request.params, chainman);
 },
     };
@@ -1731,7 +1728,7 @@ RPCHelpMan gettransactionreceipt()
     if(hashTemp.size() != 64){
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Incorrect hash");
     }
-    
+
     uint256 hash(uint256S(hashTemp));
 
     std::vector<TransactionReceiptInfo> transactionReceiptInfo = pstorageresult->getResult(uintToh256(hash));
