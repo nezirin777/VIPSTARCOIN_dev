@@ -2227,7 +2227,7 @@ std::vector<ResultExecute> CallContract(const dev::Address& addrContract, std::v
     tx.vout.push_back(CTxOut(nAmount, CScript() << OP_DUP << OP_HASH160 << senderAddress.asBytes() << OP_EQUALVERIFY << OP_CHECKSIG));
     block.vtx.push_back(MakeTransactionRef(CTransaction(tx)));
     dev::u256 nonce = globalState->getNonce(senderAddress);
- 
+
     QtumTransaction callTransaction;
     if(addrContract == dev::Address())
     {
@@ -2240,7 +2240,7 @@ std::vector<ResultExecute> CallContract(const dev::Address& addrContract, std::v
     callTransaction.forceSender(senderAddress);
     callTransaction.setVersion(VersionVM::GetEVMDefault());
 
-    
+
     ByteCodeExec exec(block, std::vector<QtumTransaction>(1, callTransaction), blockGasLimit, pblockindex, chainstate.m_chain);
     exec.performByteCode(dev::eth::Permanence::Reverted);
     return exec.getResult();
@@ -2394,7 +2394,7 @@ void writeVMlog(const std::vector<ResultExecute>& res, CChain& chain, const CTra
             ss << "]}";
         }
     }
-    
+
     std::ofstream file(qtumDir.string(), std::ios::in | std::ios::out);
     file.seekp(-2, std::ios::end);
     file << ss.str();
@@ -2697,8 +2697,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
     uint32_t sizeBlockDGP = qtumDGP.getBlockSize(pindex->nHeight + (pindex->nHeight+1 >= m_params.GetConsensus().QIP7Height ? 0 : 1));
     uint64_t minGasPrice = qtumDGP.getMinGasPrice(pindex->nHeight + (pindex->nHeight+1 >= m_params.GetConsensus().QIP7Height ? 0 : 1));
     uint64_t blockGasLimit = qtumDGP.getBlockGasLimit(pindex->nHeight + (pindex->nHeight+1 >= m_params.GetConsensus().QIP7Height ? 0 : 1));
-    dgpMaxBlockSize = sizeBlockDGP ? sizeBlockDGP : dgpMaxBlockSize;
-    updateBlockSizeParams(dgpMaxBlockSize);
+
     CBlock checkBlock(block.GetBlockHeader());
     std::vector<CTxOut> checkVouts;
 
@@ -3021,7 +3020,7 @@ bool CChainState::ConnectBlock(const CBlock& block, BlockValidationState& state,
         {
             if (tx.IsCoinStake())
                 nActualStakeReward = tx.GetValueOut()-view.GetValueIn(tx);
-                    
+
             std::vector<CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
             TxValidationState tx_state;
@@ -4933,7 +4932,7 @@ CBlockIndex* BlockManager::GetLastCheckpoint(const CCheckpointData& data)
     return nullptr;
 }
 
-// Automatically select a suitable sync-checkpoint 
+// Automatically select a suitable sync-checkpoint
 const CBlockIndex* BlockManager::AutoSelectSyncCheckpoint(const CBlockIndex *pindexBest)
 {
     const CBlockIndex *pindex = pindexBest;
@@ -5115,7 +5114,7 @@ bool CChainState::UpdateHashProof(const CBlock& block, BlockValidationState& sta
     uint256 hash = block.GetHash();
 
 
-    
+
     // Check coinstake timestamp
     if (block.IsProofOfStake() && !CheckCoinStakeTimestamp(block.GetBlockTime(), nHeight, consensusParams))
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "timestamp-invalid", strprintf("UpdateHashProof() : coinstake timestamp violation nTimeBlock=%d", block.GetBlockTime()));
@@ -5134,13 +5133,13 @@ bool CChainState::UpdateHashProof(const CBlock& block, BlockValidationState& sta
             return error("UpdateHashProof() : check proof-of-stake failed for block %s", hash.ToString());
         }
     }
-    
+
     // PoW is checked in CheckBlock()
     if (block.IsProofOfWork())
     {
         hashProof = block.GetHash();
     }
-    
+
     // Record proof hash value
     pindex->hashProof = hashProof;
     return true;
@@ -5965,9 +5964,7 @@ bool CVerifyDB::VerifyDB(
         }
 
         ///////////////////////////////////////////////////////////////////// // qtum
-        uint32_t sizeBlockDGP = qtumDGP.getBlockSize(pindex->nHeight);
-        dgpMaxBlockSize = sizeBlockDGP ? sizeBlockDGP : dgpMaxBlockSize;
-        updateBlockSizeParams(dgpMaxBlockSize);
+
         /////////////////////////////////////////////////////////////////////
 
         CBlock block;

@@ -122,7 +122,7 @@ static const bool DEFAULT_PERSIST_MEMPOOL = true;
 static const int DEFAULT_STOPATHEIGHT = 0;
 /** Block files containing a block-height within MIN_BLOCKS_TO_KEEP of ::ChainActive().Tip() will not be pruned. */
 static const unsigned int MIN_BLOCKS_TO_KEEP = 288;
-static const signed int DEFAULT_CHECKBLOCKS = 6;
+static const signed int DEFAULT_CHECKBLOCKS = 6 * 10; // VIPS仕様: 検証ブロック数を60に拡張
 static const unsigned int DEFAULT_CHECKLEVEL = 3;
 // Require that user allocate at least 550 MiB for block & undo files (blk???.dat and rev???.dat)
 // At 1MB per block, 288 blocks = 288MB.
@@ -210,6 +210,8 @@ void StopScriptCheckWorkerThreads();
  */
 CTransactionRef GetTransaction(const CBlockIndex* const block_index, const CTxMemPool* const mempool, const uint256& hash, const Consensus::Params& consensusParams, uint256& hashBlock, CChainState* chainstate = nullptr);
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
+
+CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams); // VIPS仕様: PoS報酬算出の宣言
 
 bool AbortNode(BlockValidationState& state, const std::string& strMessage, const bilingual_str& userMessage = bilingual_str{});
 

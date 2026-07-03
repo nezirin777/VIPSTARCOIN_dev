@@ -145,7 +145,7 @@ ChainTestingSetup::ChainTestingSetup(const std::string& chainName, const std::ve
 ////////////////////////////////////////////////////////////// qtum
     const CChainParams& chainparams = Params();
     fRequireStandard = !gArgs.GetBoolArg("-acceptnonstdtxn", !chainparams.RequireStandard());
-    dev::eth::NoProof::init();		
+    dev::eth::NoProof::init();
     boost::filesystem::path pathTemp = fs::temp_directory_path() / strprintf("test_qtum_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
     boost::filesystem::create_directories(pathTemp);
     const dev::h256 hashDB(dev::sha3(dev::rlp("")));
@@ -249,9 +249,10 @@ TestChain100Setup::TestChain100Setup()
 
     {
         LOCK(::cs_main);
+
         assert(
             m_node.chainman->ActiveChain().Tip()->GetBlockHash().ToString() ==
-            "5ce9c22662191ba24b8d930e606446fce116a4c022e2660c846ae1a7d70708ec");
+            "26d36d19aa34573ee5934b766aac1a438e6a35bb8d063cf477c792d27af68bd9");
     }
 }
 

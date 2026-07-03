@@ -160,10 +160,6 @@ struct Params {
         return std::numeric_limits<int>::max();
     }
 
-    int nLastPOWBlock;
-    int nFirstMPoSBlock;
-    int nMPoSRewardRecipients;
-    int nFixUTXOCacheHFHeight;
     int nEnableHeaderSignatureHeight;
     /** Block sync-checkpoint span*/
     int nCheckpointSpan;
@@ -216,7 +212,7 @@ struct Params {
     }
     int64_t TargetTimespan(int height) const
     {
-        return height < QIP9Height ? nPowTargetTimespan : 
+        return height < QIP9Height ? nPowTargetTimespan :
             (height < nReduceBlocktimeHeight ? nPowTargetTimespanV2 : nRBTPowTargetTimespan);
     }
     int CheckpointSpan(int height) const

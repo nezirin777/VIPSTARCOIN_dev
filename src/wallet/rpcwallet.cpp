@@ -4437,7 +4437,7 @@ static RPCHelpMan getbalances()
         balances_watchonly.pushKV("trusted", ValueFromAmount(bal.m_watchonly_trusted));
         balances_watchonly.pushKV("untrusted_pending", ValueFromAmount(bal.m_watchonly_untrusted_pending));
         balances_watchonly.pushKV("immature", ValueFromAmount(bal.m_watchonly_immature));
-        balances_watchonly.pushKV("stake", ValueFromAmount(bal.m_mine_stake));
+        balances_watchonly.pushKV("stake", ValueFromAmount(bal.m_watchonly_stake)); // VIPS仕様: 正確なWatch-only残高を反映
         balances.pushKV("watchonly", balances_watchonly);
     }
     return balances;
