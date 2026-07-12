@@ -18,6 +18,8 @@
 #include <blockfilter.h>
 #include <chain.h>
 #include <chainparams.h>
+#include <clientversion.h>
+#include <compat/sanity.h>
 #include <consensus/amount.h>
 #include <deploymentstatus.h>
 #include <fs.h>
@@ -672,30 +674,9 @@ void SetupServerArgs(ArgsManager& argsman)
     // Add the hidden options
     argsman.AddHiddenArgs(hidden_args);
 }
-
-std::string LicenseInfo()
-{
-    const std::string URL_SOURCE_CODE = "<https://github.com/vipstar-dev/VIPSTARCOIN>";
-
-    return CopyrightHolders(strprintf(_("Copyright (C) 2018-%i").translated, COPYRIGHT_YEAR) + " ") + "\n" +
-           "\n" +
-           strprintf(_("Please contribute if you find %s useful. "
-                       "Visit %s for further information about the software.").translated,
-               PACKAGE_NAME, "<" PACKAGE_URL ">") +
-           "\n" +
-           strprintf(_("The source code is available from %s.").translated,
-               URL_SOURCE_CODE) +
-           "\n" +
-           "\n" +
-           _("This is experimental software.").translated + "\n" +
-           strprintf(_("Distributed under the MIT software license, see the accompanying file %s or %s").translated, "COPYING", "<https://opensource.org/licenses/MIT>") +
-           "\n";
-}
-
 static bool fHaveGenesis = false;
 static GlobalMutex g_genesis_wait_mutex;
 static std::condition_variable g_genesis_wait_cv;
-
 static void BlockNotifyGenesisWait(const CBlockIndex* pBlockIndex)
 {
     if (pBlockIndex != nullptr) {
@@ -706,8 +687,6 @@ static void BlockNotifyGenesisWait(const CBlockIndex* pBlockIndex)
         g_genesis_wait_cv.notify_all();
     }
 }
-
-// Delete local blockchain data
 void DeleteBlockChainData()
 {
     // Delete block chain data paths
