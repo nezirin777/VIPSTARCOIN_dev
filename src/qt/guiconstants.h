@@ -11,7 +11,7 @@
 using namespace std::chrono_literals;
 
 /* A delay between model updates */
-static constexpr auto MODEL_UPDATE_DELAY{2000ms};
+static constexpr auto MODEL_UPDATE_DELAY{250ms};
 
 /* A delay between shutdown pollings */
 static constexpr auto SHUTDOWN_POLLING_DELAY{200ms};
@@ -52,7 +52,7 @@ static const int TOOLTIP_WRAP_THRESHOLD = 80;
 #define SPINNER_FRAMES 36
 
 #define QAPP_ORG_NAME "VIPSTARCOIN"
-#define QAPP_ORG_DOMAIN "vipstarcoin.org"
+#define QAPP_ORG_DOMAIN "vipstarcoin.jp"
 #define QAPP_APP_NAME_DEFAULT "VIPSTARCOIN-Qt"
 #define QAPP_APP_NAME_TESTNET "VIPSTARCOIN-Qt-testnet"
 #define QAPP_APP_NAME_SIGNET "VIPSTARCOIN-Qt-signet"
@@ -65,10 +65,10 @@ static constexpr uint64_t GB_BYTES{1000000000};
 static constexpr int DEFAULT_PRUNE_TARGET_GB{2};
 
 /* Mainnet vipstarcoin explorer uri */
-#define VIPS_INFO_MAINNET "<a href='https://vipstarcoin.info/%1/%2'>%2</a>"
+#define VIPS_INFO_MAINNET "<a href='https://insight.vipstarcoin.jp/%1/%2'>%2</a>"
 
 /* Testnet vipstarcoin explorer uri */
-#define VIPS_INFO_TESTNET "<a href='https://testnet.vipstarcoin.info/%1/%2'>%2</a>"
+#define VIPS_INFO_TESTNET "<a href='https://insight.vipstarcoin.jp/%1/%2'>%2</a>"
 
 /* Hardware wallet interface uri */
 #define VIPS_HWI_TOOL "<a href='https://github.com/vipstarcoinproject/HWI/tags'>HWI Tool</a>"

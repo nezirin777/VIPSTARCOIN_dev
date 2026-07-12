@@ -126,10 +126,9 @@ static bool AppInit(NodeContext& node, int argc, char* argv[])
     if (HelpRequested(args) || args.IsArgSet("-version")) {
         std::string strUsage = PACKAGE_NAME " version " + FormatFullVersion() + "\n";
 
-        if (args.IsArgSet("-version")) {
-            strUsage += FormatParagraph(LicenseInfo());
-        } else {
-            strUsage += "\nUsage:  qtumd [options]                     Start " PACKAGE_NAME "\n"
+        if (!args.IsArgSet("-version")) {
+            strUsage += FormatParagraph(LicenseInfo()) + "\n"
+                "\nUsage:  vipstarcoind [options]                     Start " PACKAGE_NAME "\n"
                 "\n";
             strUsage += args.GetHelpMessage();
         }
@@ -165,7 +164,7 @@ static bool AppInit(NodeContext& node, int argc, char* argv[])
         // Error out when loose non-argument tokens are encountered on command line
         for (int i = 1; i < argc; i++) {
             if (!IsSwitchChar(argv[i][0])) {
-                return InitError(Untranslated(strprintf("Command line contains unexpected token '%s', see qtumd -h for a list of options.\n", argv[i])));
+                return InitError(Untranslated(strprintf("Command line contains unexpected token '%s', see vipstarcoind -h for a list of options.\n", argv[i])));
             }
         }
 
