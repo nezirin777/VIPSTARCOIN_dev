@@ -49,7 +49,14 @@ struct EthChainIdCache
 
 int qtumutils::eth_getChainId(int blockHeight, int shanghaiHeight, const std::string& chain)
 {
-    if (chain == CBaseChainParams::MAIN || blockHeight < shanghaiHeight)
+    // VIPS: before Shanghai activation, always return the legacy
+    // (Qtum-derived, pre-existing) chain id for ALL networks, to preserve
+    // exact backward compatibility with already-mined blocks. This check
+    // must come first and unconditionally, independent of chain type.
+    if (blockHeight < shanghaiHeight)
+        return ChainIdType::LEGACY;
+
+    if (chain == CBaseChainParams::MAIN)
         return ChainIdType::MAIN;
 
     if (chain == CBaseChainParams::REGTEST || chain == CBaseChainParams::UNITTEST)
