@@ -170,7 +170,7 @@ static UniValue generateBlocks(ChainstateManager& chainman, const CTxMemPool& me
     unsigned int nExtraNonce = 0;
     UniValue blockHashes(UniValue::VARR);
     while (nGenerate > 0 && !ShutdownRequested()) {
-        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler{chainman.ActiveChainstate(), &mempool}.CreateNewBlock(coinbase_script, false, nullptr, 0, GetAdjustedTimeSeconds()+node::POW_MINER_MAX_TIME));
+        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler{chainman.ActiveChainstate(), &mempool}.CreateNewBlock(coinbase_script, true, false, nullptr, 0, GetAdjustedTimeSeconds()+node::POW_MINER_MAX_TIME));
         if (!pblocktemplate.get())
             throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
         CBlock *pblock = &pblocktemplate->block;
@@ -520,11 +520,12 @@ using wallet::GetWalletForJSONRPCRequest;
 CScript getwork_coinbase_script;
 
 void GenerateCoinbaseAddress(std::shared_ptr<CWallet> const pwallet) {
-    CTxDestination dest;
     std::string label;
-    bilingual_str error;
-    pwallet->GetNewDestination(OutputType::LEGACY, label, dest, error);
-    getwork_coinbase_script = GetScriptForDestination(dest);
+    auto op_dest = pwallet->GetNewDestination(OutputType::LEGACY, label);
+    if (!op_dest) {
+        throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, util::ErrorString(op_dest).original);
+    }
+    getwork_coinbase_script = GetScriptForDestination(*op_dest);
 }
 
 static RPCHelpMan getwork()
@@ -600,7 +601,7 @@ static RPCHelpMan getwork()
                 LogPrintf("getwork: Address generated: %s\n", EncodeDestination(dest));
             }
 
-            pblocktemplate = BlockAssembler(chainman.ActiveChainstate(), mempool, Params()).CreateNewBlock(getwork_coinbase_script, false, false, nullptr, 0, 0, true);
+            pblocktemplate = BlockAssembler(chainman.ActiveChainstate(), &mempool).CreateNewBlock(getwork_coinbase_script, false, false, nullptr, 0, 0, true);
             if (!pblocktemplate)
                 throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 

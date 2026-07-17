@@ -100,7 +100,7 @@ bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManage
         // Process this block the same as if we had received it from another node
         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
         bool fNewBlock = false;
-        if (!chainman.ProcessNewBlock(chainparams, shared_pblock, true, &fNewBlock))
+        if (!chainman.ProcessNewBlock(shared_pblock, true, true, &fNewBlock))
             return error("CheckWork: block not accepted");
     }
     return true;
@@ -136,6 +136,23 @@ void updateMinerParams(int nHeight, const Consensus::Params& consensusParams, bo
     }
 }
 
+void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce)
+{
+    // Update nExtraNonce
+    static uint256 hashPrevBlock;
+    if (hashPrevBlock != pblock->hashPrevBlock)
+    {
+        nExtraNonce = 0;
+        hashPrevBlock = pblock->hashPrevBlock;
+    }
+    ++nExtraNonce;
+    unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
+    CMutableTransaction txCoinbase(*pblock->vtx[0]);
+    txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce));
+    assert(txCoinbase.vin[0].scriptSig.size() <= 100);
+    pblock->vtx[0] = MakeTransactionRef(std::move(txCoinbase));
+    pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+}
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     int64_t nOldTime = pblock->nTime;
@@ -1993,7 +2010,7 @@ protected:
 
         // Create a block that's properly populated with transactions
         d->pblocktemplatefilled = std::unique_ptr<CBlockTemplate>(
-                BlockAssembler(d->pwallet->chain().chainman().ActiveChainstate(), &(d->pwallet->chain().mempool()), d->pwallet).CreateNewBlock(d->pblock->vtx[1]->vout[1].scriptPubKey, true, &(d->nTotalFees),
+                BlockAssembler(d->pwallet->chain().chainman().ActiveChainstate(), &(d->pwallet->chain().mempool()), d->pwallet).CreateNewBlock(d->pblock->vtx[1]->vout[1].scriptPubKey, true, true, &(d->nTotalFees),
                                                         blockTime, FutureDrift(GetAdjustedTimeSeconds(), d->nHeight, d->consensusParams) - nStakeTimeBuffer));
         if (!d->pblocktemplatefilled.get()) {
             d->fError = true;
