@@ -21,6 +21,7 @@ Bitcoin-Qt.app
 
 # Qtum binary names (kept for reference)
 src/qtum
+!src/qtum/
 src/qtum-cli
 src/qtum-tx
 src/qtumd
