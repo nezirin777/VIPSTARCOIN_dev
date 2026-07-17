@@ -1086,7 +1086,7 @@ vipstarcoin_util_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-vipstarcoin_util_LDADD += $(BOOST_LIBS)
+vipstarcoin_util_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # qtum-chainstate binary #
