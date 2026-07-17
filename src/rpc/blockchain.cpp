@@ -3777,7 +3777,7 @@ static RPCHelpMan getreplaybaseline()
 {
     int nHeight;
     if (request.params[0].isNum()) {
-        nHeight = request.params[0].get_int();
+        nHeight = request.params[0].getInt<int>();
     } else if (request.params[0].isStr()) {
         try {
             nHeight = std::stoi(request.params[0].get_str());

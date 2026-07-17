@@ -6,6 +6,7 @@
 #include <core_io.h>
 #include <policy/feerate.h>
 #include <policy/fees.h>
+#include <policy/policy.h>
 #include <rpc/protocol.h>
 #include <rpc/request.h>
 #include <rpc/server.h>
@@ -88,7 +89,9 @@ static RPCHelpMan estimatesmartfee()
             if (feeRate != CFeeRate(0)) {
                 CFeeRate min_mempool_feerate{mempool.GetMinFee()};
                 CFeeRate min_relay_feerate{mempool.m_min_relay_feerate};
-                feeRate = std::max({feeRate, min_mempool_feerate, min_relay_feerate});
+                // VIPS: clamp estimated fee to minimum block fee rate to prevent transaction stuck
+                CFeeRate vips_min_feerate{DEFAULT_BLOCK_MIN_TX_FEE};
+                feeRate = std::max({feeRate, min_mempool_feerate, min_relay_feerate, vips_min_feerate});
                 result.pushKV("feerate", ValueFromAmount(feeRate.GetFeePerK()));
             } else {
                 errors.push_back("Insufficient data or no feerate found");
