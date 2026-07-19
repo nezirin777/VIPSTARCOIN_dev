@@ -124,6 +124,8 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::string& Bech32HRP() const { return bech32_hrp; }
     const std::vector<uint8_t>& FixedSeeds() const { return vFixedSeeds; }
+    /** Make miner wait to have peers to avoid wasting work */
+    bool MiningRequiresPeers() const { return fMiningRequiresPeers; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     std::string EVMGenesisInfo() const;
     std::string EVMGenesisInfo(int nHeight) const;
@@ -199,6 +201,7 @@ protected:
     std::string strNetworkID;
     CBlock genesis;
     std::vector<uint8_t> vFixedSeeds;
+    bool fMiningRequiresPeers;
     bool fDefaultConsistencyChecks;
     bool fRequireStandard;
     bool fMineBlocksOnDemand;
