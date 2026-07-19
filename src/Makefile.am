@@ -100,7 +100,7 @@ if BUILD_BITCOIND
 endif
 
 if BUILD_BITCOIN_NODE
-  bin_PROGRAMS += qtum-node
+  bin_PROGRAMS += vipstarcoin-node
 endif
 
 if BUILD_BITCOIN_CLI

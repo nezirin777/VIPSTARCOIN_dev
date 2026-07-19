@@ -42,23 +42,23 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         setWindowTitle(tr("About %1").arg(PACKAGE_NAME));
 
         std::string licenseInfo = LicenseInfo();
-        /// HTML-format the license message from the core
-        QString licenseInfoHTML = QString::fromStdString(LicenseInfo());
+        /// VIPS-format the license message from the core
+        QString licenseInfoVIPS = QString::fromStdString(LicenseInfo());
         // Make URLs clickable
         QRegularExpression uri(QStringLiteral("<(.*)>"), QRegularExpression::InvertedGreedinessOption);
-        licenseInfoHTML.replace(uri, QStringLiteral("<a href=\"\\1\">\\1</a>"));
+        licenseInfoVIPS.replace(uri, QStringLiteral("<a href=\"\\1\">\\1</a>"));
         // Replace newlines with HTML breaks
-        licenseInfoHTML.replace("\n", "<br>");
+        licenseInfoVIPS.replace("\n", "<br>");
 
         ui->aboutMessage->setTextFormat(Qt::RichText);
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         text = version + "\n" + QString::fromStdString(FormatParagraph(licenseInfo));
-        ui->aboutMessage->setText(version + "<br><br>" + licenseInfoHTML);
+        ui->aboutMessage->setText(version + "<br><br>" + licenseInfoVIPS);
         ui->aboutMessage->setWordWrap(true);
         ui->helpMessage->setVisible(false);
     } else {
         setWindowTitle(tr("Command-line options"));
-        QString header = "Usage:  qtum-qt [command-line options]                     \n"; 
+        QString header = "Usage:  vipstarcoin-qt [command-line options]                     \n";
         QTextCursor cursor(ui->helpMessage->document());
         cursor.insertText(version);
         cursor.insertBlock();

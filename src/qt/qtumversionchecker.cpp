@@ -9,11 +9,11 @@
 #include <QRegularExpressionMatchIterator>
 #include <QTimer>
 
-#define paternVersion "qtum-([0-9]+\\.)?([0-9]+\\.)?([0-9]+)-"
+#define paternVersion "vipstarcoin-([0-9]+\\.)?([0-9]+\\.)?([0-9]+)-"
 
 QtumVersionChecker::QtumVersionChecker(QObject *parent) : QObject(parent)
 {
-    currentVersion = Version(CLIENT_VERSION_MAJOR, CLIENT_VERSION_MINOR, 0);
+    currentVersion = Version(CLIENT_VERSION_MAJOR, CLIENT_VERSION_MINOR, CLIENT_VERSION_REVISION);
 }
 
 QtumVersionChecker::~QtumVersionChecker()
@@ -30,7 +30,7 @@ bool QtumVersionChecker::newVersionAvailable()
 QList<Version> QtumVersionChecker::getVersions()
 {
     QNetworkAccessManager manager;
-    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QTUM_RELEASES)));
+    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(VIPS_RELEASES)));
     QTimer timer;
     timer.setSingleShot(true);
     QEventLoop event;
@@ -53,7 +53,7 @@ QList<Version> QtumVersionChecker::getVersions()
             while (regExIt.hasNext())
             {
                 QRegularExpressionMatch match = regExIt.next();
-                QString versionString = match.captured().mid(5, match.captured().length() - 6); // get version string in format XX.XX.XX
+                QString versionString = match.captured().mid(12, match.captured().length() - 13); // get version string in format XX.XX.XX
                 Version version(versionString);
                 if(!versions.contains(version))
                 {

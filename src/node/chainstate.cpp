@@ -149,7 +149,7 @@ static ChainstateLoadResult CompleteChainstateInitialization(
     fGettingValuesDGP = options.getting_values_dgp;
 
     dev::eth::NoProof::init();
-    fs::path qtumStateDir = gArgs.GetDataDirNet() / "stateQtum";
+    fs::path qtumStateDir = gArgs.GetDataDirNet() / "stateVIPSTARCOIN";
     bool fStatus = fs::exists(qtumStateDir);
     const std::string dirQtum = PathToString(qtumStateDir);
     const dev::h256 hashDB(dev::sha3(dev::rlp("")));

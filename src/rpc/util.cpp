@@ -19,7 +19,7 @@
 #include <tuple>
 
 const std::string UNIX_EPOCH_TIME = "UNIX epoch time";
-const std::string EXAMPLE_ADDRESS[2] = {"QM72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd", "QX1GkJdye9WoUnrE2v6ZQhQ72EUVDtGXQX"};
+const std::string EXAMPLE_ADDRESS[2] = {"VJRt3y2XZwt93fNT6qQVoC5yCLDA5MFcRR", "v7ccyLM2ipAexDQSENy51Yvr5b1WsV3aCb"};
 
 GlobalMutex cs_blockchange;
 std::condition_variable cond_blockchange;
@@ -148,12 +148,12 @@ std::string ShellQuoteIfNeeded(const std::string& s)
 
 std::string HelpExampleCli(const std::string& methodname, const std::string& args)
 {
-    return "> qtum-cli " + methodname + " " + args + "\n";
+    return "> vipstarcoin-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleCliNamed(const std::string& methodname, const RPCArgList& args)
 {
-    std::string result = "> qtum-cli -named " + methodname;
+    std::string result = "> vipstarcoin-cli -named " + methodname;
     for (const auto& argpair: args) {
         const auto& value = argpair.second.isStr()
                 ? argpair.second.get_str()
@@ -167,7 +167,7 @@ std::string HelpExampleCliNamed(const std::string& methodname, const RPCArgList&
 std::string HelpExampleRpc(const std::string& methodname, const std::string& args)
 {
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", "
-        "\"method\": \"" + methodname + "\", \"params\": [" + args + "]}' -H 'content-type: text/plain;' http://127.0.0.1:8332/\n";
+        "\"method\": \"" + methodname + "\", \"params\": [" + args + "]}' -H 'content-type: text/plain;' http://127.0.0.1:31916/\n";
 }
 
 std::string HelpExampleRpcNamed(const std::string& methodname, const RPCArgList& args)
@@ -178,7 +178,7 @@ std::string HelpExampleRpcNamed(const std::string& methodname, const RPCArgList&
     }
 
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", "
-           "\"method\": \"" + methodname + "\", \"params\": " + params.write() + "}' -H 'content-type: text/plain;' http://127.0.0.1:8332/\n";
+           "\"method\": \"" + methodname + "\", \"params\": " + params.write() + "}' -H 'content-type: text/plain;' http://127.0.0.1:31916/\n";
 }
 
 // Converts a hex string to a public key if possible
