@@ -283,7 +283,7 @@ public:
     int32_t nTimeLimit;
 
     /** Construct a new block template with coinbase to scriptPubKeyIn */
-    std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0, int32_t nTimeLimit=0);
+    std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn, bool fMineWitnessTx=true, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0, int32_t nTimeLimit=0, bool externalGBT = false);
     std::unique_ptr<CBlockTemplate> CreateEmptyBlock(const CScript& scriptPubKeyIn, bool fProofOfStake=false, int64_t* pTotalFees = 0, int32_t nTime=0);
 
     inline static std::optional<int64_t> m_last_block_num_txs{};
@@ -328,6 +328,7 @@ void StakeQtums(bool fStake, wallet::CWallet *pwallet);
 void RefreshDelegates(wallet::CWallet *pwallet, bool myDelegates, bool stakerDelegates);
 #endif
 
+void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
 /** Update an old GenerateCoinbaseCommitment from CreateNewBlock after the block txs have changed */
@@ -337,7 +338,11 @@ void RegenerateCommitments(CBlock& block, ChainstateManager& chainman);
 void ApplyArgsManOptions(const ArgsManager& gArgs, BlockAssembler::Options& options);
 
 /** Check if staking is enabled */
-bool CanStake();
+  bool CanStake();
+
+  uint32_t ByteReverse(uint32_t value);
+  void FormatHashBuffers(CBlock* pblock, char* pdata);
+  bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman);
 } // namespace node
 
 #endif // BITCOIN_NODE_MINER_H
