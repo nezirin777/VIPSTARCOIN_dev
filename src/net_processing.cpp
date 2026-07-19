@@ -2708,9 +2708,15 @@ bool PeerManagerImpl::CheckPoSHeadersAreContinuous(const std::vector<CBlockHeade
     const Consensus::Params& consensusParams = m_chainparams.GetConsensus();
     for (const CBlockHeader& header : headers)
     {
-        //reject proof of work at height consensusParams.nLastPOWBlock
-        if (header.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
-            return false;
+        // VIPS: unlike Qtum, there is no height-based PoW cutoff
+        // (nLastPOWBlock does not exist in VIPS consensus params; PoW is
+        // valid at any height, decided purely by block structure). The
+        // authoritative PoW/PoS validity checks happen downstream in
+        // ContextualCheckBlockHeader/ConnectBlock, which already do not
+        // reference a PoW cutoff height. This function is only a P2P
+        // anti-DoS pre-filter (Misbehaving on failure), so omitting the
+        // height-based PoW rejection here does not weaken consensus
+        // enforcement.
 
         // Check coinstake timestamp
         if (header.IsProofOfStake() && !CheckCoinStakeTimestamp(header.GetBlockTime(), nHeight, consensusParams))
