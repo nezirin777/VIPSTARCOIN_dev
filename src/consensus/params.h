@@ -181,11 +181,8 @@ struct Params {
         return std::numeric_limits<int>::max();
     }
 
-    int nLastPOWBlock;
-    int nFirstMPoSBlock;
-    int nMPoSRewardRecipients;
-    int nFixUTXOCacheHFHeight;
     int nEnableHeaderSignatureHeight;
+    std::string checkpointPubKey;
     /** Block sync-checkpoint span*/
     int nCheckpointSpan;
     int nRBTCheckpointSpan;
