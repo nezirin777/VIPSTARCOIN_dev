@@ -149,6 +149,11 @@ struct Params {
         int64_t targetSpacing = TargetSpacing(height);
         return targetTimespan / targetSpacing;
     }
+    int64_t nPosTargetTimespan;
+    int64_t nPosTargetTimespanV2;
+    int nDiffAdjustChange;
+    int nDiffDamping;
+    unsigned int nDiffChange;
     /** The best chain should have at least this much work */
     uint256 nMinimumChainWork;
     /** By default assume that the signatures in ancestors of this block are valid */
@@ -232,7 +237,7 @@ struct Params {
     }
     int64_t TargetTimespan(int height) const
     {
-        return height < QIP9Height ? nPowTargetTimespan : 
+        return height < QIP9Height ? nPowTargetTimespan :
             (height < nReduceBlocktimeHeight ? nPowTargetTimespanV2 : nRBTPowTargetTimespan);
     }
     int CheckpointSpan(int height) const
