@@ -1574,7 +1574,7 @@ public:
 
     {
         // Make this thread recognisable as the mining thread
-        std::string threadName = "qtumstake";
+        std::string threadName = "vipsstake";
         if(pwallet && pwallet->GetName() != "")
         {
             threadName = threadName + "-" + pwallet->GetName();
