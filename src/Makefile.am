@@ -41,7 +41,7 @@ LIBBITCOIN_NODE=libbitcoin_node.a
 LIBBITCOIN_COMMON=libbitcoin_common.a
 LIBBITCOIN_CONSENSUS=libbitcoin_consensus.a
 LIBBITCOIN_CLI=libbitcoin_cli.a
-LIBBITCOIN_UTIL=libqtum_util.a
+LIBBITCOIN_UTIL=libvipstarcoin_util.a
 LIBBITCOIN_CRYPTO_BASE=crypto/libbitcoin_crypto_base.la
 LIBBITCOINQT=qt/libbitcoinqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
@@ -102,7 +102,7 @@ EXTRA_LIBRARIES += \
   $(LIBBITCOIN_ZMQ)
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += qtumd
+  bin_PROGRAMS += vipstarcoind
 endif
 
 if BUILD_BITCOIN_NODE
@@ -110,21 +110,21 @@ if BUILD_BITCOIN_NODE
 endif
 
 if BUILD_BITCOIN_CLI
-  bin_PROGRAMS += qtum-cli
+  bin_PROGRAMS += vipstarcoin-cli
 endif
 
 if BUILD_BITCOIN_TX
-  bin_PROGRAMS += qtum-tx
+  bin_PROGRAMS += vipstarcoin-tx
 endif
 
 if ENABLE_WALLET
 if BUILD_BITCOIN_WALLET
-  bin_PROGRAMS += qtum-wallet
+  bin_PROGRAMS += vipstarcoin-wallet
 endif
 endif
 
 if BUILD_BITCOIN_UTIL
-  bin_PROGRAMS += qtum-util
+  bin_PROGRAMS += vipstarcoin-util
 endif
 
 if BUILD_BITCOIN_CHAINSTATE
@@ -411,7 +411,7 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	$(AM_V_GEN) $(top_srcdir)/share/genbuild.sh "$(abs_top_builddir)/src/obj/build.h" \
 	  "$(abs_top_srcdir)"
-libqtum_util_a-clientversion.$(OBJEXT): obj/build.h
+libvipstarcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
 # node #
 libbitcoin_node_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(LEVELDB_CPPFLAGS) $(MINIUPNPC_CPPFLAGS) $(NATPMP_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
@@ -969,9 +969,9 @@ endif
 #
 
 # util #
-libqtum_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libqtum_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libqtum_util_a_SOURCES = \
+libvipstarcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+libvipstarcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libvipstarcoin_util_a_SOURCES = \
   support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
@@ -1022,7 +1022,7 @@ libbitcoin_cli_a_SOURCES = \
   rpc/client.cpp \
   $(BITCOIN_CORE_H)
 
-nodist_libqtum_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libvipstarcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind & bitcoin-node binaries #
@@ -1052,29 +1052,29 @@ qtum_bin_ldadd = \
 
 qtum_bin_ldadd += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(NATPMP_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) $(SQLITE_LIBS) $(GMP_LIBS) $(GMPXX_LIBS)
 
-qtumd_SOURCES = $(qtum_daemon_sources) init/bitcoind.cpp
-qtumd_CPPFLAGS = $(qtum_bin_cppflags)
-qtumd_CXXFLAGS = $(qtum_bin_cxxflags)
-qtumd_LDFLAGS = $(qtum_bin_ldflags)
-qtumd_LDADD = $(LIBBITCOIN_NODE) $(qtum_bin_ldadd)
+vipstarcoind_SOURCES = $(qtum_daemon_sources) init/bitcoind.cpp
+vipstarcoind_CPPFLAGS = $(qtum_bin_cppflags)
+vipstarcoind_CXXFLAGS = $(qtum_bin_cxxflags)
+vipstarcoind_LDFLAGS = $(qtum_bin_ldflags)
+vipstarcoind_LDADD = $(LIBBITCOIN_NODE) $(qtum_bin_ldadd)
 
-qtum_node_SOURCES = $(qtum_daemon_sources) init/bitcoin-node.cpp
-qtum_node_CPPFLAGS = $(qtum_bin_cppflags)
-qtum_node_CXXFLAGS = $(qtum_bin_cxxflags)
-qtum_node_LDFLAGS = $(qtum_bin_ldflags)
-qtum_node_LDADD = $(LIBBITCOIN_NODE) $(qtum_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
+vipstarcoin_node_SOURCES = $(qtum_daemon_sources) init/bitcoin-node.cpp
+vipstarcoin_node_CPPFLAGS = $(qtum_bin_cppflags)
+vipstarcoin_node_CXXFLAGS = $(qtum_bin_cxxflags)
+vipstarcoin_node_LDFLAGS = $(qtum_bin_ldflags)
+vipstarcoin_node_LDADD = $(LIBBITCOIN_NODE) $(qtum_bin_ldadd) $(LIBBITCOIN_IPC) $(LIBMULTIPROCESS_LIBS)
 
 # bitcoin-cli binary #
-qtum_cli_SOURCES = bitcoin-cli.cpp
-qtum_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-qtum_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-qtum_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+vipstarcoin_cli_SOURCES = bitcoin-cli.cpp
+vipstarcoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+vipstarcoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+vipstarcoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-qtum_cli_SOURCES += bitcoin-cli-res.rc
+vipstarcoin_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-qtum_cli_LDADD = \
+vipstarcoin_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
@@ -1086,20 +1086,20 @@ qtum_cli_LDADD = \
   $(LIBCRYPTOPP) \
   $(LIBSECP256K1)
 
-qtum_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+vipstarcoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-qtum_tx_SOURCES = bitcoin-tx.cpp
-qtum_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-qtum_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-qtum_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+vipstarcoin_tx_SOURCES = bitcoin-tx.cpp
+vipstarcoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+vipstarcoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+vipstarcoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-qtum_tx_SOURCES += bitcoin-tx-res.rc
+vipstarcoin_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-qtum_tx_LDADD = \
+vipstarcoin_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -1111,16 +1111,16 @@ qtum_tx_LDADD = \
   $(LIBCRYPTOPP) \
   $(LIBSECP256K1)
 
-qtum_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+vipstarcoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoin-wallet binary #
-qtum_wallet_SOURCES = bitcoin-wallet.cpp
-qtum_wallet_SOURCES += init/bitcoin-wallet.cpp
-qtum_wallet_CPPFLAGS = $(qtum_bin_cppflags)
-qtum_wallet_CXXFLAGS = $(qtum_bin_cxxflags)
-qtum_wallet_LDFLAGS = $(qtum_bin_ldflags)
-qtum_wallet_LDADD = \
+vipstarcoin_wallet_SOURCES = bitcoin-wallet.cpp
+vipstarcoin_wallet_SOURCES += init/bitcoin-wallet.cpp
+vipstarcoin_wallet_CPPFLAGS = $(qtum_bin_cppflags)
+vipstarcoin_wallet_CXXFLAGS = $(qtum_bin_cxxflags)
+vipstarcoin_wallet_LDFLAGS = $(qtum_bin_ldflags)
+vipstarcoin_wallet_LDADD = \
   $(LIBBITCOIN_WALLET_TOOL) \
   $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_COMMON) \
@@ -1135,21 +1135,21 @@ qtum_wallet_LDADD = \
   $(CRYPTO_LIBS)
 
 if TARGET_WINDOWS
-qtum_wallet_SOURCES += bitcoin-wallet-res.rc
+vipstarcoin_wallet_SOURCES += bitcoin-wallet-res.rc
 endif
 #
 
 # bitcoin-util binary #
-qtum_util_SOURCES = bitcoin-util.cpp
-qtum_util_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-qtum_util_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-qtum_util_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
+vipstarcoin_util_SOURCES = bitcoin-util.cpp
+vipstarcoin_util_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+vipstarcoin_util_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+vipstarcoin_util_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) $(PTHREAD_FLAGS)
 
 if TARGET_WINDOWS
-qtum_util_SOURCES += bitcoin-util-res.rc
+vipstarcoin_util_SOURCES += bitcoin-util-res.rc
 endif
 
-qtum_util_LDADD = \
+vipstarcoin_util_LDADD = \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
   $(LIBUNIVALUE) \
@@ -1157,7 +1157,7 @@ qtum_util_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-qtum_util_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+vipstarcoin_util_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # qtum-chainstate binary #
