@@ -244,7 +244,13 @@ void BlockAssembler::RebuildRefundTransaction(CBlock* pblock){
         refundtx=1; //1 for coinstake in PoS
     }
     CMutableTransaction contrTx(originalRewardTx);
-    contrTx.vout[refundtx].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+
+    if(pblock->IsProofOfStake()) {
+        contrTx.vout[refundtx].nValue = nFees + GetProofOfStakeReward(nHeight, chainparams.GetConsensus());
+    } else {
+        contrTx.vout[refundtx].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+    }
+
     contrTx.vout[refundtx].nValue -= bceResult.refundSender;
     //note, this will need changed for MPoS
     int i=contrTx.vout.size();

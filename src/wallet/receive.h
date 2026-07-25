@@ -6,11 +6,15 @@
 #define BITCOIN_WALLET_RECEIVE_H
 
 #include <consensus/amount.h>
+#include <addresstype.h>
+#include <threadsafety.h>
 #include <wallet/transaction.h>
 #include <wallet/types.h>
-#include <wallet/wallet.h>
+
+#include <list>
 
 namespace wallet {
+class CWallet;
 isminetype InputIsMine(const CWallet& wallet, const CTxIn& txin) EXCLUSIVE_LOCKS_REQUIRED(wallet.cs_wallet);
 
 /** Returns whether all of the inputs match the filter */
