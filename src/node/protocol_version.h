@@ -14,8 +14,9 @@ static const int PROTOCOL_VERSION = 70023;
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
 
-//! disconnect from peers older than this proto version (evm Cancun)
-static const int MIN_PEER_PROTO_VERSION = 70022;
+//! disconnect from peers older than this proto version
+//! VIPS仕様: 旧VIPSノードとの接続性確保のため70003を維持（Step3から継続）
+static const int MIN_PEER_PROTO_VERSION = 70003;
 
 //! disconnect from peers older than this proto version after evm Cancun
 static const int MIN_PEER_PROTO_VERSION_AFTER_EVMCANCUN = 70022;
@@ -27,16 +28,16 @@ static const int MIN_PEER_PROTO_VERSION_AFTER_EVMPECTRA = 70023;
 static const int BIP0031_VERSION = 60000;
 
 //! "sendheaders" command and announcing blocks with headers starts with this version
-static const int SENDHEADERS_VERSION = 70012;
+static const int SENDHEADERS_VERSION = 70000;
 
 //! "feefilter" tells peers to filter invs to you by fee starts with this version
-static const int FEEFILTER_VERSION = 70013;
+static const int FEEFILTER_VERSION = 70000;
 
 //! short-id-based block download starts with this version
-static const int SHORT_IDS_BLOCKS_VERSION = 70014;
+static const int SHORT_IDS_BLOCKS_VERSION = 70000;
 
 //! not banning for invalid compact blocks starts with this version
-static const int INVALID_CB_NO_BAN_VERSION = 70015;
+static const int INVALID_CB_NO_BAN_VERSION = 70000;
 
 //! "wtxidrelay" command for wtxid-based relay starts with this version
 static const int WTXID_RELAY_VERSION = 70019;

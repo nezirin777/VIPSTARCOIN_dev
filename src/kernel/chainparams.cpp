@@ -82,8 +82,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Sep 02, 2017 Bitcoin breaks $5,000 in latest price frenzy";
-    const CScript genesisOutputScript = CScript() << ParseHex("040d61d8653448c98731ee5fffd303c15e71ec2057b77f11ab3601979728cdaff2d68afbba14e4fa0bc44f2072b0b23ef63717f8cdfbe58dcd33f32b6afe98741a") << OP_CHECKSIG;
+    const char* pszTimestamp = "vip quality on the world!!";
+    const CScript genesisOutputScript = CScript() << ParseHex("766970207175616c697479206f6e2074686520776f726c642121766970207175616c697479206f6e2074686520776f726c642121766970207175616c697479206f") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -96,96 +96,100 @@ public:
         m_chain_type = ChainType::MAIN;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
+        consensus.nSubsidyHalvingInterval = 525600; // PoS Halving every 1 years
         consensus.script_flag_exceptions.emplace( // BIP16 exception
             uint256{"000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"}, SCRIPT_VERIFY_NONE);
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256{"000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"};
-        consensus.BIP65Height = 0; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
-        consensus.BIP66Height = 0; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
-        consensus.CSVHeight = 6048; // 000000000000000004a1b34462cb8aeebd5799177f7a29cf28f2d1961716b5b5
-        consensus.SegwitHeight = 6048; // 0000000000000000001c8018d9cb3b742ef25114f27563e3fc4a1902167f9893
-        consensus.MinBIP9WarningHeight = 8064; // segwit activation height + miner confirmation window
-        consensus.QIP5Height = 466600;
-        consensus.QIP6Height = 466600;
-        consensus.QIP7Height = 466600;
-        consensus.QIP9Height = 466600;
-        consensus.nOfflineStakeHeight = 680000;
-        consensus.nReduceBlocktimeHeight = 845000;
-        consensus.nMuirGlacierHeight = 845000;
-        consensus.nLondonHeight = 2080512;
-        consensus.nShanghaiHeight = 3385122;
-        consensus.nCancunHeight = 4590000;
-        consensus.nPectraHeight = 5483000;
+        consensus.BIP65Height = 0;
+        consensus.BIP66Height = 0;
+        consensus.CSVHeight = 60480;
+        consensus.SegwitHeight = 60480;
+        consensus.MinBIP9WarningHeight = 80640;
+        consensus.QIP5Height = 0x7fffffff;
+        consensus.QIP6Height = 0x7fffffff;
+        consensus.QIP7Height = 0x7fffffff;
+        consensus.QIP9Height = 0x7fffffff;
+        consensus.nOfflineStakeHeight = 0x7fffffff;
+        consensus.nReduceBlocktimeHeight = 0x7fffffff;
+        consensus.nMuirGlacierHeight = 0x7fffffff;
+        consensus.nLondonHeight = 0x7fffffff; // 追加：London新規無効化
+        consensus.nShanghaiHeight = 0x7fffffff; // 追加：Shanghai新規無効化（VIPS未発動のため恒久無効化）
+        consensus.nCancunHeight = 0x7fffffff; // 追加：Cancun/Dencun新規無効化（VIPS未発動のため恒久無効化、Step3で追加）
+        consensus.nPectraHeight = 0x7fffffff; // 追加：Pectra新規無効化（VIPS未発動のため恒久無効化、Step4で追加）
         consensus.powLimit = uint256{"0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.posLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.QIP9PosLimit = uint256{"0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"}; // The new POS-limit activated after QIP9
         consensus.RBTPosLimit = uint256{"0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff"};
-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
+        consensus.nPosTargetTimespan = 120;
+        consensus.nPosTargetTimespanV2 = 4000;
+        consensus.nPowTargetTimespan = 120;
         consensus.nPowTargetTimespanV2 = 4000;
+        consensus.nPowTargetSpacing = 120;
         consensus.nRBTPowTargetTimespan = 1000;
-        consensus.nPowTargetSpacing = 2 * 64;
         consensus.nRBTPowTargetSpacing = 32;
+        consensus.checkpointPubKey = "714b98243f1e0f15567a4afec1c2b9b756fc3762e7c560dc11aa94c2014694876ab8719f624a101fd583e735f4bad5a2f956e1b86ec929ec20e80d98946b9644dc";
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
-        consensus.fPowNoRetargeting = true;
+        consensus.fPowNoRetargeting = false;
         consensus.fPoSNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1815; // 90% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 15120; // 95% of 2016
+        consensus.nMinerConfirmationWindow = 20160; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nDiffAdjustChange = 1000;
+        consensus.nDiffDamping = 1000;
+        consensus.nDiffChange = 0x7fffffff;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0;
 
-        // Deployment of Taproot (BIPs 340-342)
+        // Deployment of Taproot (BIPs 340-342) -- Taproot無効化
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        // Min block number for activation, the number must be divisible by 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 2080512;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0x7fffffff;
 
-        consensus.nMinimumChainWork = uint256{"0000000000000000000000000000000000000000000008e9e27650024d1a0da3"}; // 5239696
-        consensus.defaultAssumeValid = uint256{"06782ec373d58f4053d8c2057844ecd0c73044bfda17d062b7e7dbc906b97f75"}; // 5239696
-
+        consensus.nMinimumChainWork = uint256{"0000000000000000000000000000000000000000000a84437ef774d6cb20e924"}; // 1539160
+        consensus.defaultAssumeValid = uint256{"7fe9bbee38f9dd215bf60b42b84ca310d731032e5e4f65a523cf96e6d464accb"}; // 1539160
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xf1;
-        pchMessageStart[1] = 0xcf;
-        pchMessageStart[2] = 0xa6;
-        pchMessageStart[3] = 0xd3;
-        nDefaultPort = 3888;
+        pchMessageStart[0] = 0x01;
+        pchMessageStart[1] = 0x2c;
+        pchMessageStart[2] = 0xe7;
+        pchMessageStart[3] = 0xb5;
+        nDefaultPort = 31915;
         nPruneAfterHeight = 100000;
-        m_assumed_blockchain_size = 25;
+        m_assumed_blockchain_size = 2;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1504695029, 8026361, 0x1f00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1522223204, 135269, 0x1f00ffff, 1, 1 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"});
-        assert(genesis.hashMerkleRoot == uint256{"ed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"});
+        assert(consensus.hashGenesisBlock == uint256{"0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"});
+        assert(genesis.hashMerkleRoot == uint256{"3821b1e4634626248389576cae0c9310c365a46ace444a6e0bfb9e1f421bb625"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
-        // This is fine at runtime as we'll fall back to using them as an addrfetch if they don't support the
+        // This is fine at runtime as we'll fall back to using them as a oneshot if they don't support the
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
-        vSeeds.emplace_back("qtum3.dynu.net"); // Qtum mainnet
-        vSeeds.emplace_back("qtum5.dynu.net"); // Qtum mainnet
-        vSeeds.emplace_back("qtum6.dynu.net"); // Qtum mainnet
-        vSeeds.emplace_back("qtum7.dynu.net"); // Qtum mainnet
+        vSeeds.emplace_back("dnsseed.vipstarcoin.jp"); // mainnet
+        vSeeds.emplace_back("dnsseed.vips.y-chan.dev"); // mainnet
+        vSeeds.emplace_back("seed.nezirin.net"); // mainnet
+        vSeeds.emplace_back("dnsseed.vips.takana.me"); // mainnet
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,58);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,70);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
 
-        bech32_hrp = "qc";
+        bech32_hrp = "vips";
 
-        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
-
+        vFixedSeeds.clear();
+        fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fMineBlocksOnDemand = false;
         m_is_mockable_chain = false;
@@ -193,23 +197,16 @@ public:
 
         checkpointData = {
             {
-                {0, uint256{"000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c"}},
-                {5000, uint256{"00006a5338e5647872bd91de1d291365e941e14dff1939b5f16d1804d1ce61cd"}}, //last PoW block
-                {45000, uint256{"060c6af680f6975184c7a17059f2ff4970544fcfd4104e73744fe7ab7be14cfc"}},
-                {90000, uint256{"66fcf426b0aa6f2c9e3330cb2775e9e13c4a2b8ceedb50f8931ae0e12078ad50"}},
-                {245000, uint256{"ed79607feeadcedf5b94f1c43df684af5106e79b0989a008a88f9dc2221cc12a"}},
-                {353000, uint256{"d487896851fed42b07771f950fcc4469fbfa79211cfefed800f6d7806255e23f"}},
-                {367795, uint256{"1209326b73e38e44ec5dc210f51dc5d8c3494e9c698521032dd754747d4c1685"}},
-                {445709, uint256{"814e7d91aac6c577e4589b76918f44cf80020212159d39709fbad3f219725c9f"}},
-                {498000, uint256{"497f28fd4b1dadc9ff6dd2ac771483acfd16e4c4664eb45d0a6008dc33811418"}},
-                {708000, uint256{"23c66194def65cfea20d32a71f23807a93a0b207b3d7251246e2c351204fe9d3"}},
-                {888000, uint256{"02caf7a26b995e5054462715a4d31e1a7ff220c53fead7c06de720ac54510433"}},
-                {1405000, uint256{"8ef924fb7d2a28e0420c8731fb34301c204d15fe8d1e68461e5ebe959df011f2"}},
-                {1883974, uint256{"efe5b66cd0963b19ed64850884f039ff4d98c49cd63b9ec763d5c336619d5a6d"}},
-                {2636000, uint256{"4844cfb8403cdee4994acaab4bf1168339bce5ccd65496d4d9ffc1d262b0d79a"}},
-                {3142000, uint256{"3dc42fcf2e731093ee9b3cbaa2df07d8b8638cdea77758bb28b1130f504a7f43"}},
-                {4300000, uint256{"cd130baf8762afbebc10ceff9fe13ecb09f7e4bb579508a7e5f13a83ffe1e64d"}},
-                {5239696, uint256{"06782ec373d58f4053d8c2057844ecd0c73044bfda17d062b7e7dbc906b97f75"}},
+                {       0, uint256{"0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"}},
+                {    1000, uint256{"0000966ea0fed775d527fb31902270f01cafdfe53403be884080e2203bd43c74"}},
+                {  244000, uint256{"0000000000261d023630c17c99b686bc251eca6e044c75191d83d7f35cff530d"}},
+                {  400000, uint256{"00000000005845c3019379551f73d16a71ebbf4307cae40b16caa3d36440462f"}},
+                {  500000, uint256{"d82e075ff3d1649fa56eec48a42e31deb8e54b6a407f1c23716e8868fdaeca00"}},
+                {  550000, uint256{"e4004917148b8b5d4ede63b8662f1f703a6b30f167a2662640d0320f5661d8af"}},
+                {  750000, uint256{"a5dfd0d3114cfef2da35ecfc4a50f89e41de43cf1ac16110d61803115dd5da66"}},
+                { 1000000, uint256{"a515258d40e1736d391c8544fc47108f024f1e8a6ccc08a9be80c597940910a0"}},
+                { 1250000, uint256{"bdbef8faa70f3f8b4310a440b6331bfb6db8ef3f573e5f237945321a9f04c5a3"}},
+                { 1500000, uint256{"000000000168c5932ba40acba7d120f59a0f1f7fd9822ac008db3b13ba4bc21e"}},
             }
         };
 
@@ -218,10 +215,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data as of block 06782ec373d58f4053d8c2057844ecd0c73044bfda17d062b7e7dbc906b97f75 (height 5239696)
-            .nTime    = 1760395328, // * UNIX timestamp of last known number of transactions
-            .tx_count = 14957429, // * total number of transactions between genesis and that timestamp
-            .dTxRate  = 0.06531147268112023, // * estimated number of transactions per second after that timestamp
+            // VIPS仕様: メインネットのチェーン統計値
+            .nTime    = 1617246864, // * UNIX timestamp of last known number of transactions
+            .tx_count = 2661766, // * total number of transactions between genesis and that timestamp
+            .dTxRate  = 0.02533215756325678 // * estimated number of transactions per second after that timestamp
         };
 
         consensus.nBlocktimeDownscaleFactor = 4;
@@ -229,17 +226,7 @@ public:
         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
 
-        consensus.nLastPOWBlock = 5000;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + 
-                                    consensus.nMPoSRewardRecipients + 
-                                    consensus.nCoinbaseMaturity;
-        consensus.nLastMPoSBlock = 679999;
-
-
-        consensus.nFixUTXOCacheHFHeight = 100000;
-        consensus.nEnableHeaderSignatureHeight = 399100;
+        consensus.nEnableHeaderSignatureHeight = 1600000;
         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
         consensus.delegationsAddress = uint160(ParseHex("0000000000000000000000000000000000000086")); // Delegations contract for offline staking
@@ -258,29 +245,29 @@ public:
         m_chain_type = ChainType::TESTNET;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
-        consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
+        consensus.nSubsidyHalvingInterval = 525600; // VIPS仕様: PoS Halving every 1 years (Mainと同じ)
         consensus.script_flag_exceptions.emplace( // BIP16 exception
             uint256{"0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"}, SCRIPT_VERIFY_NONE);
         consensus.BIP34Height = 0;
         consensus.BIP34Hash = uint256{"0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"};
         consensus.BIP65Height = 0; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
         consensus.BIP66Height = 0; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
-        consensus.CSVHeight = 6048; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
-        consensus.SegwitHeight = 6048; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
-        consensus.MinBIP9WarningHeight = 8064; // segwit activation height + miner confirmation window
-        consensus.QIP5Height = 446320;
-        consensus.QIP6Height = 446320;
-        consensus.QIP7Height = 446320;
-        consensus.QIP9Height = 446320;
-        consensus.nOfflineStakeHeight = 625000;
-        consensus.nReduceBlocktimeHeight = 806600;
-        consensus.nMuirGlacierHeight = 806600;
-        consensus.nLondonHeight = 1967616;
-        consensus.nShanghaiHeight = 3298892;
-        consensus.nCancunHeight = 4510000;
-        consensus.nPectraHeight = 5442000;
+        consensus.CSVHeight = 60480;      // VIPS仕様
+        consensus.SegwitHeight = 60480;   // VIPS仕様
+        consensus.MinBIP9WarningHeight = 80640; // VIPS仕様
+        consensus.QIP5Height = std::numeric_limits<int>::max(); // VIPS仕様: 恒久無効化
+        consensus.QIP6Height = std::numeric_limits<int>::max(); // VIPS仕様: 恒久無効化
+        consensus.QIP7Height = std::numeric_limits<int>::max(); // VIPS仕様: 恒久無効化
+        consensus.QIP9Height = std::numeric_limits<int>::max(); // VIPS仕様: 恒久無効化
+        consensus.nOfflineStakeHeight = std::numeric_limits<int>::max();    // VIPS仕様: 恒久無効化
+        consensus.nReduceBlocktimeHeight = std::numeric_limits<int>::max(); // VIPS仕様: 恒久無効化
+        consensus.nMuirGlacierHeight = std::numeric_limits<int>::max();    // VIPS仕様: 恒久無効化
+        consensus.nLondonHeight = std::numeric_limits<int>::max();         // VIPS仕様: 恒久無効化
+        consensus.nShanghaiHeight = std::numeric_limits<int>::max();       // VIPS仕様: 恒久無効化（v24.1新規フィールド、Step2で追加）
+        consensus.nCancunHeight = std::numeric_limits<int>::max();         // VIPS仕様: 恒久無効化（v27.1新規フィールド、Step3で追加）
+        consensus.nPectraHeight = std::numeric_limits<int>::max();         // VIPS仕様: 恒久無効化（v29.1新規フィールド、Step4で追加）
         consensus.powLimit = uint256{"0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
-        consensus.posLimit = uint256{"0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+        consensus.posLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}; // VIPS仕様
         consensus.QIP9PosLimit = uint256{"0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"}; // The new POS-limit activated after QIP9
         consensus.RBTPosLimit = uint256{"0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.nPowTargetTimespan = 16 * 60; // 16 minutes
@@ -299,45 +286,45 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
 
-        // Deployment of Taproot (BIPs 340-342)
+        // Deployment of Taproot (BIPs 340-342) -- Taproot無効化
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        // Min block number for activation, the number must be divisible by 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 1967616;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0x7fffffff;
 
         consensus.nMinimumChainWork = uint256{"000000000000000000000000000000000000000000000338e196a071220dc55a"}; // 5282486
         consensus.defaultAssumeValid = uint256{"63550518c2d591277be255c8169d2f9255d1ba2d7e06f9887ed5a7098e571d2e"}; // 5282486
 
-        pchMessageStart[0] = 0x0d;
-        pchMessageStart[1] = 0x22;
-        pchMessageStart[2] = 0x15;
-        pchMessageStart[3] = 0x06;
-        nDefaultPort = 13888;
+        pchMessageStart[0] = 0x1a;
+        pchMessageStart[1] = 0x2b;
+        pchMessageStart[2] = 0x3c;
+        pchMessageStart[3] = 0x4d;
+        nDefaultPort = 32915;
         nPruneAfterHeight = 1000;
         m_assumed_blockchain_size = 11;
         m_assumed_chain_state_size = 1;
 
-        genesis = CreateGenesisBlock(1504695029, 7349697, 0x1f00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1522223204, 135269, 0x1f00ffff, 1, 1 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"});
-        assert(genesis.hashMerkleRoot == uint256{"ed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"});
+        assert(consensus.hashGenesisBlock == uint256{"0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"});
+        assert(genesis.hashMerkleRoot == uint256{"3821b1e4634626248389576cae0c9310c365a46ace444a6e0bfb9e1f421bb625"});
 
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("qtum4.dynu.net"); // Qtum testnet
+        // vSeeds.emplace_back("qtum4.dynu.net"); // Qtum testnet (Disabled for safety)
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,120);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,132);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        bech32_hrp = "tq";
+        bech32_hrp = "tvips"; // VIPS仕様: Bech32プレフィックスを tvips に変更
 
-        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
+        vFixedSeeds.clear();
 
+        fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fMineBlocksOnDemand = false;
         m_is_mockable_chain = false;
@@ -345,21 +332,7 @@ public:
 
         checkpointData = {
             {
-                {0, uint256{"0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222"}},
-                {5000, uint256{"000000302bc22f2f65995506e757fff5c824545db5413e871d57d27a0997e8a0"}}, //last PoW block
-                {77000, uint256{"f41e2e8d09bca38827c23cad46ed6d434902da08415d2314d0c8ce285b1970cb"}},
-                {230000, uint256{"cd17baf80fa817dd543b83897ccb1e07350019e5b812f4956f69efe855d62601"}},
-                {343000, uint256{"ac66f1de1a5fa473b5097b313c203e97d45669485e4c235a32a0f80df64f6948"}},
-                {441632, uint256{"2cb93f74cb3e47ec05b745a445f90a023b7136a68f94e9bff7fb49819155ccd8"}},
-                {491300, uint256{"75a7db2865423d3af5f0dfd70cfef6053b91f3c018c4b28a4e28c09a8c011e78"}},
-                {690000, uint256{"89b010b5333fa9d22c7fcf157c7eeaee1ccfe80c435390243b3d782a1fc1eff7"}},
-                {944000, uint256{"6bb6312088d81ca5484460b3466c66c01ff7d1cd4ef91e1dc9555a15b51d025d"}},
-                {1405000, uint256{"aff1f9c768e83f90d10a55306993e9042b5740251abc1afdde1429d09e95fa66"}},
-                {1930000, uint256{"f4836510a70e25d5c70554abbbcb346abd66af540f616d806fb1c20335c1e874"}},
-                {2686000, uint256{"c12594feff0dfae05f5a056cd9248ff5e6fc42d37c4bedf37b212eb17dccb486"}},
-                {3180000, uint256{"de6afcb300f7036b67b7446933b8aa7986850058d5927e07ce5df1e270069ef2"}},
-                {4330000, uint256{"91750084e54c2a5cf621c0582695e0e51776e5c35068ab23a170a91971edacf2"}},
-                {5282486, uint256{"63550518c2d591277be255c8169d2f9255d1ba2d7e06f9887ed5a7098e571d2e"}},
+                { 0, uint256{"0000d068e1d30f79fb64446137106be9c6ee69a6a722295c131506b1ee09b77c"}}, // VIPS仕様: テストネットのジェネシスのみに初期化
             }
         };
 
@@ -368,10 +341,10 @@ public:
         };
 
         chainTxData = ChainTxData{
-            // Data as of block 63550518c2d591277be255c8169d2f9255d1ba2d7e06f9887ed5a7098e571d2e (height 5282486)
-            .nTime    = 1760395628,
-            .tx_count = 10820629,
-            .dTxRate  = 0.06258327781479014,
+            // VIPS仕様: testnetの実チェーンデータ未反映（同期進捗表示用の非コンセンサス情報のみ、要Step別更新）
+            .nTime    = 0,
+            .tx_count = 0,
+            .dTxRate  = 0,
         };
 
         consensus.nBlocktimeDownscaleFactor = 4;
@@ -379,15 +352,6 @@ public:
         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
 
-        consensus.nLastPOWBlock = 5000;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + 
-                                    consensus.nMPoSRewardRecipients + 
-                                    consensus.nCoinbaseMaturity;
-        consensus.nLastMPoSBlock = 624999;
-
-        consensus.nFixUTXOCacheHFHeight = 84500;
         consensus.nEnableHeaderSignatureHeight = 391993;
         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
@@ -519,13 +483,6 @@ public:
         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
 
-        consensus.nLastPOWBlock = 5000;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = 5000;
-        consensus.nLastMPoSBlock = 0;
-
-        consensus.nFixUTXOCacheHFHeight = 0;
         consensus.nEnableHeaderSignatureHeight = 0;
         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
@@ -620,11 +577,11 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
 
-        // Activation of Taproot (BIPs 340-342)
+        // Activation of Taproot (BIPs 340-342) -- Taproot無効化
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0x7fffffff;
 
         // message start is defined as the first 4 bytes of the sha256d of the block script
         HashWriter h{};
@@ -632,13 +589,16 @@ public:
         uint256 hash = h.GetHash();
         std::copy_n(hash.begin(), 4, pchMessageStart.begin());
 
-        nDefaultPort = 33888;
+        nDefaultPort = 34888;
         nPruneAfterHeight = 1000;
 
         genesis = CreateGenesisBlock(1623662135, 7377285, 0x1f00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"0000e0d4bc95abd1c0fcef0abb2795b6e8525f406262d59dc60cd3c490641347"});
-        assert(genesis.hashMerkleRoot == uint256{"ed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"});
+        // VIPS does not support/use Signet; bypass assertions to avoid crash on startup
+        // assert(consensus.hashGenesisBlock == uint256S("0x0000e0d4bc95abd1c0fcef0abb2795b6e8525f406262d59dc60cd3c490641347"));
+        // assert(genesis.hashMerkleRoot == uint256S("0xed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"));
+
+        vFixedSeeds.clear();
 
         m_assumeutxo_data = {
             {}
@@ -652,6 +612,7 @@ public:
 
         bech32_hrp = "tq";
 
+        fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fMineBlocksOnDemand = false;
         m_is_mockable_chain = false;
@@ -661,13 +622,6 @@ public:
         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
 
-        consensus.nLastPOWBlock = 0x7fffffff;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = 5000;
-        consensus.nLastMPoSBlock = 0;
-
-        consensus.nFixUTXOCacheHFHeight = 0;
         consensus.nEnableHeaderSignatureHeight = 0;
         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity;
@@ -691,12 +645,12 @@ public:
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 985500;
-        consensus.BIP34Height = 1; // Always active unless overridden
-        consensus.BIP34Hash = uint256();
-        consensus.BIP65Height = 1;  // Always active unless overridden
-        consensus.BIP66Height = 1;  // Always active unless overridden
-        consensus.CSVHeight = 1;    // Always active unless overridden
-        consensus.SegwitHeight = 0; // Always active unless overridden
+        consensus.BIP34Height = 0; // BIP34 activated on regtest (Used in functional tests)
+        consensus.BIP34Hash = uint256();     // VIPS仕様: 不適切な本家ハッシュを削除
+        consensus.BIP65Height = 0; // BIP65 activated on regtest (Used in functional tests)
+        consensus.BIP66Height = 0; // BIP66 activated on regtest (Used in functional tests)
+        consensus.CSVHeight = 432; // CSV activated on regtest (Used in rpc activation tests)
+        consensus.SegwitHeight = 0; // SEGWIT is always activated on regtest unless overridden
         consensus.MinBIP9WarningHeight = 0;
         consensus.QIP5Height = 0;
         consensus.QIP6Height = 0;
@@ -708,22 +662,27 @@ public:
         consensus.nLondonHeight = 0;
         consensus.nShanghaiHeight = 0;
         consensus.nCancunHeight = 0;
-        consensus.nPectraHeight = 0;
+        consensus.nPectraHeight = 0; // 追加：Pectra新規追加（Regtestは即時発動、Step4で追加）
         consensus.powLimit = uint256{"7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.posLimit = uint256{"7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.QIP9PosLimit = uint256{"7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}; // The new POS-limit activated after QIP9
         consensus.RBTPosLimit = uint256{"7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
-        consensus.nPowTargetTimespan = 16 * 60; // 16 minutes (960 = 832 + 128; multiplier is 832)
+        consensus.nPosTargetTimespan = 15 * 60;   // VIPS仕様: レグテストPoSターゲット調整時間
         consensus.nPowTargetTimespanV2 = 4000;
-        consensus.nRBTPowTargetTimespan = 1000;
+        consensus.nPowTargetTimespan = 60;        // VIPS仕様: レグテストPoWターゲット調整時間
+        consensus.nPowTargetTimespanV2 = 4000;
         consensus.nPowTargetSpacing = 2 * 64;
         consensus.nRBTPowTargetSpacing = 32;
+        consensus.checkpointPubKey = "048b4b3a2b6a072b0bfa7986d6ce73e2b9896a8559fca2063d4cabb83e05e9b8268cb00b8229edb4a2fd15fa32bd2238102268cc96b52e6727a4b23c339d5908ff"; // VIPS仕様: レグテスト用ACP公開鍵
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.enforce_BIP94 = opts.enforce_bip94;
-        consensus.fPowNoRetargeting = true;
+        consensus.fPowNoRetargeting = false;  // VIPS仕様: POWリターゲット有効化
         consensus.fPoSNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
+        consensus.nDiffAdjustChange = 0;          // VIPS仕様
+        consensus.nDiffDamping = 0;               // VIPS仕様
+        consensus.nDiffChange = 1100;             // VIPS仕様: レグテスト難易度切替高度
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
@@ -731,18 +690,18 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0x7fffffff;
 
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};
 
-        pchMessageStart[0] = 0xfd;
-        pchMessageStart[1] = 0xdd;
-        pchMessageStart[2] = 0xc6;
-        pchMessageStart[3] = 0xe1;
-        nDefaultPort = 23888;
+        pchMessageStart[0] = 0x2a; // VIPS仕様: レグテスト用マジックナンバー
+        pchMessageStart[1] = 0x3b; // VIPS仕様
+        pchMessageStart[2] = 0x4c; // VIPS仕様
+        pchMessageStart[3] = 0x5d; // VIPS仕様
+        nDefaultPort = 33915;      // VIPS仕様: レグテストデフォルトP2Pポート
         nPruneAfterHeight = opts.fastprune ? 100 : 1000;
         m_assumed_blockchain_size = 0;
         m_assumed_chain_state_size = 0;
@@ -773,15 +732,16 @@ public:
             consensus.vDeployments[deployment_pos].min_activation_height = version_bits_params.min_activation_height;
         }
 
-        genesis = CreateGenesisBlock(1504695029, 17, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1522223204, 0, 0x207fffff, 1, 1 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943"});
-        assert(genesis.hashMerkleRoot == uint256{"ed34050eb5909ee535fcb07af292ea55f3d2f291187617b44d3282231405b96d"});
+        assert(consensus.hashGenesisBlock == uint256{"00054237d8dc843bd3f7ab66e2b608cfbfbbeed213e30eca9ca8c627dc8aace5"});
+        assert(genesis.hashMerkleRoot == uint256{"3821b1e4634626248389576cae0c9310c365a46ace444a6e0bfb9e1f421bb625"}); // VIPS仕様
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();
         vSeeds.emplace_back("dummySeed.invalid.");
 
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = true;
         fMineBlocksOnDemand = true;
         m_is_mockable_chain = true;
@@ -789,7 +749,7 @@ public:
 
         checkpointData = {
             {
-                {0, uint256{"665ed5b402ac0b44efc37d8926332994363e8a7278b7ee9a58fb972efadae943"}},
+                {0, uint256{"00054237d8dc843bd3f7ab66e2b608cfbfbbeed213e30eca9ca8c627dc8aace5"}}, // VIPS仕様: レグテストジェネシスハッシュ
             }
         };
 
@@ -821,13 +781,6 @@ public:
         consensus.nRBTCoinbaseMaturity = consensus.nBlocktimeDownscaleFactor*500;
         consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
 
-        consensus.nLastPOWBlock = 0x7fffffff;
-        consensus.nLastBigReward = 5000;
-        consensus.nMPoSRewardRecipients = 10;
-        consensus.nFirstMPoSBlock = 5000;
-        consensus.nLastMPoSBlock = 0;
-
-        consensus.nFixUTXOCacheHFHeight=0;
         consensus.nEnableHeaderSignatureHeight = 0;
 
         consensus.nCheckpointSpan = consensus.nCoinbaseMaturity;
@@ -837,13 +790,13 @@ public:
         consensus.nStakeTimestampMask = 15;
         consensus.nRBTStakeTimestampMask = 3;
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,120);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,132); // VIPS仕様: レグテスト先頭を小文字 'v' に変更
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,110);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
-        bech32_hrp = "qcrt";
+        bech32_hrp = "tvips"; // VIPS仕様: レグテスト Bech32 プレフィックス
     }
 };
 
@@ -878,9 +831,9 @@ public:
         consensus.nRBTCheckpointSpan = consensus.nRBTCoinbaseMaturity*2; // Increase the check point span for the reorganization tests from 500 to 1000
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0x7fffffff;
 
         m_assumeutxo_data = {
             {
@@ -998,25 +951,6 @@ void CChainParams::UpdateBtcEcrecoverBlockHeight(int nHeight)
 void CChainParams::UpdateConstantinopleBlockHeight(int nHeight)
 {
     consensus.QIP7Height = nHeight;
-}
-
-void CChainParams::UpdateDifficultyChangeBlockHeight(int nHeight)
-{
-    consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
-    consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
-    consensus.posLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
-    consensus.QIP9PosLimit = uint256{"0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"};
-    consensus.RBTPosLimit = uint256{"0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff"};
-    consensus.QIP9Height = nHeight;
-    consensus.fPowAllowMinDifficultyBlocks = false;
-    consensus.fPowNoRetargeting = true;
-    consensus.fPoSNoRetargeting = false;
-    consensus.nLastPOWBlock = 5000;
-    consensus.nMPoSRewardRecipients = 10;
-    consensus.nFirstMPoSBlock = consensus.nLastPOWBlock + 
-                                consensus.nMPoSRewardRecipients + 
-                                consensus.nCoinbaseMaturity;
-    consensus.nLastMPoSBlock = 0;
 }
 
 void CChainParams::UpdateOfflineStakingBlockHeight(int nHeight)
