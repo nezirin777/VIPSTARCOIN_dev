@@ -418,7 +418,7 @@ static RPCHelpMan waitfornewblock()
         "waitfornewblock",
         "Waits for any new block and returns useful info about it.\n"
                 "\nReturns the current block on timeout or exit.\n"
-                "\nMake sure to use no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+                "\nMake sure to use no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
                 {
                     {"timeout", RPCArg::Type::NUM, RPCArg::Default{0}, "Time in milliseconds to wait for a response. 0 indicates no timeout."},
                     {"current_tip", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "Method waits for the chain tip to differ from this."},
@@ -477,7 +477,7 @@ static RPCHelpMan waitforblock()
         "waitforblock",
         "Waits for a specific new block and returns useful info about it.\n"
                 "\nReturns the current block on timeout or exit.\n"
-                "\nMake sure to use no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+                "\nMake sure to use no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
                 {
                     {"blockhash", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "Block hash to wait for."},
                     {"timeout", RPCArg::Type::NUM, RPCArg::Default{0}, "Time in milliseconds to wait for a response. 0 indicates no timeout."},
@@ -539,7 +539,7 @@ static RPCHelpMan waitforblockheight()
         "Waits for (at least) block height and returns the height and hash\n"
                 "of the current tip.\n"
                 "\nReturns the current block on timeout or exit.\n"
-                "\nMake sure to use no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+                "\nMake sure to use no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
                 {
                     {"height", RPCArg::Type::NUM, RPCArg::Optional::NO, "Block height to wait for."},
                     {"timeout", RPCArg::Type::NUM, RPCArg::Default{0}, "Time in milliseconds to wait for a response. 0 indicates no timeout."},
@@ -1117,7 +1117,7 @@ const RPCResult getblock_vin{
                     {RPCResult::Type::STR, "asm", "Disassembly of the output script"},
                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                     {RPCResult::Type::STR_HEX, "hex", "The raw output script bytes, hex-encoded"},
-                    {RPCResult::Type::STR, "address", /*optional=*/true, "The Qtum address (only if a well-defined address exists)"},
+                    {RPCResult::Type::STR, "address", /*optional=*/true, "The VIPSTARCOIN address (only if a well-defined address exists)"},
                     {RPCResult::Type::STR, "type", "The type (one of: " + GetAllOutputTypes() + ")"},
                 }},
             }},
@@ -1826,7 +1826,7 @@ RPCHelpMan getdelegationinfoforaddress()
     return RPCHelpMan{"getdelegationinfoforaddress",
                 "Get delegation information for an address.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The vipstarcoin address string"},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ, "", "",
@@ -1923,7 +1923,7 @@ RPCHelpMan getdelegationsforstaker()
                 "requires -logevents to be enabled\n"
                 "\nGet the current list of delegates for a super staker.\n",
                 {
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The qtum address string for staker"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The vipstarcoin address string for staker"},
                 },
                RPCResult{
             RPCResult::Type::ARR, "", "",
@@ -2379,7 +2379,7 @@ static RPCHelpMan gettxout()
                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                     {RPCResult::Type::STR_HEX, "hex", "The raw output script bytes, hex-encoded"},
                     {RPCResult::Type::STR, "type", "The type, eg pubkeyhash"},
-                    {RPCResult::Type::STR, "address", /*optional=*/true, "The Qtum address (only if a well-defined address exists)"},
+                    {RPCResult::Type::STR, "address", /*optional=*/true, "The VIPSTARCOIN address (only if a well-defined address exists)"},
                 }},
                 {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
                 {RPCResult::Type::BOOL, "coinstake", "Coinstake or not"},
@@ -3686,7 +3686,7 @@ static RPCHelpMan scanblocks()
     return RPCHelpMan{
         "scanblocks",
         "Return relevant blockhashes for given descriptors (requires blockfilterindex).\n"
-        "This call may take several minutes. Make sure to use no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+        "This call may take several minutes. Make sure to use no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
         {
             scan_action_arg_desc,
             scan_objects_arg_desc,
@@ -3876,7 +3876,7 @@ static RPCHelpMan getdescriptoractivity()
         "getdescriptoractivity",
         "Get spend and receive activity associated with a set of descriptors for a set of blocks. "
         "This command pairs well with the `relevant_blocks` output of `scanblocks()`.\n"
-        "This call may take several minutes. If you encounter timeouts, try specifying no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+        "This call may take several minutes. If you encounter timeouts, try specifying no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
         {
             RPCArg{"blockhashes", RPCArg::Type::ARR, RPCArg::Optional::NO, "The list of blockhashes to examine for activity. Order doesn't matter. Must be along main chain or an error is thrown.\n", {
                 {"blockhash", RPCArg::Type::STR_HEX, RPCArg::Optional::OMITTED, "A valid blockhash"},
@@ -4234,7 +4234,7 @@ static RPCHelpMan dumptxoutset()
         "Write the serialized UTXO set to a file. This can be used in loadtxoutset afterwards if this snapshot height is supported in the chainparams as well.\n\n"
         "Unless the \"latest\" type is requested, the node will roll back to the requested height and network activity will be suspended during this process. "
         "Because of this it is discouraged to interact with the node in any other way during the execution of this call to avoid inconsistent results and race conditions, particularly RPCs that interact with blockstorage.\n\n"
-        "This call may take several minutes. Make sure to use no RPC timeout (qtum-cli -rpcclienttimeout=0)",
+        "This call may take several minutes. Make sure to use no RPC timeout (vipstarcoin-cli -rpcclienttimeout=0)",
         {
             {"path", RPCArg::Type::STR, RPCArg::Optional::NO, "Path to the output file. If relative, will be prefixed by datadir."},
             {"type", RPCArg::Type::STR, RPCArg::Default(""), "The type of snapshot to create. Can be \"latest\" to create a snapshot of the current UTXO set or \"rollback\" to temporarily roll back the state of the node to a historical block before creating the snapshot of a historical UTXO set. This parameter can be omitted if a separate \"rollback\" named parameter is specified indicating the height or hash of a specific historical block. If \"rollback\" is specified and separate \"rollback\" named parameter is not specified, this will roll back to the latest valid snapshot block that can currently be loaded with loadtxoutset."},
@@ -4529,7 +4529,7 @@ static RPCHelpMan loadtxoutset()
         "Meanwhile, the original chainstate will complete the initial block download process in "
         "the background, eventually validating up to the block that the snapshot is based upon.\n\n"
 
-        "The result is a usable qtumd instance that is current with the network tip in a "
+        "The result is a usable vipstarcoind instance that is current with the network tip in a "
         "matter of minutes rather than hours. UTXO snapshot are typically obtained from "
         "third-party sources (HTTP, torrent, etc.) which is reasonable since their "
         "contents are always checked by hash.\n\n"
@@ -4808,7 +4808,7 @@ static RPCHelpMan qrc20balanceof()
                 "Returns the token balance for address\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address to check token balance"},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address to check token balance"},
                 },
                 RPCResult{
                     RPCResult::Type::STR, "balance", "The token balance of the chosen address"},
@@ -4851,8 +4851,8 @@ static RPCHelpMan qrc20allowance()
                 "Returns remaining tokens allowed to spend for an address\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address"},
-                    {"addressfrom", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address of the account owning tokens"},
-                    {"addressto", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address of the account able to transfer the tokens"},
+                    {"addressfrom", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address of the account owning tokens"},
+                    {"addressto", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address of the account able to transfer the tokens"},
                 },
                 RPCResult{
                     RPCResult::Type::STR, "allowance", "Amount of remaining tokens allowed to spent"},
@@ -4893,7 +4893,7 @@ static RPCHelpMan qrc20listtransactions()
                 "Returns transactions history for a specific address.\n",
                 {
                     {"contractaddress", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The contract address."},
-                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The qtum address to get history for."},
+                    {"address", RPCArg::Type::STR, RPCArg::Optional::NO,  "The vipstarcoin address to get history for."},
                     {"fromblock", RPCArg::Type::NUM, RPCArg::Default{0}, "The number of the earliest block."},
                     {"minconf", RPCArg::Type::NUM, RPCArg::Default{6}, "Minimal number of confirmations."},
                 },
@@ -4902,8 +4902,8 @@ static RPCHelpMan qrc20listtransactions()
                 {
                     {RPCResult::Type::OBJ, "", "",
                         {
-                            {RPCResult::Type::STR, "receiver", "The receiver qtum address"},
-                            {RPCResult::Type::STR, "sender", "The sender qtum address"},
+                            {RPCResult::Type::STR, "receiver", "The receiver vipstarcoin address"},
+                            {RPCResult::Type::STR, "sender", "The sender vipstarcoin address"},
                             {RPCResult::Type::STR, "amount", "The transferred token amount"},
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations of the most recent transaction included"},
                             {RPCResult::Type::STR_HEX, "blockHash", "The block hash"},
@@ -4979,10 +4979,75 @@ static RPCHelpMan qrc20listtransactions()
     };
 }
 
+static RPCHelpMan getreplaybaseline()
+{
+    return RPCHelpMan{"getreplaybaseline",
+                "\nReturns baseline info for block replay validation at the given height.\n",
+                {
+                    {"height", RPCArg::Type::NUM, RPCArg::Optional::NO, "The block height"},
+                },
+                RPCResult{
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::NUM, "height", "The block height"},
+                        {RPCResult::Type::STR_HEX, "hash", "The block hash"},
+                        {RPCResult::Type::STR_HEX, "bits", "The block nBits"},
+                        {RPCResult::Type::STR_HEX, "hashStateRoot", "The state root hash"},
+                        {RPCResult::Type::STR_HEX, "hashUTXORoot", "The UTXO root hash"},
+                        {RPCResult::Type::NUM, "moneysupply", "The money supply"},
+                    }
+                },
+                RPCExamples{
+                    HelpExampleCli("getreplaybaseline", "1000000")
+            + HelpExampleRpc("getreplaybaseline", "1000000")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    int nHeight;
+    if (request.params[0].isNum()) {
+        nHeight = request.params[0].getInt<int>();
+    } else if (request.params[0].isStr()) {
+        try {
+            nHeight = std::stoi(request.params[0].get_str());
+        } catch (...) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is not a valid integer string");
+        }
+    } else {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height must be an integer");
+    }
+
+    ChainstateManager& chainman = EnsureAnyChainman(request.context);
+    const CBlockIndex* pblockindex = nullptr;
+    {
+        LOCK(cs_main);
+        if (nHeight < 0 || nHeight > chainman.ActiveChain().Height()) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Target block height is out of range");
+        }
+        pblockindex = chainman.ActiveChain()[nHeight];
+    }
+
+    if (!pblockindex) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block index not found");
+    }
+
+    UniValue result(UniValue::VOBJ);
+    result.pushKV("height", nHeight);
+    result.pushKV("hash", pblockindex->GetBlockHash().GetHex());
+    result.pushKV("bits", strprintf("%08x", pblockindex->nBits));
+    result.pushKV("hashStateRoot", pblockindex->hashStateRoot.GetHex());
+    result.pushKV("hashUTXORoot", pblockindex->hashUTXORoot.GetHex());
+    result.pushKV("moneysupply", (uint64_t)pblockindex->nMoneySupply);
+
+    return result;
+},
+    };
+}
+
 void RegisterBlockchainRPCCommands(CRPCTable& t)
 {
     static const CRPCCommand commands[]{
         {"blockchain", &getblockchaininfo},
+        {"blockchain", &getreplaybaseline},
         {"blockchain", &getchaintxstats},
         {"blockchain", &getblockstats},
         {"blockchain", &getbestblockhash},

@@ -359,6 +359,7 @@ void RefreshDelegates(wallet::CWallet *pwallet, bool myDelegates, bool stakerDel
  */
 int64_t GetMinimumTime(const CBlockIndex* pindexPrev, const int64_t difficulty_adjustment_interval);
 
+void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
 /** Update an old GenerateCoinbaseCommitment from CreateNewBlock after the block txs have changed */
@@ -393,7 +394,11 @@ std::optional<BlockRef> GetTip(ChainstateManager& chainman);
 std::optional<BlockRef> WaitTipChanged(ChainstateManager& chainman, KernelNotifications& kernel_notifications, const uint256& current_tip, MillisecondsDouble& timeout);
 
 /** Check if staking is enabled */
-bool CanStake();
+  bool CanStake();
+
+  uint32_t ByteReverse(uint32_t value);
+  void FormatHashBuffers(CBlock* pblock, char* pdata);
+  bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman);
 } // namespace node
 
 #endif // BITCOIN_NODE_MINER_H
