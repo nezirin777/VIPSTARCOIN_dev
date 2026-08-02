@@ -43,6 +43,7 @@
 #include <pos.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
+#include <qtum/qtumutils.h>
 #include <random.h>
 #include <script/script.h>
 #include <script/sigcache.h>
@@ -71,7 +72,6 @@
 #include <libethcore/ABI.h>
 #include <univalue.h>
 #include <util/signstr.h>
-#include <qtum/qtumutils.h>
 #include <common/args.h>
 #include <addresstype.h>
 

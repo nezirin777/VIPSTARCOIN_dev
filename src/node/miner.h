@@ -359,6 +359,7 @@ void RefreshDelegates(wallet::CWallet *pwallet, bool myDelegates, bool stakerDel
  */
 int64_t GetMinimumTime(const CBlockIndex* pindexPrev, const int64_t difficulty_adjustment_interval);
 
+void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 
 /** Update an old GenerateCoinbaseCommitment from CreateNewBlock after the block txs have changed */
@@ -366,6 +367,9 @@ void RegenerateCommitments(CBlock& block, ChainstateManager& chainman);
 
 /** Apply -blockmintxfee and -blockmaxweight options from ArgsManager to BlockAssembler options. */
 void ApplyArgsManOptions(const ArgsManager& gArgs, BlockAssembler::Options& options);
+
+/** Return a BlockAssembler::Options populated from ArgsManager settings (VIPS getwork/staking helper). */
+BlockAssembler::Options ConfiguredOptions();
 
 /* Compute the block's merkle root, insert or replace the coinbase transaction and the merkle root into the block */
 void AddMerkleRootAndCoinbase(CBlock& block, CTransactionRef coinbase, uint32_t version, uint32_t timestamp, uint32_t nonce);
@@ -393,7 +397,11 @@ std::optional<BlockRef> GetTip(ChainstateManager& chainman);
 std::optional<BlockRef> WaitTipChanged(ChainstateManager& chainman, KernelNotifications& kernel_notifications, const uint256& current_tip, MillisecondsDouble& timeout);
 
 /** Check if staking is enabled */
-bool CanStake();
+  bool CanStake();
+
+  uint32_t ByteReverse(uint32_t value);
+  void FormatHashBuffers(CBlock* pblock, char* pdata);
+  bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManager& chainman);
 } // namespace node
 
 #endif // BITCOIN_NODE_MINER_H
