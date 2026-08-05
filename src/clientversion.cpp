@@ -20,7 +20,7 @@ using util::Join;
  * for both bitcoind and bitcoin-qt, to make it harder for attackers to
  * target servers or GUI users specifically.
  */
-const std::string UA_NAME("Satoshi");
+const std::string UA_NAME("Unofficial VIPS");
 
 
 #include <bitcoin-build-info.h>
@@ -75,17 +75,16 @@ std::string CopyrightHolders(const std::string& strPrefix)
     std::string strCopyrightHolders = strPrefix + copyright_devs;
 
     // Make sure Bitcoin Core copyright is not removed by accident
-    if (copyright_devs.find("Qtum Core") == std::string::npos) {
-        strCopyrightHolders += "\n" + strPrefix + "The Qtum Core Developers";
+    if (copyright_devs.find("VIPSTARCOIN Core") == std::string::npos) {
+        strCopyrightHolders += "\n" + strPrefix + "The VIPSTARCOIN Core Developers";
     }
     return strCopyrightHolders;
 }
-
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/qtumproject/qtum>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/nezirin777/VIPSTARCOIN_dev>";
 
-    return CopyrightHolders(strprintf(_("Copyright (C) %i"), COPYRIGHT_YEAR).translated + " ") + "\n" +
+    return CopyrightHolders(strprintf(_("Copyright (C) 2018-%i"), COPYRIGHT_YEAR).translated + " ") + "\n" +
            "\n" +
            strprintf(_("Please contribute if you find %s useful. "
                        "Visit %s for further information about the software."),

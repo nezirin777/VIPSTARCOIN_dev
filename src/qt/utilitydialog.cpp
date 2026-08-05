@@ -40,27 +40,27 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         setWindowTitle(tr("About %1").arg(CLIENT_NAME));
 
         std::string licenseInfo = LicenseInfo();
-        /// HTML-format the license message from the core
-        QString licenseInfoHTML = QString::fromStdString(LicenseInfo());
+        /// VIPS-format the license message from the core
+        QString licenseInfoVIPS = QString::fromStdString(LicenseInfo());
         // Make URLs clickable
         QRegularExpression uri(QStringLiteral("<(.*)>"), QRegularExpression::InvertedGreedinessOption);
-        licenseInfoHTML.replace(uri, QStringLiteral("<a href=\"\\1\">\\1</a>"));
+        licenseInfoVIPS.replace(uri, QStringLiteral("<a href=\"\\1\">\\1</a>"));
         // Replace newlines with HTML breaks
-        licenseInfoHTML.replace("\n", "<br>");
+        licenseInfoVIPS.replace("\n", "<br>");
 
         ui->aboutMessage->setTextFormat(Qt::RichText);
         ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         text = version + "\n" + QString::fromStdString(FormatParagraph(licenseInfo));
-        ui->aboutMessage->setText(version + "<br><br>" + licenseInfoHTML);
+        ui->aboutMessage->setText(version + "<br><br>" + licenseInfoVIPS);
         ui->aboutMessage->setWordWrap(true);
         ui->helpMessage->setVisible(false);
     } else {
         setWindowTitle(tr("Command-line options"));
-        QString header = "The qtum-qt application provides a graphical interface for interacting with " CLIENT_NAME ".\n\n"
-                         "It combines the core functionalities of qtumd with a user-friendly interface for wallet management, transaction history, and network statistics.\n\n"
+        QString header = "The vipstarcoin-qt application provides a graphical interface for interacting with " CLIENT_NAME ".\n\n"
+                         "It combines the core functionalities of vipstarcoind with a user-friendly interface for wallet management, transaction history, and network statistics.\n\n"
                          "It is suitable for users who prefer a graphical over a command-line interface.\n\n"
                          "You can optionally specify a payment [URI], in e.g. the BIP21 URI format.\n\n"
-                         "Usage: qtum-qt [options] [URI]\n\n";
+                         "Usage: vipstarcoin-qt [options] [URI]\n\n";
         QTextCursor cursor(ui->helpMessage->document());
         cursor.insertText(version);
         cursor.insertBlock();

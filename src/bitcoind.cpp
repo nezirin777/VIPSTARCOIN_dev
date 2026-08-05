@@ -142,12 +142,12 @@ static bool ProcessInitCommands(ArgsManager& args)
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
-                "The " CLIENT_NAME " daemon (qtumd) is a headless program that connects to the Qtum network to validate and relay transactions and blocks, as well as relaying addresses.\n\n"
-                "It provides the backbone of the Qtum network and its RPC, REST and ZMQ services can provide various transaction, block and address-related services.\n\n"
+                "The " CLIENT_NAME " daemon (vipstarcoind) is a headless program that connects to the VIPSTARCOIN network to validate and relay transactions and blocks, as well as relaying addresses.\n\n"
+                "It provides the backbone of the VIPSTARCOIN network and its RPC, REST and ZMQ services can provide various transaction, block and address-related services.\n\n"
                 "There is an optional wallet component which provides transaction services.\n\n"
                 "It can be used in a headless environment or as part of a server setup.\n"
                 "\n"
-                "Usage: qtumd [options]\n"
+                "Usage: vipstarcoind [options]\n"
                 "\n";
             strUsage += args.GetHelpMessage();
         }

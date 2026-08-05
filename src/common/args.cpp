@@ -36,7 +36,7 @@
 #include <utility>
 #include <variant>
 
-const char * const BITCOIN_CONF_FILENAME = "qtum.conf";
+const char * const BITCOIN_CONF_FILENAME = "vipstarcoin.conf";
 const char * const BITCOIN_SETTINGS_FILENAME = "settings.json";
 
 ArgsManager gArgs;
@@ -723,18 +723,18 @@ bool HasTestOption(const ArgsManager& args, const std::string& test_option)
 fs::path GetDefaultDataDir()
 {
     // Windows:
-    //   old: C:\Users\Username\AppData\Roaming\Qtum
-    //   new: C:\Users\Username\AppData\Local\Qtum
-    // macOS: ~/Library/Application Support/Qtum
-    // Unix-like: ~/.qtum
+    //   old: C:\Users\Username\AppData\Roaming\VIPSTARCOIN
+    //   new: C:\Users\Username\AppData\Local\VIPSTARCOIN
+    // macOS: ~/Library/Application Support/VIPSTARCOIN
+    // Unix-like: ~/.vipstarcoin
 #ifdef WIN32
     // Windows
     // Check for existence of datadir in old location and keep it there
-    fs::path legacy_path = GetSpecialFolderPath(CSIDL_APPDATA) / "Qtum";
+    fs::path legacy_path = GetSpecialFolderPath(CSIDL_APPDATA) / "VIPSTARCOIN";
     if (fs::exists(legacy_path)) return legacy_path;
 
     // Otherwise, fresh installs can start in the new, "proper" location
-    return GetSpecialFolderPath(CSIDL_LOCAL_APPDATA) / "Qtum";
+    return GetSpecialFolderPath(CSIDL_LOCAL_APPDATA) / "VIPSTARCOIN";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -744,10 +744,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef __APPLE__
     // macOS
-    return pathRet / "Library/Application Support/Qtum";
+    return pathRet / "Library/Application Support/VIPSTARCOIN";
 #else
     // Unix-like
-    return pathRet / ".qtum";
+    return pathRet / ".vipstarcoin";
 #endif
 #endif
 }

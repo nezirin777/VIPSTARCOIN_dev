@@ -52,16 +52,16 @@ static int AppInitUtil(ArgsManager& args, int argc, char* argv[])
 
     if (HelpRequested(args) || args.GetBoolArg("-version", false)) {
         // First part of help message is specific to this utility
-        std::string strUsage = CLIENT_NAME " qtum-util utility version " + FormatFullVersion() + "\n";
+        std::string strUsage = CLIENT_NAME " vipstarcoin-util utility version " + FormatFullVersion() + "\n";
 
         if (args.GetBoolArg("-version", false)) {
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
-                "The qtum-util tool provides qtum related functionality that does not rely on the ability to access a running node. Available [commands] are listed below.\n"
+                "The vipstarcoin-util tool provides vipstarcoin related functionality that does not rely on the ability to access a running node. Available [commands] are listed below.\n"
                 "\n"
-                "Usage:  qtum-util [options] [command]\n"
-                "or:     qtum-util [options] grind <hex-block-header>\n";
+                "Usage:  vipstarcoin-util [options] [command]\n"
+                "or:     vipstarcoin-util [options] grind <hex-block-header>\n";
             strUsage += "\n" + args.GetHelpMessage();
         }
 
