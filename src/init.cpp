@@ -169,7 +169,7 @@ static const char* DEFAULT_ASMAP_FILENAME="ip_asn.map";
 /**
  * The PID file facilities.
  */
-static const char* BITCOIN_PID_FILENAME = "qtumd.pid";
+static const char* BITCOIN_PID_FILENAME = "vipstarcoind.pid";
 /**
  * True if this process has created a PID file.
  * Used to determine whether we should remove the PID file on shutdown.
@@ -780,7 +780,7 @@ void DeleteBlockChainData()
     fs::path datadir = gArgs.GetDataDirNet();
     fs::remove_all(datadir / "chainstate");
     fs::remove_all(gArgs.GetBlocksDirPath());
-    fs::remove_all(datadir / "stateQtum");
+    fs::remove_all(datadir / "stateVIPSTARCOIN");
     fs::remove(datadir / "banlist.dat");
     fs::remove(datadir / "fee_estimates.dat");
     fs::remove(datadir / "mempool.dat");
@@ -788,7 +788,7 @@ void DeleteBlockChainData()
     // Create block chain data dirs
     fs::create_directory(datadir / "chainstate");
     fs::create_directory(gArgs.GetBlocksDirPath());
-    fs::create_directory(datadir / "stateQtum");
+    fs::create_directory(datadir / "stateVIPSTARCOIN");
 }
 
 #if HAVE_SYSTEM

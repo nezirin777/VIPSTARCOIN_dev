@@ -2379,7 +2379,7 @@ static RPCHelpMan gettxout()
                     {RPCResult::Type::STR, "desc", "Inferred descriptor for the output"},
                     {RPCResult::Type::STR_HEX, "hex", "The raw output script bytes, hex-encoded"},
                     {RPCResult::Type::STR, "type", "The type, eg pubkeyhash"},
-                    {RPCResult::Type::STR, "address", /*optional=*/true, "The VIPSTARCOIN address (only if a well-defined address exists)"},
+                    {RPCResult::Type::STR, "address", /*optional=*/true, "The vipstarcoin address (only if a well-defined address exists)"},
                 }},
                 {RPCResult::Type::BOOL, "coinbase", "Coinbase or not"},
                 {RPCResult::Type::BOOL, "coinstake", "Coinstake or not"},
@@ -4904,7 +4904,7 @@ static RPCHelpMan qrc20listtransactions()
                         {
                             {RPCResult::Type::STR, "receiver", "The receiver vipstarcoin address"},
                             {RPCResult::Type::STR, "sender", "The sender vipstarcoin address"},
-                            {RPCResult::Type::STR, "amount", "The transferred token amount"},
+                            {RPCResult::Type::STR_AMOUNT, "amount", "The transferred token amount"},
                             {RPCResult::Type::NUM, "confirmations", "The number of confirmations of the most recent transaction included"},
                             {RPCResult::Type::STR_HEX, "blockHash", "The block hash"},
                             {RPCResult::Type::NUM, "blockNumber", "The block number"},

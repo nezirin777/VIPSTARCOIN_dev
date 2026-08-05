@@ -26,7 +26,6 @@
 #include <node/types.h>
 #include <policy/fees.h>
 #include <txmempool.h>
-#include <validation.h>
 #include <wallet/coincontrol.h>
 #include <wallet/fees.h>
 #include <wallet/wallet.h>
@@ -152,6 +151,7 @@ void SendCoinsDialog::setClientModel(ClientModel *_clientModel)
         for (const int n : confTargets) {
             ui->confTargetSelector->addItem(targetSelectorItemText(n));
         }
+
         connect(_clientModel, &ClientModel::numBlocksChanged, this, &SendCoinsDialog::updateNumberOfBlocks);
     }
 }
@@ -211,7 +211,7 @@ void SendCoinsDialog::setModel(WalletModel *_model)
 
         bCreateUnsigned = _model->createUnsigned() && !model->wallet().hasExternalSigner();
         if (model->wallet().hasExternalSigner()) {
-            //: "device" usually means a hardware wallet.
+            //: "device" usually means a hardware wallet
             ui->sendButton->setText(tr("Sign on device"));
             if (model->getOptionsModel()->hasSigner()) {
                 ui->sendButton->setEnabled(true);
@@ -223,7 +223,7 @@ void SendCoinsDialog::setModel(WalletModel *_model)
             }
         } else if (bCreateUnsigned) {
             ui->sendButton->setText(tr("Cr&eate Unsigned"));
-            ui->sendButton->setToolTip(tr("Creates a Partially Signed Qtum Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(CLIENT_NAME));
+            ui->sendButton->setToolTip(tr("Creates a Partially Signed VIPSTARCOIN Transaction (PSBT) for use with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(CLIENT_NAME));
         }
 
         // set the smartfee-sliders default value (wallets default conf.target or last stored value)
@@ -336,22 +336,24 @@ bool SendCoinsDialog::PrepareSendText(QString& question_string, QString& informa
         formatted.append(recipientElement);
     }
 
-    /*: Message displayed when attempting to create a transaction. Cautionary text to prompt the user to verify
-        that the displayed transaction details represent the transaction the user intends to create. */
-    question_string.append(tr("Do you want to create this transaction?"));
+    if (bCreateUnsigned) {
+        question_string.append(tr("Do you want to draft this transaction?"));
+    } else {
+        question_string.append(tr("Are you sure you want to send?"));
+    }
+
     question_string.append("<br /><span style='font-size:10pt;'>");
     if (bCreateUnsigned) {
         /*: Text to inform a user attempting to create a transaction of their current options. At this stage,
             a user can only create a PSBT. This string is displayed when private keys are disabled and an external
             signer is not available. */
-        question_string.append(tr("Please, review your transaction proposal. This will produce a Partially Signed Qtum Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(CLIENT_NAME));
+        question_string.append(tr("Please, review your transaction proposal. This will produce a Partially Signed VIPSTARCOIN Transaction (PSBT) which you can save or copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(CLIENT_NAME));
     } else if (model->getOptionsModel()->getEnablePSBTControls()) {
         /*: Text to inform a user attempting to create a transaction of their current options. At this stage,
             a user can send their transaction or create a PSBT. This string is displayed when both private keys
             and PSBT controls are enabled. */
         question_string.append(tr("Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.").arg(CLIENT_NAME));
     } else {
-        /*: Text to prompt a user to review the details of the transaction they are attempting to send. */
         question_string.append(tr("Please, review your transaction."));
     }
     question_string.append("</span>%1");
@@ -405,7 +407,6 @@ bool SendCoinsDialog::PrepareSendText(QString& question_string, QString& informa
 
     return true;
 }
-
 void SendCoinsDialog::presentPSBT(PartiallySignedTransaction& psbtx)
 {
     // Serialize the PSBT
@@ -849,6 +850,7 @@ void SendCoinsDialog::updateFeeSectionControls()
     ui->customFee               ->setEnabled(ui->radioCustomFee->isChecked());
 }
 
+
 void SendCoinsDialog::updateCoinControlState()
 {
     if (ui->radioCustomFee->isChecked()) {
@@ -963,9 +965,9 @@ void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 // Coin Control: button inputs -> show actual coin control dialog
 void SendCoinsDialog::coinControlButtonClicked()
 {
-    auto dlg = new CoinControlDialog(*m_coin_control, model, platformStyle);
-    connect(dlg, &QDialog::finished, this, &SendCoinsDialog::coinControlUpdateLabels);
-    GUIUtil::ShowModalDialogAsynchronously(dlg);
+    CoinControlDialog dlg(*m_coin_control, model, platformStyle);
+    dlg.exec();
+    coinControlUpdateLabels();
 }
 
 // Coin Control: checkbox custom change address
@@ -1006,7 +1008,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         }
         else if (!IsValidDestination(dest)) // Invalid address
         {
-            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Qtum address"));
+            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid VIPSTARCOIN address"));
         }
         else // Valid address
         {
@@ -1108,25 +1110,21 @@ SendConfirmationDialog::SendConfirmationDialog(const QString& title, const QStri
     updateButtons();
     connect(&countDownTimer, &QTimer::timeout, this, &SendConfirmationDialog::countDown);
 }
-
 int SendConfirmationDialog::exec()
 {
     updateButtons();
-    countDownTimer.start(1s);
+    countDownTimer.start(1000);
     return QMessageBox::exec();
 }
-
 void SendConfirmationDialog::countDown()
 {
     secDelay--;
     updateButtons();
-
     if(secDelay <= 0)
     {
         countDownTimer.stop();
     }
 }
-
 void SendConfirmationDialog::updateButtons()
 {
     if(secDelay > 0)
