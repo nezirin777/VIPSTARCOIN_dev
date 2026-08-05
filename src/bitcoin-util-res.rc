@@ -2,6 +2,8 @@
 #include "clientversion.h"       // holds the needed client version information
 
 #define VER_PRODUCTVERSION     CLIENT_VERSION_MAJOR,CLIENT_VERSION_MINOR,CLIENT_VERSION_BUILD
+#define VER_PRODUCTVERSION_STR STRINGIZE(CLIENT_VERSION_MAJOR) "." STRINGIZE(CLIENT_VERSION_MINOR) "." STRINGIZE(CLIENT_VERSION_BUILD)
+#define VER_FILEVERSION_STR    VER_PRODUCTVERSION_STR
 #define VER_FILEVERSION        VER_PRODUCTVERSION
 
 VS_VERSION_INFO VERSIONINFO
@@ -15,13 +17,13 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        CLIENT_NAME " project"
-            VALUE "FileDescription",    "qtum-util (CLI Qtum utility)"
+            VALUE "FileDescription",    "vipstarcoin-util (CLI VIPSTARCOIN utility)"
             VALUE "FileVersion",        CLIENT_VERSION_STRING
-            VALUE "InternalName",       "qtum-util"
+            VALUE "InternalName",       "vipstarcoin-util"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "qtum-util.exe"
-            VALUE "ProductName",        "qtum-util"
+            VALUE "OriginalFilename",   "vipstarcoin-util.exe"
+            VALUE "ProductName",        "vipstarcoin-util"
             VALUE "ProductVersion",     CLIENT_VERSION_STRING
         END
     END

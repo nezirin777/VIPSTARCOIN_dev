@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
     {
         BitcoinApplication app;
-        app.setApplicationName("Qtum-Qt-test");
+        app.setApplicationName("VIPSTARCOIN-Qt-test");
         app.createNode(*init);
 
         AppTests app_tests(app);
