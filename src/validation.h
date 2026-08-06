@@ -99,8 +99,8 @@ static const bool DEFAULT_ADDRINDEX = false;
 static const bool DEFAULT_LOGEVENTS = false;
 /** Block files containing a block-height within MIN_BLOCKS_TO_KEEP of ActiveChain().Tip() will not be pruned. */
 static const unsigned int MIN_BLOCKS_TO_KEEP = 288;
-static const signed int DEFAULT_CHECKBLOCKS = 6;
-static constexpr int DEFAULT_CHECKLEVEL{3};
+static const signed int DEFAULT_CHECKBLOCKS = 6 * 10; // VIPS仕様: 検証ブロック数を60に拡張
+static const unsigned int DEFAULT_CHECKLEVEL = 3;
 // Require that user allocate at least 550 MiB for block & undo files (blk???.dat and rev???.dat)
 // At 1MB per block, 288 blocks = 288MB.
 // Add 15% for Undo data = 331MB
@@ -148,6 +148,10 @@ int64_t FutureDrift(uint32_t nTime, int nHeight, const Consensus::Params& consen
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
 
 bool FatalError(kernel::Notifications& notifications, BlockValidationState& state, const bilingual_str& message);
+CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams); // VIPS仕様: PoS報酬算出の宣言
+
+/** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
+double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex* pindex);
 
 /** Prune block files up to a given height */
 void PruneBlockFilesManual(Chainstate& active_chainstate, int nManualPruneHeight);

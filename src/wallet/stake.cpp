@@ -219,25 +219,14 @@ bool CreateCoinStakeFromMine(CWallet& wallet, unsigned int nBits, const CAmount&
     }
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    int64_t nRewardPiece = 0;
     // Calculate reward
     {
         int64_t nReward = nTotalFees + GetBlockSubsidy(pindexPrev->nHeight + 1, consensusParams);
         if (nReward < 0)
             return false;
 
-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
-        {
-            // Keep whole reward
-            nCredit += nReward;
-        }
-        else
-        {
-            // Split the reward when mpos is used
-            nRewardPiece = nReward / consensusParams.nMPoSRewardRecipients;
-            nCredit += nRewardPiece + nReward % consensusParams.nMPoSRewardRecipients;
-        }
-   }
+        nCredit += nReward;
+    }
 
     if (nCredit >= GetStakeSplitThreshold())
     {
@@ -255,14 +244,6 @@ bool CreateCoinStakeFromMine(CWallet& wallet, unsigned int nBits, const CAmount&
     }
     else
         txNew.vout[1].nValue = nCredit;
-
-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
-    {
-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams, wallet.chain().chainman().ActiveChain(),  wallet.chain().chainman().m_blockman)) {
-            LogError("CreateCoinStake : failed to create MPoS reward outputs");
-            return false;
-        }
-    }
 
     // Append the Refunds To Sender to the transaction outputs
     for(unsigned int i = 2; i < tx.vout.size(); i++)
@@ -429,7 +410,6 @@ bool CreateCoinStakeFromDelegate(CWallet& wallet, unsigned int nBits, const CAmo
         return false;
 
     const Consensus::Params& consensusParams = Params().GetConsensus();
-    int64_t nRewardPiece = 0;
     int64_t nRewardOffline = 0;
     // Calculate reward
     {
@@ -437,28 +417,12 @@ bool CreateCoinStakeFromDelegate(CWallet& wallet, unsigned int nBits, const CAmo
         if (nTotalReward < 0)
             return false;
 
-        if(pindexPrev->nHeight < consensusParams.nFirstMPoSBlock || pindexPrev->nHeight >= consensusParams.nLastMPoSBlock)
-        {
-            // Keep whole reward
-            int64_t nRewardStaker = 0;
-            if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker)) {
-                LogError("CreateCoinStake: Failed to split reward");
-                return false;
-            }
-            nCredit += nRewardStaker;
+        int64_t nRewardStaker = 0;
+        if(!SplitOfflineStakeReward(nTotalReward, delegation.fee, nRewardOffline, nRewardStaker)) {
+            LogError("CreateCoinStake: Failed to split reward");
+            return false;
         }
-        else
-        {
-            // Split the reward when mpos is used
-            nRewardPiece = nTotalReward / consensusParams.nMPoSRewardRecipients;
-            int64_t nRewardStaker = 0;
-            int64_t nReward = nRewardPiece + nTotalReward % consensusParams.nMPoSRewardRecipients;
-            if(!SplitOfflineStakeReward(nReward, delegation.fee, nRewardOffline, nRewardStaker)) {
-                LogError("CreateCoinStake: Failed to split reward");
-                return false;
-            }
-            nCredit += nRewardStaker;
-        }
+        nCredit += nRewardStaker;
     }
 
     // Set output amount
@@ -466,14 +430,6 @@ bool CreateCoinStakeFromDelegate(CWallet& wallet, unsigned int nBits, const CAmo
     if(delegateOutputExist)
     {
         txNew.vout[2].nValue = nRewardOffline;
-    }
-
-    if(pindexPrev->nHeight >= consensusParams.nFirstMPoSBlock && pindexPrev->nHeight < consensusParams.nLastMPoSBlock)
-    {
-        if(!CreateMPoSOutputs(txNew, nRewardPiece, pindexPrev->nHeight, consensusParams, wallet.chain().chainman().ActiveChain(),  wallet.chain().chainman().m_blockman)) {
-            LogError("CreateCoinStake : failed to create MPoS reward outputs");
-            return false;
-        }
     }
 
     // Append the Refunds To Sender to the transaction outputs

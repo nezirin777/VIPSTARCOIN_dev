@@ -119,9 +119,6 @@ double GetDifficulty(const CBlockIndex& blockindex)
 
 double GetPoWMHashPS(ChainstateManager& chainman)
 {
-    if (chainman.m_best_header && chainman.m_best_header->nHeight >= Params().GetConsensus().nLastPOWBlock)
-        return 0;
-
     int nPoWInterval = 72;
     int64_t nTargetSpacingWorkMin = 30, nTargetSpacingWork = 30;
 

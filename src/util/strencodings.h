@@ -26,6 +26,10 @@
 #include <type_traits>
 #include <vector>
 
+// ▽ VIPS仕様: getworkシリアライズ等のバッファ型変換で必須となる開始・終了アドレス定義マクロを追加します
+#define BEGIN(a)            ((char*)&(a))
+#define END(a)              ((char*)&((&(a))[1]))
+
 /** Used by SanitizeString() */
 enum SafeChars
 {

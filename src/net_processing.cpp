@@ -6289,23 +6289,8 @@ bool PeerManagerImpl::ProcessNetBlock(const std::shared_ptr<const CBlock> pblock
             return false;
         }
 
-        // Check for the checkpoint
-        CBlockIndex* tip = m_chainman.ActiveChain().Tip();
-        if (tip && pblock->hashPrevBlock != tip->GetBlockHash())
-        {
-            // Extra checks to prevent "fill up memory by spamming with bogus blocks"
-            const CBlockIndex* pcheckpoint = m_chainman.m_blockman.AutoSelectSyncCheckpoint(tip);
-            int64_t deltaTime = pblock->GetBlockTime() - pcheckpoint->nTime;
-            if (deltaTime < 0)
-            {
-                if (peer) Misbehaving(*peer, "Block with timestamp before last checkpoint");
-                LogError("ProcessNetBlock() : block with timestamp before last checkpoint");
-                return false;
-            }
-        }
-
         // Check for the signiture encoding
-        if (!CheckCanonicalBlockSignature(pblock.get())) 
+        if (!CheckCanonicalBlockSignature(pblock.get()))
         {
             if (peer) Misbehaving(*peer, "Bad block signature encoding");
             LogError("ProcessNetBlock(): bad block signature encoding");

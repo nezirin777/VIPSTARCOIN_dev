@@ -25,7 +25,7 @@ static const uint64_t MAX_BLOCK_GAS_LIMIT_DGP = 1000000000;
 static const uint64_t DEFAULT_BLOCK_GAS_LIMIT_DGP = 40000000;
 
 class QtumDGP {
-    
+
 public:
 
     QtumDGP(QtumState* _state, Chainstate& _chainstate, bool _dgpevm = true) : dgpevm(_dgpevm), state(_state), chainstate(_chainstate) { initDataSchedule(); }
@@ -44,17 +44,7 @@ private:
 
     bool checkLimitSchedule(const std::vector<uint32_t>& defaultData, const std::vector<uint32_t>& checkData, int blockHeight);
 
-    void createParamsInstance();
-
-    dev::Address getAddressForBlock(unsigned int blockHeight);
-
-    void parseStorageScheduleContract(std::vector<uint32_t>& uint32Values);
-    
-    void parseDataScheduleContract(std::vector<uint32_t>& uint32Values);
-
-    dev::eth::EVMSchedule createEVMSchedule(const dev::eth::EVMSchedule& schedule, int blockHeight);
-
-    void clear();    
+     void clear() {}
 
 
 
