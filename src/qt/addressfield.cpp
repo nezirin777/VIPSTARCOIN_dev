@@ -79,6 +79,11 @@ void AddressField::setComboBoxEditable(bool editable)
 
 void AddressField::on_refresh()
 {
+    // 非表示状態の時は重いUTXOスキャンをスキップして即復帰する
+    if (!isVisible()) {
+        return;
+    }
+
     // Initialize variables
     QString currentAddress = currentText();
     m_stringList.clear();
