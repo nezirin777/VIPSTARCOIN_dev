@@ -362,6 +362,9 @@ void RegenerateCommitments(CBlock& block, ChainstateManager& chainman);
 /** Apply -blockmintxfee and -blockmaxweight options from ArgsManager to BlockAssembler options. */
 void ApplyArgsManOptions(const ArgsManager& gArgs, BlockAssembler::Options& options);
 
+/** Construct BlockAssembler::Options from the global ArgsManager (gArgs). */
+BlockAssembler::Options ConfiguredOptions();
+
 /** Check if staking is enabled */
   bool CanStake();
 

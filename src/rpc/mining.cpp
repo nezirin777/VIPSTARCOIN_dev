@@ -58,6 +58,7 @@ using node::GetMinimumTime;
 using node::IncrementExtraNonce;
 using interfaces::Mining;
 using node::BlockAssembler;
+using node::ConfiguredOptions;
 using node::NodeContext;
 using node::RegenerateCommitments;
 using node::UpdateTime;
@@ -612,7 +613,7 @@ static RPCHelpMan getwork()
     ChainstateManager& chainman = EnsureChainman(node);
 
     if (chainman.IsInitialBlockDownload()) {
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, PACKAGE_NAME " is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, CLIENT_NAME " is downloading blocks...");
     }
 
     typedef std::map<uint256, std::pair<CBlock*, CScript> > mapNewBlock_t;
@@ -658,7 +659,9 @@ static RPCHelpMan getwork()
                 LogPrintf("getwork: Address generated: %s\n", EncodeDestination(dest));
             }
 
-            pblocktemplate = BlockAssembler(chainman.ActiveChainstate(), &mempool).CreateNewBlock(getwork_coinbase_script, false, false, nullptr, 0, 0, true);
+            BlockAssembler::Options options = ConfiguredOptions();
+            options.coinbase_output_script = getwork_coinbase_script;
+            pblocktemplate = BlockAssembler(chainman.ActiveChainstate(), &mempool, options).CreateNewBlock(/*fProofOfStake=*/false, nullptr, 0, 0);
             if (!pblocktemplate)
                 throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
 
