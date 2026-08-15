@@ -26,3 +26,19 @@ target/
 /guix-build-*
 
 /ci/scratch/
+
+# Config headers / generated packaging files (still generated in-tree by CMake configure)
+share/setup.nsi
+share/qt/Info.plist
+
+# Consensus/kernel library pkg-config
+libbitcoinconsensus.pc
+libvipstarcoinconsensus.pc
+
+# IDE / Editor workspace
+.idea
+
+# Phase 6 baseline extraction
+*.ndjson
+*.ndjson.progress
+めも.txt
