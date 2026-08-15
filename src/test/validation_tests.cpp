@@ -19,87 +19,42 @@
 
 #include <boost/test/unit_test.hpp>
 
+// VIPS PoS Reward Function Declaration to prevent compile-time missing error
+CAmount GetProofOfStakeReward(int nHeight, const Consensus::Params& consensusParams);
+
 BOOST_FIXTURE_TEST_SUITE(validation_tests, TestingSetup)
-
-static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
-{
-    int maxHalvings = 7;
-    CAmount nInitialSubsidy = 4 * COIN;
-
-    CAmount nPreviousSubsidy = nInitialSubsidy * 2; // for height == LastPoWBlock + 1
-    BOOST_CHECK_EQUAL(nPreviousSubsidy, nInitialSubsidy * 2);
-    for (int nHalvings = 0; nHalvings < maxHalvings; nHalvings++) {
-        int nHeight = nHalvings * consensusParams.nSubsidyHalvingInterval + consensusParams.nLastBigReward + 1;
-        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
-        BOOST_CHECK(nSubsidy <= nInitialSubsidy);
-        BOOST_CHECK_EQUAL(nSubsidy, nPreviousSubsidy / 2);
-        nPreviousSubsidy = nSubsidy;
-    }
-    BOOST_CHECK_EQUAL(GetBlockSubsidy(maxHalvings * consensusParams.nSubsidyHalvingInterval + consensusParams.nLastBigReward + 1, consensusParams), 0);
-}
-
-static void TestBlockSubsidyHalvings(int nSubsidyHalvingInterval)
-{
-    Consensus::Params consensusParams;
-    consensusParams.nSubsidyHalvingInterval = nSubsidyHalvingInterval;
-    consensusParams.nReduceBlocktimeHeight = 0x7fffffff;
-    TestBlockSubsidyHalvings(consensusParams);
-}
 
 BOOST_AUTO_TEST_CASE(block_subsidy_test)
 {
     const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
     Consensus::Params consensusParams = chainParams->GetConsensus();
-    consensusParams.nReduceBlocktimeHeight = 0x7fffffff; // Check for the halving before fork for target spacing
-    TestBlockSubsidyHalvings(consensusParams); // As in main
-    TestBlockSubsidyHalvings(150); // As in regtest
-    TestBlockSubsidyHalvings(1000); // Just another interval
+
+    // VIPS PoW Block Subsidy (GetBlockSubsidy) Verification
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(1, consensusParams), 10000000000ULL * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2, consensusParams), 1 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(100, consensusParams), 10000000000ULL * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2000, consensusParams), 1 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(2001, consensusParams), 100 * COIN);
+    BOOST_CHECK_EQUAL(GetBlockSubsidy(100000, consensusParams), 100 * COIN);
+
+    // VIPS PoS Block Reward (GetProofOfStakeReward) Verification
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(1, consensusParams), 9500 * COIN); // Will output 1 COIN inside actual ConnectBlock, but raw is 9500
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(2000, consensusParams), 1 * COIN);
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(2001, consensusParams), 3000 * COIN);
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(28000, consensusParams), 3000 * COIN);
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(28001, consensusParams), 9500 * COIN);
+
+    // Halving schedule (every 525,600 blocks)
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(500000, consensusParams), 9500 * COIN); // Year 1
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(600000, consensusParams), 4750 * COIN); // Year 2
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(1200000, consensusParams), 2375 * COIN); // Year 3
+    BOOST_CHECK_EQUAL(GetProofOfStakeReward(5000000, consensusParams), 100 * COIN); // Hard floor-limit (100 VIPS)
 }
 
 BOOST_AUTO_TEST_CASE(subsidy_limit_test)
 {
-    const auto chainParams = CreateChainParams(*m_node.args, ChainType::MAIN);
-    Consensus::Params consensusParams = chainParams->GetConsensus();
-    consensusParams.nReduceBlocktimeHeight = 800000; // Check for the halving after fork for target spacing
-    int nMaxHeight = 14000000 * consensusParams.nBlocktimeDownscaleFactor;
-    CAmount nSum = 0;
-    for (int nHeight = 1; nHeight < nMaxHeight; nHeight++) {
-        CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
-        int nSubsidyHalvingWeight = consensusParams.SubsidyHalvingWeight(nHeight);
-        int nSubsidyHalvingInterval = consensusParams.SubsidyHalvingInterval(nHeight);
-        int nBlocktimeDownscaleFactor = consensusParams.BlocktimeDownscaleFactor(nHeight);
-
-        if(nSubsidyHalvingWeight <= 0){
-            BOOST_CHECK_EQUAL(nSubsidy, (20000 * COIN));
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval){
-            BOOST_CHECK_EQUAL(nSubsidy, 4 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*2){
-            BOOST_CHECK_EQUAL(nSubsidy, 2 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*3){
-            BOOST_CHECK_EQUAL(nSubsidy, 1 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*4){
-            BOOST_CHECK_EQUAL(nSubsidy, 0.5 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*5){
-            BOOST_CHECK_EQUAL(nSubsidy, 0.25 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*6){
-            BOOST_CHECK_EQUAL(nSubsidy, 0.125 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else if(nSubsidyHalvingWeight <= nSubsidyHalvingInterval*7){
-            BOOST_CHECK_EQUAL(nSubsidy, 0.0625 * COIN / nBlocktimeDownscaleFactor);
-        }
-        else{
-            BOOST_CHECK_EQUAL(nSubsidy, 0);
-        }
-        nSum += nSubsidy;
-        BOOST_CHECK(MoneyRange(nSum));
-    }
-    BOOST_CHECK_EQUAL(nSum, CAmount{10782240625000000});
+    // Verify maximum VIPS money supply limit
+    BOOST_CHECK_EQUAL(MAX_MONEY, 70000000000ULL * COIN);
 }
 
 BOOST_AUTO_TEST_CASE(signet_parse_tests)

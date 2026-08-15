@@ -709,7 +709,7 @@ public:
         if (Contract.exists("senderAddress")){
             senderAddress = DecodeDestination(Contract["senderAddress"].get_str());
             if (!IsValidDestination(senderAddress))
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Qtum address to send from");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid VIPSTARCOIN address to send from");
             if (!IsValidContractSenderAddress(senderAddress))
                 throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid contract sender address. Only P2PK and P2PKH allowed");
             else
