@@ -163,6 +163,20 @@ void UpdateConstantinopleBlockHeight(int nHeight)
     const_cast<CChainParams*>(globalChainParams.get())->UpdateConstantinopleBlockHeight(nHeight);
 }
 
+void CChainParams::UpdateDifficultyChangeBlockHeight(int nHeight)
+{
+    consensus.nSubsidyHalvingInterval = 985500; // qtum halving every 4 years
+    consensus.nSubsidyHalvingIntervalV2 = consensus.nBlocktimeDownscaleFactor*985500; // qtum halving every 4 years (nSubsidyHalvingInterval * nBlocktimeDownscaleFactor)
+
+    consensus.posLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
+    consensus.QIP9PosLimit = uint256{"0000000000001fffffffffffffffffffffffffffffffffffffffffffffffffff"};
+    consensus.RBTPosLimit = uint256{"0000000000003fffffffffffffffffffffffffffffffffffffffffffffffffff"};
+    consensus.QIP9Height = nHeight;
+    consensus.fPowAllowMinDifficultyBlocks = false;
+    consensus.fPowNoRetargeting = true;
+    consensus.fPoSNoRetargeting = false;
+}
+
 void UpdateDifficultyChangeBlockHeight(int nHeight)
 {
     const_cast<CChainParams*>(globalChainParams.get())->UpdateDifficultyChangeBlockHeight(nHeight);

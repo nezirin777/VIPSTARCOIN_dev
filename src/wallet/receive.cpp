@@ -244,6 +244,17 @@ bool CachedTxIsTrusted(const CWallet& wallet, const CWalletTx& wtx)
 
 Balance GetBalance(const CWallet& wallet, const int min_depth, bool avoid_reuse)
 {
+    // 60秒以内のキャッシュがあれば走査をスキップして即復帰
+    int64_t nNow = GetTime();
+    {
+        LOCK(wallet.cs_wallet);
+        auto key = std::make_pair(min_depth, avoid_reuse);
+        auto it = wallet.m_balance_cache.find(key);
+        if (it != wallet.m_balance_cache.end() && nNow < it->second.nTime + 60) {
+            return it->second.balance;
+        }
+    }
+
     Balance ret;
     bool allow_used_addresses = !avoid_reuse || !wallet.IsWalletFlagSet(WALLET_FLAG_AVOID_REUSE);
     {
@@ -271,6 +282,13 @@ Balance GetBalance(const CWallet& wallet, const int min_depth, bool avoid_reuse)
                 }
             }
         }
+    }
+
+    // キャッシュを更新
+    {
+        LOCK(wallet.cs_wallet);
+        auto key = std::make_pair(min_depth, avoid_reuse);
+        wallet.m_balance_cache[key] = { nNow, ret };
     }
     return ret;
 }
