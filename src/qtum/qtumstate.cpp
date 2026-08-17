@@ -5,7 +5,6 @@
 #include <script/script.h>
 #include <qtum/qtumstate.h>
 #include <libevm/VMFace.h>
-#include <validation.h>
 
 using namespace std;
 using namespace dev;
@@ -99,7 +98,7 @@ ResultExecute QtumState::execute(EnvInfo const& _envInfo, SealEngineFace const& 
         printfErrorLog(dev::eth::toTransactionException(_e));
         res.excepted = dev::eth::toTransactionException(_e);
         res.gasUsed = _t.gas();
-        if(_chain.Height() < consensusParams.nFixUTXOCacheHFHeight  && _p != Permanence::Reverted){
+        if(_p != Permanence::Reverted){
             deleteAccounts(_sealEngine.deleteAddresses);
             commit(CommitBehaviour::RemoveEmptyAccounts);
         } else {

@@ -614,7 +614,7 @@ static RPCHelpMan getwork()
     const CTxMemPool& mempool = EnsureMemPool(node);
     ChainstateManager& chainman = EnsureChainman(node);
 
-    if (chainman.ActiveChainstate().IsInitialBlockDownload()) {
+    if (chainman.IsInitialBlockDownload()) {
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, CLIENT_NAME " is downloading blocks...");
     }
 
@@ -1007,8 +1007,8 @@ static RPCHelpMan getblocktemplate()
         time_start = GetTime();
 
         // Create new block
-        bool fProofOfStake = chainman.ActiveChain().Height() >= Params().GetConsensus().nLastPOWBlock ? true : false;
-        block_template = miner.createNewBlock({.is_coinstake = fProofOfStake});
+        CScript scriptDummy = CScript() << OP_TRUE;
+        block_template = miner.createNewBlock({ .coinbase_output_script = scriptDummy, .is_coinstake = true });
         CHECK_NONFATAL(block_template);
 
 
