@@ -101,8 +101,22 @@ BitcoinGUI::BitcoinGUI(interfaces::Node& node, const PlatformStyle *_platformSty
     m_network_style(networkStyle)
 {
     QSettings settings;
-    if (!restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
-        // Restore failed (perhaps missing setting), center the window
+    if (restoreGeometry(settings.value("MainWindowGeometry").toByteArray())) {
+        // 復元されたウィンドウ位置が、現在接続されているいずれの画面の有効領域とも交差しない場合
+        bool intersects = false;
+        QRect windowRect = frameGeometry();
+        for (QScreen* screen : QGuiApplication::screens()) {
+            if (screen->availableGeometry().intersects(windowRect)) {
+                intersects = true;
+                break;
+            }
+        }
+        if (!intersects) {
+            // 画面外からの救出：プライマリスクリーンの中心へ移動
+            move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
+        }
+    } else {
+        // 復元失敗（初回起動時など）：プライマリスクリーンの中心へ移動
         move(QGuiApplication::primaryScreen()->availableGeometry().center() - frameGeometry().center());
     }
 
@@ -910,8 +924,8 @@ void BitcoinGUI::addWallet(WalletModel* walletModel)
 {
     if (!walletFrame || !m_wallet_controller) return;
 
-    WalletView* wallet_view = new WalletView(platformStyle, walletFrame);
-    if (!walletFrame->addWallet(walletModel, wallet_view)) return;
+    WalletView* wallet_view = new WalletView(walletModel, platformStyle, walletFrame);
+    if (!walletFrame->addView(wallet_view)) return;
 
     rpcConsole->addWallet(walletModel);
     if (m_wallet_selector->count() == 0) {
@@ -933,7 +947,6 @@ void BitcoinGUI::addWallet(WalletModel* walletModel)
     connect(wallet_view, &WalletView::encryptionStatusChanged, this, &BitcoinGUI::updateWalletStatus);
     connect(wallet_view, &WalletView::incomingTransaction, this, &BitcoinGUI::incomingTransaction);
     connect(wallet_view, &WalletView::incomingTokenTransaction, this, &BitcoinGUI::incomingTokenTransaction);
-    connect(wallet_view, &WalletView::hdEnabledStatusChanged, this, &BitcoinGUI::updateWalletStatus);
     connect(wallet_view, &WalletView::currentChanged, walletFrame, &WalletFrame::pageChanged);
     connect(this, &BitcoinGUI::setPrivacy, wallet_view, &WalletView::setPrivacy);
     const bool privacy = isPrivacyModeActivated();
@@ -1159,7 +1172,7 @@ void BitcoinGUI::showHelpMessageClicked()
 #ifdef ENABLE_WALLET
 void BitcoinGUI::openClicked()
 {
-    OpenURIDialog dlg(this);
+    OpenURIDialog dlg(platformStyle, this);
     if(dlg.exec())
     {
         Q_EMIT receivedURI(dlg.getURI());
@@ -1594,7 +1607,7 @@ void BitcoinGUI::incomingTransaction(const QString& date, BitcoinUnit unit, cons
     // On new transaction, make an info balloon
     QString msg = tr("Date: %1\n").arg(date) +
                   tr("Amount: %1\n").arg(BitcoinUnits::formatWithUnit(unit, amount, true));
-    if (m_node.walletClient().getWallets().size() > 1 && !walletName.isEmpty()) {
+    if (m_node.walletLoader().getWallets().size() > 1 && !walletName.isEmpty()) {
         msg += tr("Wallet: %1\n").arg(walletName);
     }
     msg += tr("Type: %1\n").arg(type);
@@ -1610,7 +1623,7 @@ void BitcoinGUI::incomingTokenTransaction(const QString& date, const QString& am
     // On new transaction, make an info balloon
     QString msg = tr("Date: %1\n").arg(date) +
                   tr("Amount: %1\n").arg(amount);
-    if (m_node.walletClient().getWallets().size() > 1 && !walletName.isEmpty()) {
+    if (m_node.walletLoader().getWallets().size() > 1 && !walletName.isEmpty()) {
         msg += tr("Wallet: %1\n").arg(walletName);
     }
     msg += tr("Type: %1\n").arg(type);
