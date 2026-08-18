@@ -5909,13 +5909,13 @@ static bool ContextualCheckBlockHeader(const CBlockHeader& block, BlockValidatio
 
     // Limit block in future accepted in chain to only a time window of 15 min
     if (block.GetBlockTime() > nAdjustedTime + 15 * 60) {
-        LogPrintf("DEBUG_HEADER_FAIL: time-too-new at height=%d (blockTime=%d > adjustedTime=%d + 15min)\n", nHeight, block.GetBlockTime(), nAdjustedTime);
+        LogPrintf("ERROR: %s: time-too-new at height=%d (blockTime=%d > adjustedTime=%d + 15min)\n", __func__, nHeight, block.GetBlockTime(), nAdjustedTime);
         return state.Invalid(BlockValidationResult::BLOCK_TIME_FUTURE, "time-too-new", "block timestamp too far in the future");
     }
 
     // Check timestamp against prev it should not be more then 15 minutes outside blockchain time
     if (block.GetBlockTime() <= pindexPrev->GetBlockTime() - 15 * 60) {
-        LogPrintf("DEBUG_HEADER_FAIL: time-too-old at height=%d (blockTime=%d <= prevTime=%d - 15min)\n", nHeight, block.GetBlockTime(), pindexPrev->GetBlockTime());
+        LogPrintf("ERROR: %s: time-too-old at height=%d (blockTime=%d <= prevTime=%d - 15min)\n", __func__, nHeight, block.GetBlockTime(), pindexPrev->GetBlockTime());
         return state.Invalid(BlockValidationResult::BLOCK_INVALID_HEADER, "time-too-old", "block timestamp is too early");
     }
 

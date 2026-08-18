@@ -393,6 +393,9 @@ std::optional<BlockRef> GetTip(ChainstateManager& chainman);
  * Returns the current tip, or nullopt if the node is shutting down. */
 std::optional<BlockRef> WaitTipChanged(ChainstateManager& chainman, KernelNotifications& kernel_notifications, const uint256& current_tip, MillisecondsDouble& timeout);
 
+/** Construct BlockAssembler::Options from the global ArgsManager (gArgs). */
+BlockAssembler::Options ConfiguredOptions();
+
 /** Check if staking is enabled */
   bool CanStake();
 

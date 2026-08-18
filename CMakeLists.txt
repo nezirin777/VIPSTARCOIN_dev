@@ -26,7 +26,7 @@ get_directory_property(precious_variables CACHE_VARIABLES)
 #=============================
 # Project / Package metadata
 #=============================
-set(CLIENT_NAME "Qtum Core")
+set(CLIENT_NAME "Unofficial VIPS")
 set(CLIENT_VERSION_MAJOR 30)
 set(CLIENT_VERSION_MINOR 2)
 set(CLIENT_VERSION_BUILD 0)
@@ -52,8 +52,8 @@ set(CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
 
 project(QtumCore
   VERSION ${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_BUILD}
-  DESCRIPTION "Qtum client software"
-  HOMEPAGE_URL "https://qtum.org/"
+  DESCRIPTION "VIPSTARCOIN client software"
+  HOMEPAGE_URL "https://vipstarcoin.jp/"
   LANGUAGES NONE
 )
 
@@ -64,7 +64,7 @@ endif()
 
 set(COPYRIGHT_HOLDERS "The %s developers")
 set(COPYRIGHT_HOLDERS_FINAL "The ${CLIENT_NAME} developers")
-set(CLIENT_BUGREPORT "https://github.com/qtumproject/qtum/issues")
+set(CLIENT_BUGREPORT "https://github.com/nezirin777/VIPSTARCOIN_dev/issues")
 
 #=============================
 # Language setup
@@ -99,9 +99,13 @@ option(BUILD_DAEMON "Build qtumd executable." ON)
 option(BUILD_GUI "Build qtum-qt executable." OFF)
 option(BUILD_CLI "Build qtum-cli executable." ON)
 
-option(BUILD_TESTS "Build test_qtum and other unit test executables." ON)
-option(BUILD_TX "Build qtum-tx executable." ${BUILD_TESTS})
-option(BUILD_UTIL "Build qtum-util executable." ${BUILD_TESTS})
+option(BUILD_TESTS "Build test_qtum executable." OFF)
+# VIPS: Autotools時代、use_tests(--disable-tests)とbuild_bitcoin_tx/util
+# (--with-utils)は独立した別変数だった(configure.ac build_bitcoin_utils由来)。
+# CMake版はBUILD_TX/UTILがBUILD_TESTSに直接連動する設計のため、BUILD_TESTS=OFF
+# 化がvipstarcoin-tx/utilのデフォルトビルドまで無効化しないよう独立してONを維持。
+option(BUILD_TX "Build qtum-tx executable." ON)
+option(BUILD_UTIL "Build qtum-util executable." ON)
 
 option(BUILD_UTIL_CHAINSTATE "Build experimental qtum-chainstate executable." OFF)
 option(BUILD_KERNEL_LIB "Build experimental qtumkernel library." ${BUILD_UTIL_CHAINSTATE})
@@ -115,7 +119,11 @@ if(ENABLE_WALLET)
     find_package(SQLite3 3.7.17 REQUIRED)
   endif()
 endif()
-cmake_dependent_option(BUILD_WALLET_TOOL "Build qtum-wallet tool." ${BUILD_TESTS} "ENABLE_WALLET" OFF)
+# VIPS: BUILD_TX/UTILと同型の副作用(パターン33)。Autotools時代、
+# build_bitcoin_wallet(vipstarcoin-walletツール)もbuild_bitcoin_utils由来の
+# 独立変数で、use_tests(--disable-tests)とは無関係だった。BUILD_TESTS=OFF化が
+# vipstarcoin-walletのデフォルトビルドまで無効化しないよう独立してONを維持。
+cmake_dependent_option(BUILD_WALLET_TOOL "Build qtum-wallet tool." ON "ENABLE_WALLET" OFF)
 
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
 option(WERROR "Treat compiler warnings as errors." OFF)

@@ -91,9 +91,11 @@ if(NOT "$ENV{BITCOIN_GENBUILD_NO_GIT}" STREQUAL "1")
           OUTPUT_STRIP_TRAILING_WHITESPACE
           ERROR_QUIET
         )
-        if(IS_DIRTY)
-          string(APPEND GIT_COMMIT "-dirty")
-        endif()
+        # VIPS: share/genbuild.sh時代からの既存仕様を踏襲し、
+        # dirty状態でも"-dirty"サフィックスを付与しない。
+        # if(IS_DIRTY)
+        #   string(APPEND GIT_COMMIT "-dirty")
+        # endif()
       endif()
     endif()
   endif()
