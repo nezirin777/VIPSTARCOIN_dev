@@ -33,9 +33,9 @@ PATTERN_IPV6 = re.compile(r"^\[([\da-f:]+)]:(\d{1,5})$", re.IGNORECASE)
 PATTERN_ONION = re.compile(r"^([a-z2-7]{56}\.onion):(\d+)$")
 PATTERN_I2P = re.compile(r"^([a-z2-7]{52}\.b32\.i2p):(\d{1,5})$")
 PATTERN_AGENT = re.compile(
-    r"^/VIPSTARCOIN:("
-    r"1.0.(0|1|2)"
-    r")")
+    r"^/VIPSTARCOIN:(1\.0\.[0-3]/|1\.0\.[2-9](?:\.[0-9]{1,2})?/)$"
+    r"|^/Unofficial VIPS:[1-9]\.[0-9]{1,2}\.[0-9]{1,2}/$"
+)
 
 def parseline(line: str) -> Union[dict, None]:
     """ Parses a line from `seeds_main.txt` into a dictionary of details for that line.
