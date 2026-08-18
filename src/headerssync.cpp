@@ -42,25 +42,13 @@ HeadersSyncState::HeadersSyncState(NodeId id, const Consensus::Params& consensus
     // exceeds this bound, because it's not possible for a consensus-valid
     // chain to be longer than this (at the current time -- in the future we
     // could try again, if necessary, to sync a longer chain).
-    if(consensus_params.nLastPOWBlock != consensus_params.nLastBigReward)
-    {
-        // Regtest mode, so use the Bitcoin formula for max commitments
-        m_max_commitments = 6*(Ticks<std::chrono::seconds>(NodeClock::now() - NodeSeconds{std::chrono::seconds{chain_start->GetMedianTimePast()}}) + MAX_FUTURE_BLOCK_TIME) / HEADER_COMMITMENT_PERIOD;
-    }
-    else
-    {
-        // Mainnet or testnet, so use the Qtum formula
-        int64_t numberOfBlocks = (TicksSinceEpoch<std::chrono::seconds>(NodeClock::now()) + MAX_FUTURE_BLOCK_TIME - chain_start->GetBlockTime()) / (consensus_params.MinStakeTimestampMask() + 1);
-        if(numberOfBlocks > 0)
-        {
-            if(chain_start->nHeight <= consensus_params.nLastPOWBlock)
-            {
-                // Add the PoW block, they take no time
-                numberOfBlocks += consensus_params.nLastPOWBlock;
-            }
-            m_max_commitments = 1 + numberOfBlocks / HEADER_COMMITMENT_PERIOD;
-        }
-    }
+    // VIPS: unlike Qtum, PoW blocks are not restricted to heights before a
+    // fixed cutoff (nLastPOWBlock does not exist in VIPS consensus params;
+    // both PoW and PoS blocks are valid at any height, decided purely by
+    // block structure via IsProofOfStake()). The Qtum-specific formula relied
+    // on a fixed PoW cutoff height and does not apply to VIPS.
+    // Always use the Bitcoin-standard time-based formula for all networks.
+    m_max_commitments = 6*(Ticks<std::chrono::seconds>(NodeClock::now() - NodeSeconds{std::chrono::seconds{chain_start->GetMedianTimePast()}}) + MAX_FUTURE_BLOCK_TIME) / HEADER_COMMITMENT_PERIOD;
 
     LogDebug(BCLog::NET, "Initial headers sync started with peer=%d: height=%i, max_commitments=%i, min_work=%s\n", m_id, m_current_height, m_max_commitments, m_minimum_required_work.ToString());
 }
