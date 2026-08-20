@@ -397,6 +397,9 @@ target_link_libraries(qtum-qt
 
 import_plugins(qtum-qt)
 install_binary_component(qtum-qt HAS_MANPAGE)
+# VIPS: 内部ターゲット名(qtum-qt)は上流追従性のため本家のまま据え置き、
+# 最終生成物のファイル名のみOUTPUT_NAMEでVIPSブランド化する(Step4ゆう最終判断4)。
+set_target_properties(qtum-qt PROPERTIES OUTPUT_NAME "vipstarcoin-qt")
 if(WIN32)
   set_target_properties(qtum-qt PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()

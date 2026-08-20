@@ -101,13 +101,17 @@ bool CheckWork(const CChainParams& chainparams, CBlock* pblock, ChainstateManage
     // Found a solution
     {
         LOCK(cs_main);
-        if (pblock->hashPrevBlock != chainman.ActiveChain().Tip()->GetBlockHash())
-            return error("CheckWork: Generated block is stale!");
+        if (pblock->hashPrevBlock != chainman.ActiveChain().Tip()->GetBlockHash()) {
+            LogError("CheckWork: Generated block is stale!");
+            return false;
+        }
         // Process this block the same as if we had received it from another node
         std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
         bool fNewBlock = false;
-        if (!chainman.ProcessNewBlock(shared_pblock, true, true, &fNewBlock))
-            return error("CheckWork: block not accepted");
+        if (!chainman.ProcessNewBlock(shared_pblock, true, true, &fNewBlock)) {
+            LogError("CheckWork: block not accepted");
+            return false;
+        }
     }
     return true;
 }

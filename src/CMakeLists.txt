@@ -312,6 +312,7 @@ if(ENABLE_WALLET)
       Boost::headers
     )
     install_binary_component(qtum-wallet HAS_MANPAGE)
+    set_target_properties(qtum-wallet PROPERTIES OUTPUT_NAME "vipstarcoin-wallet")
   endif()
 endif()
 
@@ -442,6 +443,9 @@ if(BUILD_BITCOIN_BIN)
   add_windows_application_manifest(qtum)
   target_link_libraries(qtum core_interface bitcoin_common bitcoin_util)
   install_binary_component(qtum HAS_MANPAGE)
+  # VIPS: 内部ターゲット名は本家のまま据え置き、OUTPUT_NAMEでのみブランド化(Step4ゆう最終判断4)。
+  # 統合バイナリのブランド名称は「vipstarcoin」で確定(Step5ゆう最終判断#5)。
+  set_target_properties(qtum PROPERTIES OUTPUT_NAME "vipstarcoin")
 endif()
 
 # Bitcoin Core bitcoind.
@@ -459,6 +463,8 @@ if(BUILD_DAEMON)
     Boost::headers
   )
   install_binary_component(qtumd HAS_MANPAGE)
+  # VIPS: 内部ターゲット名は本家のまま据え置き、OUTPUT_NAMEでのみブランド化(Step4ゆう最終判断4)。
+  set_target_properties(qtumd PROPERTIES OUTPUT_NAME "vipstarcoind")
 endif()
 if(ENABLE_IPC AND BUILD_DAEMON)
   add_executable(qtum-node
@@ -517,6 +523,7 @@ if(BUILD_CLI)
     libevent::extra
   )
   install_binary_component(qtum-cli HAS_MANPAGE)
+  set_target_properties(qtum-cli PROPERTIES OUTPUT_NAME "vipstarcoin-cli")
 endif()
 
 
@@ -532,6 +539,7 @@ if(BUILD_TX)
     Boost::headers
   )
   install_binary_component(qtum-tx HAS_MANPAGE)
+  set_target_properties(qtum-tx PROPERTIES OUTPUT_NAME "vipstarcoin-tx")
 endif()
 
 
@@ -546,6 +554,7 @@ if(BUILD_UTIL)
     Boost::headers
   )
   install_binary_component(qtum-util HAS_MANPAGE)
+  set_target_properties(qtum-util PROPERTIES OUTPUT_NAME "vipstarcoin-util")
 endif()
 
 
