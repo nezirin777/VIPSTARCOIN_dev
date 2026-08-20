@@ -16,7 +16,7 @@
 
 namespace init {
 namespace {
-const char* EXE_NAME = "qtum-gui";
+const char* EXE_NAME = "vipstarcoin-gui";
 
 class BitcoinGuiInit : public interfaces::Init
 {

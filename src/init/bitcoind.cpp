@@ -18,7 +18,7 @@ using node::NodeContext;
 
 namespace init {
 namespace {
-const char* EXE_NAME = "qtumd";
+const char* EXE_NAME = "vipstarcoind";
 
 class BitcoindInit : public interfaces::Init
 {
