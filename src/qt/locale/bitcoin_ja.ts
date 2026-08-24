@@ -1092,7 +1092,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <location line="+18"/>
         <source>Load Wallet Backup…</source>
         <extracomment>Name of the menu item that restores wallet from a backup file.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ウォレットのバックアップをロード…</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -1288,7 +1288,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <location line="+8"/>
         <source>Restore Wallet</source>
         <extracomment>Title of pop-up window shown when the user is attempting to restore a wallet.</extracomment>
-        <translation type="unfinished">ウォレットを復元</translation>
+        <translation>ウォレットを復元</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5962,7 +5962,7 @@ The delegation for the address will be removed from the wallet list.</source>
         <location filename="../forms/restoredialog.ui" line="+14"/>
         <location filename="../restoredialog.cpp" line="+112"/>
         <source>Restore Wallet</source>
-        <translation type="unfinished">ウォレットを復元</translation>
+        <translation>ウォレットを復元</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -6046,7 +6046,7 @@ The delegation for the address will be removed from the wallet list.</source>
         <location filename="../walletcontroller.cpp" line="+65"/>
         <source>Restore Wallet</source>
         <extracomment>Title of progress window which is displayed when wallets are being restored.</extracomment>
-        <translation type="unfinished">ウォレットを復元</translation>
+        <translation>ウォレットを復元</translation>
     </message>
     <message>
         <location line="+3"/>
