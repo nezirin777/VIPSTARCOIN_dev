@@ -175,21 +175,6 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelSpendable">
-              <property name="font">
-               <font>
-                <pointsize>23</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Spendable:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QLabel" name="labelTotal">
               <property name="font">
                <font>
