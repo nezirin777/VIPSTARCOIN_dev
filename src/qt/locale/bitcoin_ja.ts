@@ -282,7 +282,8 @@ The delegation for the address will be added in the wallet list.</source>
         <location line="+77"/>
         <source>The %1 address &quot;%2&quot; is not yours, please change it to new one.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>%1 アドレス &quot;%2&quot; はあなたのものではありません。新しいものに変更してください。
+</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -500,12 +501,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+23"/>
         <source>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</source>
-        <translation type="unfinished"></translation>
+        <translation>OSアカウントが侵害された場合の、安易な送金操作を無効化する目的があります。ただし、実質的なセキュリティを提供するものではありません。</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>For staking only.</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーキングのみ。</translation>
     </message>
     <message>
         <location filename="../askpassphrasedialog.cpp" line="+52"/>
@@ -806,7 +807,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+1"/>
         <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -896,12 +897,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+1"/>
         <source>Sign with &amp;hardware...</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアで署名(&amp;H)...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sign transaction with hardware wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアウォレットでトランザクションに署名</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -1112,7 +1113,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+118"/>
         <source>New version of VIPSTARCOIN wallet is available on the VIPSTARCOIN source code repository: &lt;br /&gt; %1. &lt;br /&gt;It is recommended to download it and update this application</source>
-        <translation type="unfinished"></translation>
+        <translation>VIPSTARCOINウォレットの新しいバージョンがVIPSTARCOINのソースコードリポジトリで公開されています：&lt;br /&gt; %1 &lt;br /&gt;ダウンロードしてこのアプリケーションを更新することをお勧めします</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1463,12 +1464,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+110"/>
         <source>Device connected.&lt;br&gt;Type is %1&lt;br&gt;Model is %2&lt;br&gt;Fingerprint is %3&lt;br&gt;App name is %4</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイスが接続されました。&lt;br&gt;種類：%1&lt;br&gt;モデル：%2&lt;br&gt;フィンガープリント：%3&lt;br&gt;アプリ名：%4</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Device not connected</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイスが接続されていません</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -1522,7 +1523,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+2"/>
         <source>Not staking because you don&apos;t have mature coins</source>
-        <translation type="unfinished"></translation>
+        <translation>使用可能な（成熟した）コインがないため、ステーキングしていません</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -1532,7 +1533,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+2"/>
         <source>Not staking because the ledger device failed to connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerデバイスへの接続に失敗したため、ステーキングしていません</translation>
     </message>
     <message>
         <location line="+56"/>
@@ -2129,12 +2130,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location filename="../walletcontroller.cpp" line="+289"/>
         <source>HWI tool not found</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツールが見つかりません</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>HWI tool not found at path &quot;%1&quot;.&lt;br&gt;Please download it from %2 and add the path to the settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>パス &quot;%1&quot; にHWIツールが見つかりません。&lt;br&gt;%2 からダウンロードし、設定にパスを追加してください。</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -2244,12 +2245,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+7"/>
         <source>Use a hardware wallet device for signing. Configure the HWI tool path in main preferences first.</source>
-        <translation type="unfinished"></translation>
+        <translation>署名にハードウェアウォレットデバイスを使用します。あらかじめメイン設定でHWIツールのパスを設定してください。</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Use a hardware device</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアデバイスを使用する</translation>
     </message>
     <message>
         <location filename="../createwalletdialog.cpp" line="+21"/>
@@ -2331,7 +2332,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+27"/>
         <source>Stake:</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーク：</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2404,7 +2405,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+2"/>
         <source>Not staking because you don&apos;t have mature coins</source>
-        <translation type="unfinished"></translation>
+        <translation>使用可能な（成熟した）コインがないため、ステーキングしていません</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -2884,12 +2885,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../hardwaresigntx.cpp" line="+35"/>
         <source>HWI tool not found</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツールが見つかりません</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>HWI tool not found at path &quot;%1&quot;.&lt;br&gt;Please download it from %2 and add the path to the settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>パス &quot;%1&quot; にHWIツールが見つかりません。&lt;br&gt;%2 からダウンロードし、設定にパスを追加してください。</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -3053,7 +3054,7 @@ Try to connect again?</source>
     <message>
         <location line="+7"/>
         <source> GB</source>
-        <translation type="unfinished"></translation>
+        <translation> GB</translation>
     </message>
     <message>
         <location line="-32"/>
@@ -3296,13 +3297,14 @@ The migration process will create a backup of the wallet before migrating. This 
     <message>
         <location line="+76"/>
         <source>Wallet backup prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>ウォレットバックアップの案内</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Please backup your wallet as soon as possible.
 Please make sure to keep an updated antivirus and operating system. We can not recover Your funds if you visit phishing site or lose your backup. Please make sure to keep backups of your private keys or files. We do not store your private keys on this wallet. And you as a user, are entirely responsible for your funds and your own security.</source>
-        <translation type="unfinished"></translation>
+        <translation>できるだけ早くウォレットのバックアップを取ってください。
+ウイルス対策ソフトとオペレーティングシステムを常に最新の状態に保つようにしてください。フィッシングサイトを訪れたり、バックアップを紛失したりした場合、資金を復旧することはできません。秘密鍵やファイルのバックアップを必ず保管してください。当ウォレットはお客様の秘密鍵を保存しません。ユーザーであるあなた自身が、資金とセキュリティについて全責任を負います。</translation>
     </message>
     <message>
         <location line="+117"/>
@@ -3318,7 +3320,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+10"/>
         <source>Wallet backup</source>
-        <translation type="unfinished"></translation>
+        <translation>ウォレットバックアップ</translation>
     </message>
     <message>
         <location filename="../modaloverlay.cpp" line="+0"/>
@@ -3350,7 +3352,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location filename="../forms/openuridialog.ui" line="+14"/>
         <source>Open VIPSTARCOIN URI</source>
-        <translation type="unfinished"></translation>
+        <translation>VIPSTARCOIN URIを開く</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -3472,12 +3474,12 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+113"/>
         <source>User Interface &amp;style:</source>
-        <translation type="unfinished"></translation>
+        <translation>ユーザーインターフェースのスタイル(&amp;S)：</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>The user interface style can be set here. This setting will take effect after restarting %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>ここでユーザーインターフェースのスタイルを設定できます。この設定は %1 の再起動後に反映されます。</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3538,7 +3540,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+24"/>
         <source>Fingerprint of the ledger that you want to be used for staking with hardware wallet</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアウォレットでステーキングに使用したいLedgerのフィンガープリント</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3549,12 +3551,12 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="-137"/>
         <source>Reserve amount that will not be used for staking</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーキングに使用しない予約額</translation>
     </message>
     <message>
         <location line="+64"/>
         <source>HWI tool path</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツールのパス</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -3564,7 +3566,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+37"/>
         <source>Hardware wallet interface tool location on disk</source>
-        <translation type="unfinished"></translation>
+        <translation>ディスク上のハードウェアウォレットインターフェースツールの場所</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -3579,7 +3581,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+25"/>
         <source>Select Ledger device for staking</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーキングに使用するLedgerデバイスを選択</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3596,12 +3598,12 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+7"/>
         <source>Enable  log &amp;events</source>
-        <translation type="unfinished"></translation>
+        <translation>ログイベントを有効にする(&amp;E)</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Enable s&amp;uper staking</source>
-        <translation type="unfinished"></translation>
+        <translation>スーパーステーキングを有効にする(&amp;S)</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -3660,17 +3662,17 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+7"/>
         <source>Use change &amp;address</source>
-        <translation type="unfinished"></translation>
+        <translation>お釣りアドレスを使用する(&amp;A)</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Check for &amp;updates</source>
-        <translation type="unfinished"></translation>
+        <translation>更新を確認する(&amp;U)</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Sign PSBT with HWI tool</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツールでPSBTに署名</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -3685,7 +3687,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+57"/>
         <source>Automatically open the VIPSTARCOIN client port on the router. This only works when your router supports NAT-PMP and it is enabled. The external port could be random.</source>
-        <translation type="unfinished"></translation>
+        <translation>ルーターでVIPSTARCOINクライアントのポートを自動的に開放します。これはルーターがNAT-PMPに対応し、有効になっている場合のみ機能します。外部ポートはランダムになる場合があります。</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -3927,12 +3929,12 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+22"/>
         <source>Select HWI tool path</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツールのパスを選択</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>HWI tool (hwi hwi.py hwi.exe)</source>
-        <translation type="unfinished"></translation>
+        <translation>HWIツール（hwi hwi.py hwi.exe）</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -4008,12 +4010,12 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+47"/>
         <source>Stake:</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーク：</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>0.000&#x2009;000&#x2009;00</source>
-        <translation type="unfinished"></translation>
+        <translation>0.000&#x2009;000&#x2009;00</translation>
     </message>
     <message>
         <location line="+56"/>
@@ -4033,7 +4035,7 @@ Please make sure to keep an updated antivirus and operating system. We can not r
     <message>
         <location line="+47"/>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>もっと見る</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -4081,7 +4083,8 @@ Please make sure to keep an updated antivirus and operating system. We can not r
         <location line="+39"/>
         <source>The %1 address &quot;%2&quot; is not yours, please change it to new one.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>%1 アドレス &quot;%2&quot; はあなたのものではありません。新しいものに変更してください。
+</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4951,7 +4954,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message>
         <location line="+21"/>
         <source>Ctrl+X</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+X</translation>
     </message>
     <message>
         <location line="+74"/>
@@ -5294,25 +5297,25 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
         <location line="+13"/>
         <source>Ctrl++</source>
         <extracomment>Main shortcut to increase the RPC console font size.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl++</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Ctrl+=</source>
         <extracomment>Secondary shortcut to increase the RPC console font size.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+=</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Ctrl+-</source>
         <extracomment>Main shortcut to decrease the RPC console font size.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+-</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Ctrl+_</source>
         <extracomment>Secondary shortcut to decrease the RPC console font size.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+_</translation>
     </message>
     <message>
         <location line="+146"/>
@@ -5374,22 +5377,22 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message>
         <location line="+326"/>
         <source>Ctrl+I</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ctrl+N</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -5486,7 +5489,7 @@ For more information on using this console, type %6.
     <message>
         <location line="-71"/>
         <source>Request payment</source>
-        <translation type="unfinished"></translation>
+        <translation>支払いをリクエスト</translation>
     </message>
     <message>
         <location line="+81"/>
@@ -5510,7 +5513,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+92"/>
         <source>Native segwit addresses (aka Bech32 or BIP-173) reduce your transaction fees later on and offer better protection against typos, but old wallets don&apos;t support them. When unchecked, an address compatible with older wallets will be created instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>ネイティブSegWitアドレス（Bech32またはBIP-173とも呼ばれます）は、後の取引手数料を削減し、タイプミスに対するより優れた保護を提供しますが、古いウォレットでは対応していません。チェックを外すと、代わりに古いウォレットと互換性のあるアドレスが作成されます。</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -5578,7 +5581,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+7"/>
         <source>S&amp;ubmit</source>
-        <translation type="unfinished"></translation>
+        <translation>送信(&amp;U)</translation>
     </message>
     <message>
         <location filename="../receivecoinsdialog.cpp" line="+46"/>
@@ -5613,7 +5616,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+0"/>
         <source>Base58 (Legacy)</source>
-        <translation type="unfinished"></translation>
+        <translation>Base58（レガシー）</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5623,7 +5626,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+0"/>
         <source>Base58 (P2SH-SegWit)</source>
-        <translation type="unfinished"></translation>
+        <translation>Base58（P2SH-SegWit）</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5633,7 +5636,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+0"/>
         <source>Bech32 (SegWit)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bech32（SegWit）</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5643,7 +5646,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+0"/>
         <source>Bech32m (Taproot)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bech32m（Taproot）</translation>
     </message>
     <message>
         <location line="+73"/>
@@ -5982,27 +5985,27 @@ The delegation for the address will be removed from the wallet list.</source>
     <message>
         <location line="+12"/>
         <source>Restore file</source>
-        <translation type="unfinished"></translation>
+        <translation>復元ファイル</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Rebuild blockchain index</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロックチェーンインデックスを再構築</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Force initial blocks download mode - fix the blockchain data.</source>
-        <translation type="unfinished"></translation>
+        <translation>初期ブロックダウンロードモードを強制する - ブロックチェーンデータを修復します。</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Delete the local copy of the block chain</source>
-        <translation type="unfinished"></translation>
+        <translation>ローカルのブロックチェーンのコピーを削除する</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>The wallet.dat will be restored from the selected location and the Qt Wallet will be restarted with the -reindex or -deleteblockchaindata option.</source>
-        <translation type="unfinished"></translation>
+        <translation>wallet.datは選択した場所から復元され、Qtウォレットは -reindex または -deleteblockchaindata オプション付きで再起動されます。</translation>
     </message>
     <message>
         <location line="+27"/>
@@ -6164,7 +6167,7 @@ The delegation for the address will be removed from the wallet list.</source>
     <message>
         <location line="+169"/>
         <source>If the custom fee is set to 1000 satoshis and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 satoshis in fee, while &quot;total at least&quot; pays 1000 satoshis. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation type="unfinished"></translation>
+        <translation>カスタム手数料が1000satoshisに設定されていて取引が250バイトしかない場合、「1キロバイトあたり」では250satoshisの手数料しか支払われませんが、「合計最低」では1000satoshisが支払われます。1キロバイトを超える取引では、どちらもキロバイト単位で支払われます。</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -6328,7 +6331,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <location line="+5"/>
         <source>Please, review your transaction. You can create and send this transaction or create a Partially Signed Bitcoin Transaction (PSBT), which you can save or copy and then sign with, e.g., an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
         <extracomment>Text to inform a user attempting to create a transaction of their current options. At this stage, a user can send their transaction or create a PSBT. This string is displayed when both private keys and PSBT controls are enabled.</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>取引を確認してください。 この取引を作成して送信するか、部分的に署名されたBitcoin取引（Partially Signed Bitcoin Transaction: PSBT）を作成できます。これを保存またはコピーして、オフラインの %1 ウォレットやPSBT互換のハードウェアウォレットなどで署名できます。</translation>
     </message>
     <message>
         <location line="+656"/>
@@ -6542,7 +6545,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+81"/>
         <source>%1/kvB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1/kvB</translation>
     </message>
     <message numerus="yes">
         <location line="+14"/>
@@ -7409,7 +7412,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+34"/>
         <source>Stake:</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーク：</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7692,7 +7695,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+27"/>
         <source>Stake:</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーク：</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -7785,7 +7788,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>Not staking because you don&apos;t have mature coins</source>
-        <translation type="unfinished"></translation>
+        <translation>使用可能な（成熟した）コインがないため、ステーキングしていません</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -7800,7 +7803,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>Not staking because the ledger device failed to connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerデバイスへの接続に失敗したため、ステーキングしていません</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8997,34 +9000,37 @@ Go to File &gt; Open Wallet to load a wallet.
         <location line="+155"/>
         <source>Import PKH failed.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>PKHのインポートに失敗しました。
+</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Import P2SH failed.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>P2SHのインポートに失敗しました。
+</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Import Bech32 failed.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Bech32のインポートに失敗しました。
+</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Ledger not connected.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerが接続されていません。</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>unknown error</source>
-        <translation type="unfinished"></translation>
+        <translation>不明なエラー</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Import addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレスをインポート</translation>
     </message>
 </context>
 <context>
