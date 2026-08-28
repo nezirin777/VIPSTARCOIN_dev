@@ -2779,7 +2779,7 @@ If you are not sure what this is, leave this field unchanged.</source>
     <message>
         <location line="+19"/>
         <source>Parse error: unbalanced &apos; or &quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>パースエラー：引用符（&apos;または&quot;）の対応が取れていません</translation>
     </message>
 </context>
 <context>
@@ -4456,7 +4456,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message>
         <location line="+307"/>
         <source>Ctrl+W</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+W</translation>
     </message>
     <message>
         <location line="+372"/>
@@ -4482,21 +4482,21 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
         <source>Onion</source>
         <comment>network name</comment>
         <extracomment>Name of Tor network in peer info</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Onion</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>I2P</source>
         <comment>network name</comment>
         <extracomment>Name of I2P network in peer info</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>I2P</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>CJDNS</source>
         <comment>network name</comment>
         <extracomment>Name of CJDNS network in peer info</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>CJDNS</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -5703,7 +5703,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+3"/>
         <source>QR image</source>
-        <translation type="unfinished"></translation>
+        <translation>QR画像</translation>
     </message>
     <message>
         <location line="+61"/>
@@ -5723,7 +5723,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+55"/>
         <source>Address Re&amp;fresh</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレスを更新(&amp;F)</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -5738,7 +5738,7 @@ For more information on using this console, type %6.
     <message>
         <location line="+23"/>
         <source>&amp;Request Payment</source>
-        <translation type="unfinished"></translation>
+        <translation>支払いをリクエスト(&amp;R)</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -8489,7 +8489,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../forms/transactiondescdialog.ui" line="+35"/>
         <source>Transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクション詳細</translation>
     </message>
     <message>
         <location line="+7"/>
