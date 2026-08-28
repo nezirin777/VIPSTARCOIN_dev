@@ -32,7 +32,7 @@
     <message>
         <location line="+18"/>
         <source>%</source>
-        <translation type="unfinished"></translation>
+        <translation>%</translation>
     </message>
     <message>
         <location line="+25"/>
@@ -57,7 +57,7 @@
     <message>
         <location line="+13"/>
         <source>Staker name</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー名</translation>
     </message>
     <message>
         <location line="+57"/>
@@ -138,7 +138,8 @@
         <location line="+6"/>
         <source>Delegation already present. 
 The delegation for the address will be added in the wallet list.</source>
-        <translation type="unfinished"></translation>
+        <translation>委任は既に存在します。
+そのアドレスへの委任がウォレットリストに追加されます。</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -153,7 +154,7 @@ The delegation for the address will be added in the wallet list.</source>
     <message>
         <location line="+2"/>
         <source>&lt;br /&gt;&lt;br /&gt;Delegate the address to the staker&lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;br /&gt;&lt;br /&gt;アドレスをステーカーに委任&lt;br /&gt;</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -169,7 +170,7 @@ The delegation for the address will be added in the wallet list.</source>
     <message>
         <location line="+5"/>
         <source>Confirm address delegation proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレス委任の提案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -197,7 +198,7 @@ The delegation for the address will be added in the wallet list.</source>
     <message>
         <location line="+13"/>
         <source>Staker name</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー名</translation>
     </message>
     <message>
         <location line="+54"/>
@@ -2307,22 +2308,22 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+103"/>
         <source>fee</source>
-        <translation type="unfinished"></translation>
+        <translation>手数料</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>staker</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>address</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレス</translation>
     </message>
     <message>
         <location line="+56"/>
         <source>Offline staking assets</source>
-        <translation type="unfinished"></translation>
+        <translation>オフラインステーキング資産</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -2337,12 +2338,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+10"/>
         <source>0.000&#x2009;000&#x2009;00 VIPS</source>
-        <translation type="unfinished"></translation>
+        <translation>0.000&#x2009;000&#x2009;00 VIPS</translation>
     </message>
     <message>
         <location line="+79"/>
         <source>Add new delegations</source>
-        <translation type="unfinished"></translation>
+        <translation>新しい委任を追加</translation>
     </message>
     <message>
         <location filename="../delegationitemwidget.cpp" line="+54"/>
@@ -2395,7 +2396,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+6"/>
         <source>Confirmed delegation&lt;br&gt;Your weight is %1&lt;br&gt;Network weight is %2&lt;br&gt;Expected time to earn reward is %3</source>
-        <translation type="unfinished"></translation>
+        <translation>委任が確認されました&lt;br&gt;あなたのウェイトは%1&lt;br&gt;ネットワークウェイトは%2&lt;br&gt;報酬獲得までの予想時間は%3</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -2529,12 +2530,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+40"/>
         <source>Staker</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー</translation>
     </message>
     <message>
         <location line="+83"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../delegationsstakerdialog.cpp" line="+30"/>
@@ -2741,7 +2742,7 @@ If you are not sure what this is, leave this field unchanged.</source>
     <message>
         <location line="+16"/>
         <source>Staker name</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー名</translation>
     </message>
     <message>
         <location line="+54"/>
@@ -5916,7 +5917,8 @@ Transaction ID: %1</source>
         <location line="+12"/>
         <source>Delegation already removed. 
 The delegation for the address will be removed from the wallet list.</source>
-        <translation type="unfinished"></translation>
+        <translation>委任は既に削除されています。
+そのアドレスへの委任がウォレットリストから削除されます。</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -5931,7 +5933,7 @@ The delegation for the address will be removed from the wallet list.</source>
     <message>
         <location line="+2"/>
         <source>&lt;br /&gt;&lt;br /&gt;Remove delegation for address:&lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;br /&gt;&lt;br /&gt;アドレスの委任を削除:&lt;br /&gt;</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -5946,7 +5948,7 @@ The delegation for the address will be removed from the wallet list.</source>
     <message>
         <location line="+3"/>
         <source>Confirm remove delegation proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>委任削除の提案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -7252,27 +7254,27 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+23"/>
         <source>Maximum outputs</source>
-        <translation type="unfinished"></translation>
+        <translation>最大出力数</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Minimum value</source>
-        <translation type="unfinished"></translation>
+        <translation>最小額</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Maximum value</source>
-        <translation type="unfinished"></translation>
+        <translation>最大額</translation>
     </message>
     <message>
         <location line="+54"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Split coins</source>
-        <translation type="unfinished"></translation>
+        <translation>コインを分割</translation>
     </message>
     <message>
         <location filename="../splitutxopage.cpp" line="-1"/>
@@ -7314,7 +7316,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+7"/>
         <source>The vipstarcoin address to split utxos.</source>
-        <translation type="unfinished"></translation>
+        <translation>UTXOを分割するVIPSTARCOINアドレス。</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7349,7 +7351,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+96"/>
         <source>Do you want to draft this split coins transaction?</source>
-        <translation type="unfinished"></translation>
+        <translation>このコイン分割トランザクションを作成しますか？</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -7359,17 +7361,17 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>&lt;br/&gt;&lt;br/&gt;Split coins for address:&lt;br/&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;br/&gt;&lt;br/&gt;アドレスのコインを分割:&lt;br/&gt;</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Are you sure you want to split coins for address&lt;br/&gt;&lt;br/&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>本当にこのアドレスのコインを分割しますか&lt;br/&gt;&lt;br/&gt;</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Confirm splitting coins for address proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>コイン分割の提案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -7407,7 +7409,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+16"/>
         <source>Staking assets</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーキング資産</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -7417,7 +7419,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+10"/>
         <source>0.000&#x2009;000&#x2009;00 VIPS</source>
-        <translation type="unfinished"></translation>
+        <translation>0.000&#x2009;000&#x2009;00 VIPS</translation>
     </message>
     <message>
         <location line="+31"/>
@@ -7427,43 +7429,43 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+39"/>
         <source>Block height:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロック高:</translation>
     </message>
     <message>
         <location line="+10"/>
         <location line="+117"/>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation>0</translation>
     </message>
     <message>
         <location line="-75"/>
         <source>Block reward:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロック報酬:</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>9500 VIPS/Block</source>
-        <translation type="unfinished"></translation>
+        <translation>9500 VIPS/ブロック</translation>
     </message>
     <message>
         <location line="+55"/>
         <source>Network weight:</source>
-        <translation type="unfinished"></translation>
+        <translation>ネットワークウェイト:</translation>
     </message>
     <message>
         <location line="+52"/>
         <source>Expected annualized ROI:</source>
-        <translation type="unfinished"></translation>
+        <translation>予想年間ROI:</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>7.9 %</source>
-        <translation type="unfinished"></translation>
+        <translation>7.9 %</translation>
     </message>
     <message>
         <location line="+73"/>
         <source>Stake records</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーク記録</translation>
     </message>
 </context>
 <context>
@@ -7544,17 +7546,17 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../forms/superstakerconfigdialog.ui" line="+14"/>
         <source>Super staker options</source>
-        <translation type="unfinished"></translation>
+        <translation>スーパーステーカーオプション</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Staker</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー</translation>
     </message>
     <message>
         <location line="+32"/>
         <source>Configuration:</source>
-        <translation type="unfinished"></translation>
+        <translation>設定:</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -7569,32 +7571,32 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+44"/>
         <source>Minimum UTXO value</source>
-        <translation type="unfinished"></translation>
+        <translation>最小UTXO額</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Delegation list type</source>
-        <translation type="unfinished"></translation>
+        <translation>委任リストタイプ</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Address list</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレスリスト</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Minimum fee</source>
-        <translation type="unfinished"></translation>
+        <translation>最小手数料</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>%</source>
-        <translation type="unfinished"></translation>
+        <translation>%</translation>
     </message>
     <message>
         <location line="+44"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -7665,27 +7667,27 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+103"/>
         <source>fee</source>
-        <translation type="unfinished"></translation>
+        <translation>手数料</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>staker</source>
-        <translation type="unfinished"></translation>
+        <translation>ステーカー</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>address</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレス</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Delegations...</source>
-        <translation type="unfinished"></translation>
+        <translation>委任...</translation>
     </message>
     <message>
         <location line="+59"/>
         <source>Super staking assets</source>
-        <translation type="unfinished"></translation>
+        <translation>スーパーステーキング資産</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -7700,12 +7702,12 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+10"/>
         <source>0.000&#x2009;000&#x2009;00 VIPS</source>
-        <translation type="unfinished"></translation>
+        <translation>0.000&#x2009;000&#x2009;00 VIPS</translation>
     </message>
     <message>
         <location line="+92"/>
         <source>Add new super stakers</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいスーパーステーカーを追加</translation>
     </message>
     <message>
         <location filename="../superstakeritemwidget.cpp" line="+50"/>
@@ -7768,7 +7770,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+7"/>
         <source>Super staking.&lt;br&gt;Your weight is %1&lt;br&gt;Delegations weight is %2&lt;br&gt;Network weight is %3&lt;br&gt;Expected time to earn reward is %4</source>
-        <translation type="unfinished"></translation>
+        <translation>スーパーステーキング中。&lt;br&gt;あなたのウェイトは%1&lt;br&gt;委任ウェイトは%2&lt;br&gt;ネットワークウェイトは%3&lt;br&gt;報酬獲得までの予想時間は%4</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -7793,7 +7795,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>Not staking because you don&apos;t have mature delegated coins</source>
-        <translation type="unfinished"></translation>
+        <translation>成熟した委任コインがないためステーキングしていません</translation>
     </message>
     <message>
         <location line="+2"/>
