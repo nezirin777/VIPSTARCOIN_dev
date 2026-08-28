@@ -9524,7 +9524,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>A %zu MiB dbcache may be too large for a system memory of only %zu MiB.</source>
-        <translation type="unfinished"></translation>
+        <translation>%zu MiBのdbcacheは、システムメモリが%zu MiBしかない環境には大きすぎる可能性があります。</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9544,12 +9544,12 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Can&apos;t spend unconfirmed version %d pre-selected input with a version 3 tx</source>
-        <translation type="unfinished"></translation>
+        <translation>未確認のバージョン%dの事前選択済み入力を、バージョン3のトランザクションで使用することはできません</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Can&apos;t spend unconfirmed version 3 pre-selected input with a version %d tx</source>
-        <translation type="unfinished"></translation>
+        <translation>未確認のバージョン3の事前選択済み入力を、バージョン%dのトランザクションで使用することはできません</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9569,7 +9569,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Copyright (C) %i</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright (C) %i</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9859,12 +9859,12 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Failed to write address index</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレスインデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Failed to write address unspent index</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレス未使用インデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9874,17 +9874,17 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Failed to write blockhash index</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロックハッシュインデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Failed to write height index</source>
-        <translation type="unfinished"></translation>
+        <translation>高さインデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Failed to write timestamp index</source>
-        <translation type="unfinished"></translation>
+        <translation>タイムスタンプインデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9899,7 +9899,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Failed to write transaction index</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクションインデックスの書き込みに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9989,7 +9989,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+2"/>
         <source>Invalid percentage value for -stakingminfee=&lt;n&gt;: &apos;%d&apos; (must be between 0 and 100)</source>
-        <translation type="unfinished"></translation>
+        <translation>-stakingminfee=&lt;n&gt;の百分率値が不正です：&apos;%d&apos;（0から100の間で指定してください）</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10139,7 +10139,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+1"/>
         <source>Signing transaction output failed</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクション出力の署名に失敗しました</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -10189,7 +10189,7 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+2"/>
         <source>The %s path uses exFAT, which is known to have intermittent corruption problems on macOS. Move this directory to a different filesystem to avoid data loss.</source>
-        <translation type="unfinished"></translation>
+        <translation>%s のパスはexFATを使用していますが、macOSでは断続的なデータ破損の問題が知られています。データ損失を避けるため、このディレクトリを別のファイルシステムへ移動してください。</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10349,12 +10349,12 @@ Unable to restore backup of wallet.</source>
     <message>
         <location line="+5"/>
         <source>You need to rebuild the database using -reindex to change -addrindex</source>
-        <translation type="unfinished"></translation>
+        <translation>-addrindexを変更するには、-reindexを使用してデータベースを再構築する必要があります</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>You need to rebuild the database using -reindex to enable -logevents</source>
-        <translation type="unfinished"></translation>
+        <translation>-logeventsを有効にするには、-reindexを使用してデータベースを再構築する必要があります</translation>
     </message>
     <message>
         <location line="+5"/>
