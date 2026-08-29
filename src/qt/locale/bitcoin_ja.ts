@@ -237,7 +237,7 @@ The delegation for the address will be added in the wallet list.</source>
     <message>
         <location filename="../forms/addtokenpage.ui" line="+20"/>
         <source>ADD Token</source>
-        <translation type="unfinished"></translation>
+        <translation>トークンを追加</translation>
     </message>
     <message>
         <location line="+48"/>
@@ -267,7 +267,7 @@ The delegation for the address will be added in the wallet list.</source>
     <message>
         <location line="+62"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation>キャンセル</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -1547,7 +1547,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location filename="../forms/callcontract.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location line="+57"/>
@@ -1587,7 +1587,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+55"/>
         <source>Optional</source>
-        <translation type="unfinished"></translation>
+        <translation>任意</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -1800,7 +1800,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location filename="../forms/contractbookpage.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location line="+87"/>
@@ -1860,7 +1860,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+3"/>
         <source>Copy &amp;Address</source>
-        <translation type="unfinished">アドレスをコピー(&amp;A)</translation>
+        <translation>アドレスをコピー(&amp;A)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1875,17 +1875,17 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+1"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished">編集(&amp;E)</translation>
+        <translation>編集(&amp;E)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>&amp;Delete</source>
-        <translation type="unfinished">削除(&amp;D)</translation>
+        <translation>削除(&amp;D)</translation>
     </message>
     <message>
         <location line="+122"/>
         <source>Are you sure you want to delete the address &quot;%1&quot; from your contract address list?</source>
-        <translation type="unfinished"></translation>
+        <translation>コントラクトアドレス一覧からアドレス &quot;%1&quot; を削除してもよろしいですか？</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1905,12 +1905,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+14"/>
         <source>Exporting Failed</source>
-        <translation type="unfinished">エクスポートに失敗しました</translation>
+        <translation>エクスポートに失敗しました</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation type="unfinished">取引履歴を %1 へ保存する際にエラーが発生しました。再試行してください。</translation>
+        <translation>取引履歴を %1 へ保存する際にエラーが発生しました。再試行してください。</translation>
     </message>
 </context>
 <context>
@@ -1924,7 +1924,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
         <location line="+16"/>
         <location line="+175"/>
         <source>Contract Summary</source>
-        <translation type="unfinished"></translation>
+        <translation>コントラクトの概要</translation>
     </message>
     <message>
         <location line="-132"/>
@@ -1946,7 +1946,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="-176"/>
         <source>Transaction ID</source>
-        <translation type="unfinished">取引 ID</translation>
+        <translation>取引 ID</translation>
     </message>
     <message>
         <location line="+125"/>
@@ -1969,7 +1969,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location filename="../contracttablemodel.cpp" line="+131"/>
         <source>Label</source>
-        <translation type="unfinished">ラベル</translation>
+        <translation>ラベル</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -1984,7 +1984,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+36"/>
         <source>(no label)</source>
-        <translation type="unfinished">（ラベル無し）</translation>
+        <translation>（ラベル無し）</translation>
     </message>
 </context>
 <context>
@@ -1992,7 +1992,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location filename="../forms/createcontract.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location line="+53"/>
@@ -2017,7 +2017,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+50"/>
         <source>Optional</source>
-        <translation type="unfinished"></translation>
+        <translation>任意</translation>
     </message>
     <message>
         <location line="+40"/>
@@ -2058,7 +2058,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+64"/>
         <source>Cr&amp;eate Unsigned</source>
-        <translation type="unfinished">未署名で作成(&amp;e)</translation>
+        <translation>未署名で作成(&amp;e)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2078,12 +2078,12 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+13"/>
         <source>Do you want to draft this create contract transaction?</source>
-        <translation type="unfinished"></translation>
+        <translation>このコントラクト作成トランザクションを下書きしますか？</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>This will produce a Partially Signed VIPSTARCOIN Transaction (PSBT) which you can copy and then sign with e.g. an offline %1 wallet, or a PSBT-compatible hardware wallet.</source>
-        <translation type="unfinished"></translation>
+        <translation>これにより、コピーして例えばオフラインの %1 ウォレットやPSBT対応のハードウェアウォレットで署名できる、部分的に署名されたVIPSTARCOINトランザクション（PSBT）が生成されます。</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -2093,7 +2093,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+3"/>
         <source>Confirm contract creation proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>コントラクト作成案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -2103,7 +2103,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message>
         <location line="+15"/>
         <source>PSBT copied</source>
-        <translation type="unfinished">PSBTがコピーされました</translation>
+        <translation>PSBTがコピーされました</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -2699,7 +2699,7 @@ If you are not sure what this is, leave this field unchanged.</source>
     <message>
         <location line="+29"/>
         <source>Label</source>
-        <translation type="unfinished">ラベル</translation>
+        <translation>ラベル</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2724,7 +2724,7 @@ If you are not sure what this is, leave this field unchanged.</source>
     <message>
         <location line="+112"/>
         <source>The entered address &quot;%1&quot; is already in the contract book.</source>
-        <translation type="unfinished"></translation>
+        <translation>入力されたアドレス &quot;%1&quot; は既にコントラクトブックに存在します。</translation>
     </message>
 </context>
 <context>
@@ -4682,7 +4682,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message>
         <location filename="../forms/qrctoken.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location filename="../qrctoken.cpp" line="+40"/>
@@ -5773,7 +5773,7 @@ For more information on using this console, type %6.
         <location line="+113"/>
         <location filename="../receivetokenpage.cpp" line="-2"/>
         <source>Address</source>
-        <translation type="unfinished">アドレス</translation>
+        <translation>アドレス</translation>
     </message>
     <message>
         <location line="+32"/>
@@ -6695,7 +6695,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../forms/sendtocontract.ui" line="+14"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -6735,7 +6735,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+52"/>
         <source>Optional</source>
-        <translation type="unfinished"></translation>
+        <translation>任意</translation>
     </message>
     <message>
         <location line="+33"/>
@@ -6750,7 +6750,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+29"/>
         <source>Amount</source>
-        <translation type="unfinished">金額</translation>
+        <translation>金額</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -6786,7 +6786,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+74"/>
         <source>Cr&amp;eate Unsigned</source>
-        <translation type="unfinished">未署名で作成(&amp;e)</translation>
+        <translation>未署名で作成(&amp;e)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6816,7 +6816,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>&lt;br /&gt;&lt;br /&gt;Send to the contract:&lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;br /&gt;&lt;br /&gt;コントラクトへ送金:&lt;br /&gt;</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -6831,7 +6831,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+3"/>
         <source>Confirm sending to contract proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>コントラクトへの送金案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -6841,7 +6841,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+15"/>
         <source>PSBT copied</source>
-        <translation type="unfinished">PSBTがコピーされました</translation>
+        <translation>PSBTがコピーされました</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -6871,7 +6871,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <location line="+242"/>
         <location filename="../sendtokenpage.cpp" line="+312"/>
         <source>Send</source>
-        <translation type="unfinished">送金</translation>
+        <translation>送金</translation>
     </message>
     <message>
         <location line="-194"/>
@@ -6891,7 +6891,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+23"/>
         <source>Amount</source>
-        <translation type="unfinished">金額</translation>
+        <translation>金額</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -6901,17 +6901,17 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+12"/>
         <source>Balance:</source>
-        <translation type="unfinished">残高:</translation>
+        <translation>残高:</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>100.34</source>
-        <translation type="unfinished"></translation>
+        <translation>100.34</translation>
     </message>
     <message>
         <location line="+68"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation>キャンセル</translation>
     </message>
     <message>
         <location filename="../sendtokenpage.cpp" line="-262"/>
@@ -6931,7 +6931,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+42"/>
         <source>Cr&amp;eate Unsigned</source>
-        <translation type="unfinished">未署名で作成(&amp;e)</translation>
+        <translation>未署名で作成(&amp;e)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6951,7 +6951,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+45"/>
         <source>Do you want to draft this send token transaction?</source>
-        <translation type="unfinished"></translation>
+        <translation>このトークン送金トランザクションを下書きしますか？</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -6976,7 +6976,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+3"/>
         <source>Confirm send token proposal.</source>
-        <translation type="unfinished"></translation>
+        <translation>トークン送金案を確認してください。</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -6986,7 +6986,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+15"/>
         <source>PSBT copied</source>
-        <translation type="unfinished">PSBTがコピーされました</translation>
+        <translation>PSBTがコピーされました</translation>
     </message>
     <message>
         <location line="+34"/>
@@ -7919,12 +7919,12 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+21"/>
         <source>Token transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation>トークン取引の詳細</translation>
     </message>
     <message>
         <location filename="../tokendescdialog.cpp" line="+18"/>
         <source>Details for %1</source>
-        <translation type="unfinished">%1 の詳細</translation>
+        <translation>%1 の詳細</translation>
     </message>
 </context>
 <context>
@@ -7950,27 +7950,27 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../forms/tokenitemwidget.ui" line="+20"/>
         <source>Form</source>
-        <translation type="unfinished">フォーム</translation>
+        <translation>フォーム</translation>
     </message>
     <message>
         <location line="+88"/>
         <source>name</source>
-        <translation type="unfinished">ディレクトリ名</translation>
+        <translation>名前</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>100000.0000 TKN</source>
-        <translation type="unfinished"></translation>
+        <translation>100000.0000 TKN</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>address</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレス</translation>
     </message>
     <message>
         <location line="+38"/>
         <source>Send</source>
-        <translation type="unfinished">送金</translation>
+        <translation>送金</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -7980,7 +7980,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+13"/>
         <source>Add new tokens</source>
-        <translation type="unfinished"></translation>
+        <translation>新しいトークンを追加</translation>
     </message>
 </context>
 <context>
@@ -7988,42 +7988,42 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../tokentransactiondesc.cpp" line="+96"/>
         <source>conflicted with a transaction with %1 confirmations</source>
-        <translation type="unfinished">%1 承認の取引と衝突</translation>
+        <translation>%1 承認の取引と衝突</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>0/unconfirmed, in memory pool</source>
-        <translation type="unfinished">0/未承認、メモリープールに有る</translation>
+        <translation>0/未承認、メモリープールに有る</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>0/unconfirmed, not in memory pool</source>
-        <translation type="unfinished">0/未承認、メモリープールに無い</translation>
+        <translation>0/未承認、メモリープールに無い</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%1/unconfirmed</source>
-        <translation type="unfinished">%1/未承認</translation>
+        <translation>%1/未承認</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>%1 confirmations</source>
-        <translation type="unfinished">%1 承認</translation>
+        <translation>%1 承認</translation>
     </message>
     <message>
         <location line="+16"/>
         <source>Status</source>
-        <translation type="unfinished">状態</translation>
+        <translation>状態</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Date</source>
-        <translation type="unfinished">日時</translation>
+        <translation>日時</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Transaction ID</source>
-        <translation type="unfinished">取引 ID</translation>
+        <translation>取引 ID</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8033,22 +8033,22 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>From</source>
-        <translation type="unfinished">内向き</translation>
+        <translation>送信元</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>To</source>
-        <translation type="unfinished">送金先</translation>
+        <translation>送金先</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Credit</source>
-        <translation type="unfinished">入金額</translation>
+        <translation>入金額</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Debit</source>
-        <translation type="unfinished">出金額</translation>
+        <translation>出金額</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8061,57 +8061,57 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location filename="../tokentransactiontablemodel.cpp" line="+271"/>
         <source>Date</source>
-        <translation type="unfinished">日時</translation>
+        <translation>日時</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Type</source>
-        <translation type="unfinished">種別</translation>
+        <translation>種別</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Label</source>
-        <translation type="unfinished">ラベル</translation>
+        <translation>ラベル</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Name</source>
-        <translation type="unfinished">名前</translation>
+        <translation>名前</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Amount</source>
-        <translation type="unfinished">金額</translation>
+        <translation>金額</translation>
     </message>
     <message>
         <location line="+48"/>
         <source>Unconfirmed</source>
-        <translation type="unfinished">未承認</translation>
+        <translation>未承認</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation type="unfinished">承認中（推奨承認数 %2 のうち %1 承認が完了）</translation>
+        <translation>承認中（推奨承認数 %2 のうち %1 承認が完了）</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Confirmed (%1 confirmations)</source>
-        <translation type="unfinished">承認されました（%1 承認）</translation>
+        <translation>承認されました（%1 承認）</translation>
     </message>
     <message>
         <location line="+43"/>
         <source>Received with</source>
-        <translation type="unfinished">受取(通常)</translation>
+        <translation>受取(通常)</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Received from</source>
-        <translation type="unfinished">受取(その他)</translation>
+        <translation>受取(その他)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Sent to</source>
-        <translation type="unfinished">送金</translation>
+        <translation>送金</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8121,7 +8121,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+27"/>
         <source>(null)</source>
-        <translation type="unfinished"></translation>
+        <translation>(null)</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -8131,27 +8131,27 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+186"/>
         <source>(no label)</source>
-        <translation type="unfinished">（ラベル無し）</translation>
+        <translation>（ラベル無し）</translation>
     </message>
     <message>
         <location line="+42"/>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation type="unfinished">取引の状態。このフィールドの上にカーソルを合わせると承認数が表示されます。</translation>
+        <translation>取引の状態。このフィールドの上にカーソルを合わせると承認数が表示されます。</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Date and time that the transaction was received.</source>
-        <translation type="unfinished">取引を受信した日時。</translation>
+        <translation>取引を受信した日時。</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Type of transaction.</source>
-        <translation type="unfinished">取引の種類。</translation>
+        <translation>取引の種類。</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>User-defined intent/purpose of the transaction.</source>
-        <translation type="unfinished">ユーザーが定義した取引の目的や用途。</translation>
+        <translation>ユーザーが定義した取引の目的や用途。</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -8161,7 +8161,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+2"/>
         <source>Amount removed from or added to balance.</source>
-        <translation type="unfinished">残高から増えた又は減った金額。</translation>
+        <translation>残高から増えた又は減った金額。</translation>
     </message>
 </context>
 <context>
@@ -8171,32 +8171,32 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
         <location line="+12"/>
         <location line="+14"/>
         <source>All</source>
-        <translation type="unfinished">すべて</translation>
+        <translation>すべて</translation>
     </message>
     <message>
         <location line="-25"/>
         <source>Today</source>
-        <translation type="unfinished">今日</translation>
+        <translation>今日</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>This week</source>
-        <translation type="unfinished">今週</translation>
+        <translation>今週</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>This month</source>
-        <translation type="unfinished">今月</translation>
+        <translation>今月</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last month</source>
-        <translation type="unfinished">先月</translation>
+        <translation>先月</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>This year</source>
-        <translation type="unfinished">今年</translation>
+        <translation>今年</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8206,12 +8206,12 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+7"/>
         <source>Received with</source>
-        <translation type="unfinished">受取(通常)</translation>
+        <translation>受取(通常)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sent to</source>
-        <translation type="unfinished">送金</translation>
+        <translation>送金</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8226,7 +8226,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+12"/>
         <source>Min amount</source>
-        <translation type="unfinished">最小金額</translation>
+        <translation>最小金額</translation>
     </message>
     <message>
         <location line="+36"/>
@@ -8236,7 +8236,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+1"/>
         <source>Copy amount</source>
-        <translation type="unfinished">金額をコピー</translation>
+        <translation>金額をコピー</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8256,12 +8256,12 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message>
         <location line="+69"/>
         <source>Range:</source>
-        <translation type="unfinished">期間:</translation>
+        <translation>期間:</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>to</source>
-        <translation type="unfinished">〜</translation>
+        <translation>〜</translation>
     </message>
 </context>
 <context>
