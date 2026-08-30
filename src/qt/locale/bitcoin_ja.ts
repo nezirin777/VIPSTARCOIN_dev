@@ -2815,28 +2815,29 @@ If you are not sure what this is, leave this field unchanged.</source>
     <message>
         <location filename="../forms/hardwaredevicedialog.ui" line="+14"/>
         <source>Search for hardware keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアキーストアを検索</translation>
     </message>
     <message>
         <location line="+32"/>
         <source>Hardware keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアキーストア</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>No hardware device detected.
 to triger a rescan press &apos;Next&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアデバイスが検出されませんでした。
+再スキャンするには「次へ」を押してください</translation>
     </message>
     <message>
         <location line="+24"/>
         <source>On linux, you might have to add a new permission to your udev rules.</source>
-        <translation type="unfinished"></translation>
+        <translation>Linuxでは、udevルールに新しい権限を追加する必要がある場合があります。</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Debug message</source>
-        <translation type="unfinished"></translation>
+        <translation>デバッグメッセージ</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2845,17 +2846,21 @@ to triger a rescan press &apos;Next&apos;</source>
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location line="+56"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation>キャンセル</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Next</source>
-        <translation type="unfinished"></translation>
+        <translation>次へ</translation>
     </message>
 </context>
 <context>
@@ -2863,17 +2868,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../forms/hardwarekeystoredialog.ui" line="+14"/>
         <source>Hardware Keystore</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアキーストア</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Select a device:</source>
-        <translation type="unfinished"></translation>
+        <translation>デバイスを選択:</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>&amp;Cancel</source>
-        <translation type="unfinished">キャンセル(&amp;C)</translation>
+        <translation>キャンセル(&amp;C)</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -2896,57 +2901,60 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+8"/>
         <source>Connect Ledger</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerを接続</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Please insert your Ledger (%1). Verify the cable is connected and that no other application is using it.
 
 Try to connect again?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledger（%1）を挿入してください。ケーブルが接続されていること、他のアプリケーションが使用していないことを確認してください。
+
+もう一度接続を試みますか？</translation>
     </message>
     <message>
         <location line="+17"/>
         <location line="+43"/>
         <location line="+20"/>
         <source>Ledger Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerの状態</translation>
     </message>
     <message>
         <location line="-63"/>
         <source>Confirm Transaction on your Ledger device...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerデバイスでトランザクションを確認してください…</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Sign failed</source>
-        <translation type="unfinished">署名できませんでした</translation>
+        <translation>署名できませんでした</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>The transaction has no a complete set of signatures.</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクションの署名が揃っていません。</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Unknown transaction error</source>
-        <translation type="unfinished"></translation>
+        <translation>不明なトランザクションエラー</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Broadcast transaction</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクションをブロードキャスト</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Confirm Address on your Ledger device:
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerデバイスでアドレスを確認してください:
+%1</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Confirm Message on your Ledger device...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ledgerデバイスでメッセージを確認してください…</translation>
     </message>
 </context>
 <context>
@@ -2954,57 +2962,57 @@ Try to connect again?</source>
     <message>
         <location filename="../forms/hardwaresigntxdialog.ui" line="+14"/>
         <source>Sign transaction with hardware</source>
-        <translation type="unfinished"></translation>
+        <translation>ハードウェアでトランザクションに署名</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>Amount:</source>
-        <translation type="unfinished">金額:</translation>
+        <translation>金額:</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Fee:</source>
-        <translation type="unfinished">手数料:</translation>
+        <translation>手数料:</translation>
     </message>
     <message>
         <location line="+39"/>
         <source>Transaction data</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクションデータ</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Transaction details</source>
-        <translation type="unfinished"></translation>
+        <translation>トランザクションの詳細</translation>
     </message>
     <message>
         <location line="+40"/>
         <source>Import Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>アドレスをインポート</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>署名</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Broadcast</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロードキャスト</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Cancel</source>
-        <translation type="unfinished">キャンセル</translation>
+        <translation>キャンセル</translation>
     </message>
     <message>
         <location filename="../hardwaresigntxdialog.cpp" line="+144"/>
         <source>Are you sure you want to broadcast the transaction? &lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>このトランザクションをブロードキャストしてもよろしいですか？&lt;br /&gt;</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Confirm broadcast transaction.</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロードキャストの実行を確認してください。</translation>
     </message>
 </context>
 <context>
@@ -4764,12 +4772,12 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message>
         <location filename="../qtumhwitool.cpp" line="+292"/>
         <source>Started</source>
-        <translation type="unfinished"></translation>
+        <translation>開始しました</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>Application %1 fail to start.</source>
-        <translation type="unfinished"></translation>
+        <translation>アプリケーション %1 の起動に失敗しました。</translation>
     </message>
 </context>
 <context>
