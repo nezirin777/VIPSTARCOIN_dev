@@ -1132,7 +1132,7 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message numerus="yes">
         <location line="+131"/>
         <source>Processed %n block(s) of transaction history.</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n ブロックの取引履歴を処理しました。</numerusform>
         </translation>
     </message>
@@ -1481,28 +1481,28 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message numerus="yes">
         <location line="-36"/>
         <source>%n second(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 時間</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n day(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 日</numerusform>
         </translation>
     </message>
@@ -2368,28 +2368,28 @@ Signing is only possible with addresses of the type &apos;legacy&apos;.</source>
     <message numerus="yes">
         <location line="+105"/>
         <source>%n second(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 時間</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n day(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 日</numerusform>
         </translation>
     </message>
@@ -3094,21 +3094,21 @@ Try to connect again?</source>
     <message numerus="yes">
         <location filename="../intro.cpp" line="+218"/>
         <source>%n GB of space available</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n GB の空き容量</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+2"/>
         <source>(of %n GB needed)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>(必要な %n GB のうち)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+3"/>
         <source>(%n GB needed for full chain)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>(完全なチェーンには %n GB必要)</numerusform>
         </translation>
     </message>
@@ -3131,7 +3131,7 @@ Try to connect again?</source>
         <location line="+9"/>
         <source>(sufficient to restore backups %n day(s) old)</source>
         <extracomment>Explanatory text on the capability of the current prune target.</extracomment>
-        <translation type="unfinished">
+        <translation>
             <numerusform>(%n 日前のバックアップを復元するのに充分です)</numerusform>
         </translation>
     </message>
@@ -4592,28 +4592,28 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message numerus="yes">
         <location line="+18"/>
         <source>%n second(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 時間</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n day(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 日</numerusform>
         </translation>
     </message>
@@ -4621,7 +4621,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
         <location line="+4"/>
         <location line="+6"/>
         <source>%n week(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 週</numerusform>
         </translation>
     </message>
@@ -4633,7 +4633,7 @@ BIP70には広範なセキュリティー上の問題があるので、ウォレ
     <message numerus="yes">
         <location line="+0"/>
         <source>%n year(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 年</numerusform>
         </translation>
     </message>
@@ -6561,7 +6561,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message numerus="yes">
         <location line="+14"/>
         <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n ブロック以内に承認を開始すると推定されます。</numerusform>
         </translation>
     </message>
@@ -7751,28 +7751,28 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message numerus="yes">
         <location line="+102"/>
         <source>%n second(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n minute(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 分</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n hour(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 時間</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location line="+4"/>
         <source>%n day(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>%n 日</numerusform>
         </translation>
     </message>
@@ -8380,7 +8380,7 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of &quot;100 
     <message numerus="yes">
         <location line="-139"/>
         <source>matures in %n more block(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>あと %n 個のブロックで成熟</numerusform>
         </translation>
     </message>
