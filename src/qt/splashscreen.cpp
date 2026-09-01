@@ -17,12 +17,12 @@
 #include <util/translation.h>
 
 #include "styleSheet.h"
-#include <qt/platformstyle.h>
 
 #include <functional>
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QIcon>
 #include <QPainter>
 #include <QPainterPath>
 #include <QRadialGradient>
@@ -50,7 +50,7 @@ SplashScreen::SplashScreen(const NetworkStyle* networkStyle)
     QString copyrightText   = QString::fromUtf8(CopyrightHolders(strprintf("\xc2\xA9 %u-%u ", 2018, COPYRIGHT_YEAR)).c_str());
     const QString& titleAddText    = networkStyle->getTitleAddText();
 
-    QString font            = QApplication::font().toString();
+    QString font            = QApplication::font().family();
 
     // create a bitmap according to device pixelratio
     QSize splashSize(480,320);
@@ -80,14 +80,14 @@ SplashScreen::SplashScreen(const NetworkStyle* networkStyle)
     pixPaint.setPen(logo_frame_color);
     pixPaint.drawPath(logoPath);
 
-    QPixmap logo = PlatformStyle::SingleColorIcon(":/icons/bitcoin", foreground_color).pixmap(QSize(logoImageSize, logoImageSize));
+    QPixmap logo = QIcon(":/icons/bitcoin").pixmap(QSize(logoImageSize, logoImageSize));
     pixPaint.drawPixmap(logoRect.x() + 6, logoRect.y() + 6, logo);
 
     pixPaint.setPen(foreground_color);
 
     pixPaint.setFont(QFont(font, 22 * fontFactor, QFont::Bold));
     QRect rectTitle(QPoint(0, logoRect.bottom() + 10), QSize(splashSize.width() - 20, packageTextHeight));
-    pixPaint.drawText(rectTitle, Qt::AlignRight | Qt::AlignBottom, titleText);
+    pixPaint.drawText(rectTitle, Qt::AlignRight | Qt::AlignBottom | Qt::TextDontClip, titleText);
 
     QPoint versionPoint(rectTitle.bottomLeft());
 
